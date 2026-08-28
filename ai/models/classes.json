@@ -1,0 +1,69 @@
+{
+  "tomato": {
+    "classes": [
+      "blossom_end_rot",
+      "healthy",
+      "septoria_leaf_spot"
+    ],
+    "counts": {
+      "train": {
+        "blossom_end_rot": 1,
+        "healthy": 1,
+        "septoria_leaf_spot": 1
+      },
+      "validation": {
+        "blossom_end_rot": 1,
+        "healthy": 1,
+        "septoria_leaf_spot": 1
+      },
+      "test": {
+        "blossom_end_rot": 1,
+        "healthy": 1,
+        "septoria_leaf_spot": 1
+      }
+    },
+    "total_images": 9
+  },
+  "rice": {
+    "classes": [
+      "healthy",
+      "leaf_blast"
+    ],
+    "counts": {
+      "train": {
+        "healthy": 1,
+        "leaf_blast": 1
+      },
+      "validation": {
+        "healthy": 1,
+        "leaf_blast": 1
+      },
+      "test": {
+        "healthy": 1,
+        "leaf_blast": 1
+      }
+    },
+    "total_images": 6
+  },
+  "wheat": {
+    "classes": [
+      "healthy",
+      "yellow_rust"
+    ],
+    "counts": {
+      "train": {
+        "healthy": 1,
+        "yellow_rust": 1
+      },
+      "validation": {
+        "healthy": 1,
+        "yellow_rust": 1
+      },
+      "test": {
+        "healthy": 1,
+        "yellow_rust": 1
+      }
+    },
+    "total_images": 6
+  }
+}

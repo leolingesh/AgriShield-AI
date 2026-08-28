@@ -1,0 +1,307 @@
+{
+  "demoCases": [
+    {
+      "id": "demo-tomato-septoria",
+      "title": "Septoria Leaf Spot on Tomato",
+      "crop": "Tomato",
+      "cropId": "tomato",
+      "location": {
+        "state": "Tamil Nadu",
+        "district": "Salem",
+        "village": "Attur",
+        "lat": 11.5977,
+        "lng": 78.5986
+      },
+      "image": "/sample_crops/septoria_tomato.jpg",
+      "weather": {
+        "temperature": 27.5,
+        "humidity": 84,
+        "rainfall": 14.2,
+        "windSpeed": 6.8,
+        "condition": "Overcast with light rain",
+        "isHighRisk": true
+      },
+      "growthStage": "Flowering & Early Fruiting",
+      "farmerObservations": "Noticed small grey spots with dark rings on lower leaves after yesterday's rain.",
+      "aiAnalysis": {
+        "crop": "Tomato",
+        "condition": "Septoria Leaf Spot",
+        "pathogen": "Septoria lycopersici",
+        "classification": "fungal_disease",
+        "confidence": 0.94,
+        "confidenceRating": "High Confidence",
+        "severity": "Moderate",
+        "severityScore": 65,
+        "affectedArea": "25-30% of lower canopy",
+        "visualSymptoms": [
+          "Numerous circular lesions (2-3 mm) with ash-grey centers and distinct dark brown borders",
+          "Tiny black pycnidia fungal fruiting bodies visible inside spots under magnification",
+          "Lower foliage showing yellow chlorotic margins around lesions"
+        ],
+        "possibleCauses": [
+          "Prolonged leaf wetness exceeding 8 hours from recent rain and morning dew",
+          "Soil-to-leaf fungal spore splashback due to lack of mulch layer",
+          "High relative humidity (84%) creating ideal fungal sporulation conditions"
+        ],
+        "isExpertVerificationRecommended": false
+      },
+      "riskAssessment": {
+        "riskScore": 78,
+        "riskLevel": "HIGH",
+        "predictedThreat": "Rapid Septoria Defoliation & Spread to Middle Canopy",
+        "contributingFactors": [
+          { "factor": "Relative Humidity (84%)", "impact": "High", "weight": "30%", "detail": "Exceeds the 80% critical threshold for Septoria lycopersici sporulation." },
+          { "factor": "Recent Precipitation (14.2 mm)", "impact": "High", "weight": "25%", "detail": "Raindrops triggered soil spore splash into the bottom canopy." },
+          { "factor": "Optimal Temperature (27.5°C)", "impact": "Moderate", "weight": "20%", "detail": "Favorable thermal range (20°C-28°C) accelerates fungal cycle." },
+          { "factor": "Susceptible Growth Stage (Flowering)", "impact": "Moderate", "weight": "15%", "detail": "Dense canopy limits sunlight penetration and keeps interior foliage damp." },
+          { "factor": "Visual Symptom Evidence", "impact": "High", "weight": "10%", "detail": "Active lesions confirmed on lower foliage." }
+        ],
+        "whyRiskExists": "Current weather shows relative humidity at 84% with 14.2 mm rainfall in Salem, TN. Septoria lycopersici requires sustained moisture and moderate temperatures (20-28°C) to spread from lower leaves to upper fruiting clusters within 48-72 hours."
+      },
+      "recommendations": {
+        "immediateActions": [
+          "Carefully prune lower 8-12 inches of infected foliage; dispose in a sealed bag away from fields.",
+          "Avoid sprinkler irrigation; switch immediately to root-zone drip irrigation.",
+          "Apply protective bio-fungicide (Trichoderma viride @ 5g/L) or Copper Oxychloride 50 WP (2.5g/L) strictly per CIBRC label guidelines."
+        ],
+        "prevention": [
+          "Apply paddy straw or black plastic mulch around tomato beds to stop rain splash spores.",
+          "Increase row spacing to 60 cm for better air circulation and faster canopy drying.",
+          "Rotate field with non-solanaceous crops (e.g., maize, pulses) for next cycle."
+        ],
+        "monitoringPlan": [
+          "Re-inspect lower and middle leaf tiers every 24-48 hours.",
+          "Check morning dew retention duration on leaves."
+        ],
+        "chemicalWarning": "Use chemical sprays only after consulting local Krishi Vigyan Kendra (KVK) or State Agricultural Officer. Strictly wear protective mask, gloves, and follow label pre-harvest intervals (PHI)."
+      }
+    },
+    {
+      "id": "demo-rice-blast",
+      "title": "Diamond Lesions of Rice Blast Disease",
+      "crop": "Rice (Paddy)",
+      "cropId": "rice",
+      "location": {
+        "state": "Tamil Nadu",
+        "district": "Thanjavur",
+        "village": "Kumbakonam",
+        "lat": 10.9602,
+        "lng": 79.3845
+      },
+      "image": "/sample_crops/rice_blast.jpg",
+      "weather": {
+        "temperature": 24.2,
+        "humidity": 91,
+        "rainfall": 22.0,
+        "windSpeed": 9.5,
+        "condition": "Cloudy with heavy overcast",
+        "isHighRisk": true
+      },
+      "growthStage": "Tillering to Panicle Initiation",
+      "farmerObservations": "Leaves have diamond spots with grey centers. Cloud cover has persisted for 3 days.",
+      "aiAnalysis": {
+        "crop": "Rice (Paddy)",
+        "condition": "Rice Blast (Leaf Blast)",
+        "pathogen": "Magnaporthe oryzae",
+        "classification": "fungal_disease",
+        "confidence": 0.96,
+        "confidenceRating": "High Confidence",
+        "severity": "High",
+        "severityScore": 82,
+        "affectedArea": "35-40% across field tillers",
+        "visualSymptoms": [
+          "Distinct spindle / eye-shaped diamond lesions on leaf blades",
+          "Greyish center with necrotic brown margins",
+          "Lesions coalescing causing leaf tip burning and drying"
+        ],
+        "possibleCauses": [
+          "Relative humidity >90% and continuous cloud cover during tillering stage",
+          "Excessive urea top dressing predisposing succulent leaf tissue",
+          "Moderate night temperatures (20-24°C) with prolonged dew duration (>10 hours)"
+        ],
+        "isExpertVerificationRecommended": true
+      },
+      "riskAssessment": {
+        "riskScore": 89,
+        "riskLevel": "CRITICAL",
+        "predictedThreat": "Neck Blast & Total Panicle Lodging Outbreak",
+        "contributingFactors": [
+          { "factor": "Relative Humidity (91%)", "impact": "Critical", "weight": "35%", "detail": "Extreme humidity creates continuous free-water film on paddy leaves." },
+          { "factor": "Precipitation & Cloud Cover", "impact": "High", "weight": "25%", "detail": "Lack of solar radiation prevents natural fungal desiccation." },
+          { "factor": "Temperature Match (24.2°C)", "impact": "High", "weight": "20%", "detail": "Exact sweet spot for Magnaporthe spore germination (22-26°C)." },
+          { "factor": "Crop Stage (Panicle Initiation)", "impact": "High", "weight": "20%", "detail": "Vulnerable transition where blast moves from leaves to panicle neck." }
+        ],
+        "whyRiskExists": "Thanjavur delta conditions currently combine 91% humidity, recent rain, and 24.2°C temperature. If untreated during panicle emergence, leaf blast can convert into neck blast causing up to 60-80% grain yield loss."
+      },
+      "recommendations": {
+        "immediateActions": [
+          "Withhold further nitrogen/urea top-dressing immediately until infection is checked.",
+          "Maintain thin water layer (2-3 cm) rather than deep standing water; practice alternate wetting and drying.",
+          "Apply Tricyclazole 75% WP (0.6g/L) or Isoprothiolane 40% EC (1.5ml/L) as foliar spray during early morning."
+        ],
+        "prevention": [
+          "Seed treatment with Pseudomonas fluorescens (10g/kg) for next crop season.",
+          "Apply balanced potassium (MOP) to strengthen cell walls and cuticle resistance.",
+          "Destroy paddy stubble and wild grass hosts along field bunds."
+        ],
+        "monitoringPlan": [
+          "Inspect leaf collars and emerging flag leaves every 24 hours.",
+          "Alert neighboring farmers in the canal block to prevent cross-field epidemic."
+        ],
+        "chemicalWarning": "Wear personal protective equipment. Strictly respect harvest waiting period. Always prioritize bio-inputs where available."
+      }
+    },
+    {
+      "id": "demo-cotton-bollworm",
+      "title": "Pink Bollworm Infestation on Cotton",
+      "crop": "Cotton",
+      "cropId": "cotton",
+      "location": {
+        "state": "Maharashtra",
+        "district": "Nagpur",
+        "village": "Hingna",
+        "lat": 21.0667,
+        "lng": 78.9667
+      },
+      "image": "/sample_crops/cotton_bollworm.jpg",
+      "weather": {
+        "temperature": 32.0,
+        "humidity": 68,
+        "rainfall": 0.0,
+        "windSpeed": 8.0,
+        "condition": "Warm and partly cloudy",
+        "isHighRisk": true
+      },
+      "growthStage": "Boll Development & Maturation",
+      "farmerObservations": "Found rosetted flowers and small holes with black droppings on developing cotton bolls.",
+      "aiAnalysis": {
+        "crop": "Cotton",
+        "condition": "Pink Bollworm Infestation",
+        "pathogen": "Pectinophora gossypiella",
+        "classification": "insect_pest",
+        "confidence": 0.93,
+        "confidenceRating": "High Confidence",
+        "severity": "High",
+        "severityScore": 75,
+        "affectedArea": "20-25% of developing bolls sampled",
+        "visualSymptoms": [
+          "Holes bored into young green bolls with entry plugged by dark excreta/frass",
+          "Rosetted twisted flower buds failing to open properly",
+          "Immature stained lint and premature boll drop"
+        ],
+        "possibleCauses": [
+          "Warm weather (30-34°C) accelerating insect generation cycles",
+          "Emergence of second-generation moths from diapausing larvae in stored cotton stalks",
+          "Crop entering peak boll vulnerability window (60-120 days post-sowing)"
+        ],
+        "isExpertVerificationRecommended": true
+      },
+      "riskAssessment": {
+        "riskScore": 82,
+        "riskLevel": "CRITICAL",
+        "predictedThreat": "Widespread Internal Boll Destruction & Lint Staining",
+        "contributingFactors": [
+          { "factor": "Warm Temperature (32°C)", "impact": "High", "weight": "30%", "detail": "Optimum thermal band for rapid egg incubation and larval feeding." },
+          { "factor": "Vulnerable Phenology", "impact": "Critical", "weight": "30%", "detail": "Peak boll development provides ample nutritional substrate for larvae." },
+          { "factor": "Pest Visual Evidence", "impact": "High", "weight": "25%", "detail": "Frass-plugged holes confirm active larval burrowing inside bolls." },
+          { "factor": "Regional History", "impact": "Moderate", "weight": "15%", "detail": "Known Vidarbha belt endemic pest pressure in mid-season." }
+        ],
+        "whyRiskExists": "Pink bollworm larvae enter bolls within 24-48 hours of egg hatch and feed internally on seeds, shielded from external sprays. Immediate IPM intervention is vital before larvae penetrate deep bolls across the whole acre."
+      },
+      "recommendations": {
+        "immediateActions": [
+          "Install Gossyplure pheromone traps @ 8-10 traps/acre for mass trapping and monitoring.",
+          "Handpick and destroy rosetted flowers and dropped infested bolls.",
+          "Release egg parasitoid Trichogramma bactrae @ 60,000/acre at weekly intervals.",
+          "Spray Chlorantraniliprole 18.5 SC (0.3 ml/L) or Spinosad 45 SC (0.4 ml/L) targeting exposed neonate larvae."
+        ],
+        "prevention": [
+          "Avoid extending the cotton crop into a multi-flush ratoon crop beyond 160 days.",
+          "Destroy leftover cotton stalks and gin trash post-harvest to kill diapausing larvae.",
+          "Plant refuge non-Bt cotton rows around fields as resistance management."
+        ],
+        "monitoringPlan": [
+          "Record daily moth trap catches (Economic Threshold Level: 8 moths/trap/night for 3 consecutive days).",
+          "Randomly sample 20 green bolls per acre weekly for internal exit holes."
+        ],
+        "chemicalWarning": "Adhere strictly to label safety guidelines, wear respirators, and observe 15-day pre-harvest waiting periods."
+      }
+    },
+    {
+      "id": "demo-tomato-blossom-rot",
+      "title": "Blossom End Rot & Calcium Deficiency in Tomato",
+      "crop": "Tomato",
+      "cropId": "tomato",
+      "location": {
+        "state": "Karnataka",
+        "district": "Bengaluru Rural",
+        "village": "Doddaballapura",
+        "lat": 13.2922,
+        "lng": 77.5385
+      },
+      "image": "/sample_crops/blossom_rot_tomato.jpg",
+      "weather": {
+        "temperature": 31.0,
+        "humidity": 48,
+        "rainfall": 0.0,
+        "windSpeed": 12.0,
+        "condition": "Dry and breezy",
+        "isHighRisk": false
+      },
+      "growthStage": "Fruiting & Fruit Enlargement",
+      "farmerObservations": "Bottom tips of green tomatoes are turning flat, black, and leathery.",
+      "aiAnalysis": {
+        "crop": "Tomato",
+        "condition": "Blossom End Rot (Physiological Disorder)",
+        "pathogen": "Calcium (Ca²⁺) Deficiency induced by irregular water stress",
+        "classification": "physiological_disorder",
+        "confidence": 0.97,
+        "confidenceRating": "High Confidence",
+        "severity": "Moderate",
+        "severityScore": 58,
+        "affectedArea": "15-20% of first-cluster green fruits",
+        "visualSymptoms": [
+          "Dark sunken, flat, leathery black spot on the blossom end (bottom tip) of green fruit",
+          "No visible fungal mycelium or insect puncture holes initially",
+          "Affects rapidly expanding green fruits during hot, dry spells"
+        ],
+        "possibleCauses": [
+          "Inconsistent irrigation causing soil moisture fluctuations (wet to dry extremes)",
+          "Rapid plant transpiration in low humidity (48%) and wind causing calcium to route to leaves rather than fruit tips",
+          "Excessive nitrogen fertilizer (ammonium form) competing with calcium uptake"
+        ],
+        "isExpertVerificationRecommended": false
+      },
+      "riskAssessment": {
+        "riskScore": 48,
+        "riskLevel": "MEDIUM",
+        "predictedThreat": "Secondary Fungal Infection (Black Mold) on Sunken Rot Lesions",
+        "contributingFactors": [
+          { "factor": "Irrigation Inconsistency", "impact": "High", "weight": "40%", "detail": "Soil moisture fluctuation disrupts steady transpiration stream carrying calcium." },
+          { "factor": "Low Humidity & High Evapotranspiration", "impact": "Moderate", "weight": "25%", "detail": "48% RH accelerates leaf transpiration, starving distal fruit tissue of Ca." },
+          { "factor": "Crop Stage (Rapid Fruit Sizing)", "impact": "High", "weight": "25%", "detail": "Cell division and expansion at blossom end requires peak calcium." },
+          { "factor": "Nutrient Balance", "impact": "Moderate", "weight": "10%", "detail": "Calcium mobility is low inside plant tissues." }
+        ],
+        "whyRiskExists": "Blossom End Rot is NOT an infectious pathogen but a physiological calcium deficiency triggered by moisture stress. However, exposed damaged fruit tissue has a 48% risk of secondary fungal rot (Alternaria/Cladosporium) if rains arrive."
+      },
+      "recommendations": {
+        "immediateActions": [
+          "Do NOT apply fungicides for blossom end rot; it is a physiological disorder, not a fungal disease.",
+          "Maintain consistent soil moisture through uniform drip irrigation cycles (do not let soil completely dry out).",
+          "Foliar spray Calcium Nitrate (0.5% - 5g/L) or Chelated Calcium (1g/L) directly on flowers and young fruits.",
+          "Remove severely rotted fruits to allow plant energy to nourish healthy developing fruit clusters."
+        ],
+        "prevention": [
+          "Test soil pH before planting (maintain between 6.2 - 6.8 for optimal calcium availability).",
+          "Apply agricultural gypsum or lime during field preparation.",
+          "Use organic mulch to conserve steady root-zone soil moisture."
+        ],
+        "monitoringPlan": [
+          "Check soil moisture with tensiometer or simple touch test at 6-inch depth daily.",
+          "Observe newly set fruits on upper flower trusses."
+        ],
+        "chemicalWarning": "Fungicides or pesticides are not required for this condition. Only use water-soluble agricultural calcium fertilizers."
+      }
+    }
+  ]
+}

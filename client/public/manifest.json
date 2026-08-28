@@ -1,0 +1,17 @@
+{
+  "name": "AgriShield AI",
+  "short_name": "AgriShield",
+  "description": "AI-Powered Early Crop Pest Detection and Prevention System for Indian Farmers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1320",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

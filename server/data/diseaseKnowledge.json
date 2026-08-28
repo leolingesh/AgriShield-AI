@@ -1,0 +1,186 @@
+{
+  "tomato___septoria_leaf_spot": {
+    "crop": "tomato",
+    "condition": "septoria_leaf_spot",
+    "name": "Septoria Leaf Spot",
+    "type": "disease",
+    "optimalTempRange": [20, 26],
+    "humidityThreshold": 80,
+    "minRainfall": 5,
+    "vulnerableStages": ["Vegetative", "Flowering", "Fruiting"],
+    "symptoms": [
+      "Small circular dark grey spots with dark borders on lower leaves",
+      "Tiny black pycnidia dots visible inside spot centers",
+      "Yellowing (chlorosis) of surrounding leaf tissue leading to premature defoliation"
+    ],
+    "ipm": {
+      "cultural": [
+        "Enforce 3-year crop rotation with non-solanaceous crops",
+        "Mulch soil bed with straw to prevent fungal spore splash-back from soil",
+        "Avoid overhead sprinkler irrigation; install drip lines"
+      ],
+      "mechanical": [
+        "Prune and destroy infected lower leaves up to 12 inches above soil line",
+        "Stake plants vertically to facilitate maximum airflow canopy aeration"
+      ],
+      "biological": [
+        "Apply Trichoderma harzianum or Bacillus subtilis foliar spray weekly"
+      ],
+      "chemical": [
+        "CAUTION: Apply preventive Copper Oxychloride (2.5g/L) or Mancozeb (2g/L). Rotate mode-of-action FRAC codes to prevent fungal resistance."
+      ]
+    },
+    "expertEscalation": "Contact local Krishi Vigyan Kendra (KVK) if leaf defoliation exceeds 30% of canopy."
+  },
+  "tomato___blossom_end_rot": {
+    "crop": "tomato",
+    "condition": "blossom_end_rot",
+    "name": "Blossom End Rot",
+    "type": "physiological_disorder",
+    "optimalTempRange": [25, 38],
+    "humidityThreshold": 45,
+    "minRainfall": 0,
+    "vulnerableStages": ["Fruiting", "Maturity"],
+    "symptoms": [
+      "Water-soaked dark leathery sunken patch at bottom (blossom end) of developing fruit",
+      "Dry black flattened area expanding as fruit ripens"
+    ],
+    "ipm": {
+      "cultural": [
+        "Maintain consistent, uniform soil moisture; avoid drastic wet-dry irrigation cycles",
+        "Apply organic compost or lime to adjust soil pH to 6.2 - 6.8 for optimal Calcium uptake"
+      ],
+      "mechanical": [
+        "Prune non-productive sucker branches to divert transpiration stream to fruits"
+      ],
+      "biological": [
+        "Foliar spray of Calcium Nitrate (0.5%) during early fruit set"
+      ],
+      "chemical": [
+        "Not a pathogen. Do NOT apply fungicides. Correct soil moisture and Calcium balance."
+      ]
+    },
+    "expertEscalation": "Conduct soil EC & Calcium analysis if over 15% of green set shows rot."
+  },
+  "tomato___healthy": {
+    "crop": "tomato",
+    "condition": "healthy",
+    "name": "Healthy Tomato Canopy",
+    "type": "healthy",
+    "optimalTempRange": [18, 30],
+    "humidityThreshold": 70,
+    "minRainfall": 0,
+    "vulnerableStages": [],
+    "symptoms": [
+      "Vibrant green leaves free from chlorosis or foliar lesions",
+      "Sturdy stem development and normal flowering set"
+    ],
+    "ipm": {
+      "cultural": ["Maintain balanced N-P-K nutrition and routine weeding."],
+      "mechanical": ["Routine staking and pruning."],
+      "biological": ["Preventive neem oil spray (5ml/L) as general repellent."],
+      "chemical": ["No chemical treatment required."]
+    },
+    "expertEscalation": "Routine monitoring scheduled."
+  },
+  "rice___leaf_blast": {
+    "crop": "rice",
+    "condition": "leaf_blast",
+    "name": "Rice Leaf Blast (Magnaporthe oryzae)",
+    "type": "disease",
+    "optimalTempRange": [18, 28],
+    "humidityThreshold": 85,
+    "minRainfall": 10,
+    "vulnerableStages": ["Seedling", "Tillering", "Flowering"],
+    "symptoms": [
+      "Spindle-shaped or diamond-shaped lesions with reddish-brown margins and grey center",
+      "Lesion enlargement causing leaf blade wilting and complete foliage browning"
+    ],
+    "ipm": {
+      "cultural": [
+        "Avoid excessive nitrogen fertilizer application",
+        "Maintain standing water depth (5-7cm) during tillering stage to suppress spore infection"
+      ],
+      "mechanical": [
+        "Remove and burn infected stubble post-harvest"
+      ],
+      "biological": [
+        "Seed treatment with Pseudomonas fluorescens (10g/kg seed)"
+      ],
+      "chemical": [
+        "CAUTION: Apply Tricyclazole 75 WP (0.6g/L) or Isoprothiolane 40 EC (1.5ml/L) at early lesion appearance."
+      ]
+    },
+    "expertEscalation": "Immediate escalation required if neck blast phase is observed at panicle emergence."
+  },
+  "rice___healthy": {
+    "crop": "rice",
+    "condition": "healthy",
+    "name": "Healthy Rice Field",
+    "type": "healthy",
+    "optimalTempRange": [22, 32],
+    "humidityThreshold": 80,
+    "minRainfall": 5,
+    "vulnerableStages": [],
+    "symptoms": [
+      "Uniform green tiller canopy without foliar spots or yellowing"
+    ],
+    "ipm": {
+      "cultural": ["Standard water management and balanced nitrogen split dosage."],
+      "mechanical": ["Weed management in field bunds."],
+      "biological": ["Routine beneficial insect conservation."],
+      "chemical": ["No chemical intervention needed."]
+    },
+    "expertEscalation": "Normal field monitoring."
+  },
+  "wheat___yellow_rust": {
+    "crop": "wheat",
+    "condition": "yellow_rust",
+    "name": "Wheat Yellow Rust (Puccinia striiformis)",
+    "type": "disease",
+    "optimalTempRange": [10, 18],
+    "humidityThreshold": 80,
+    "minRainfall": 2,
+    "vulnerableStages": ["Tillering", "Flowering", "Maturity"],
+    "symptoms": [
+      "Bright yellow powdery urediniospores arranged in distinct linear stripes along leaf veins",
+      "Premature leaf drying leading to grain shriveling"
+    ],
+    "ipm": {
+      "cultural": [
+        "Sow rust-resistant varieties recommended by ICAR (e.g. HD-3086, DBW-187)",
+        "Timely sowing before winter temperature drop"
+      ],
+      "mechanical": [
+        "Destroy self-sown volunteer wheat plants"
+      ],
+      "biological": [
+        "Bio-formulations of Bacillus subtilis foliar spray"
+      ],
+      "chemical": [
+        "CAUTION: Spray Propiconazole 25 EC (1ml/L) or Tebuconazole 50% + Trifloxystrobin 25% WG at first sign of yellow stripe."
+      ]
+    },
+    "expertEscalation": "Notify District Agriculture Officer immediately upon yellow rust stripe outbreak."
+  },
+  "wheat___healthy": {
+    "crop": "wheat",
+    "condition": "healthy",
+    "name": "Healthy Wheat Field",
+    "type": "healthy",
+    "optimalTempRange": [12, 25],
+    "humidityThreshold": 75,
+    "minRainfall": 0,
+    "vulnerableStages": [],
+    "symptoms": [
+      "Vibrant green leaf blades free from yellow stripes or foliar pustules"
+    ],
+    "ipm": {
+      "cultural": ["Maintain balanced nitrogen split application."],
+      "mechanical": ["Regular field weed management."],
+      "biological": ["Routine beneficial insect conservation."],
+      "chemical": ["No chemical intervention needed."]
+    },
+    "expertEscalation": "Routine crop scouting scheduled."
+  }
+}

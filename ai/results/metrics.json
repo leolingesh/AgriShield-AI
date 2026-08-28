@@ -1,0 +1,18 @@
+{
+  "testAccuracy": 0.7142857142857143,
+  "macroPrecision": 0.5714285714285714,
+  "macroRecall": 0.7142857142857143,
+  "macroF1": 0.619047619047619,
+  "testLoss": 0.35808640718460083,
+  "numClasses": 7,
+  "totalImages": 21,
+  "classes": [
+    "rice___healthy",
+    "rice___leaf_blast",
+    "tomato___blossom_end_rot",
+    "tomato___healthy",
+    "tomato___septoria_leaf_spot",
+    "wheat___healthy",
+    "wheat___yellow_rust"
+  ]
+}

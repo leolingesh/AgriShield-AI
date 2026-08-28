@@ -1,0 +1,142 @@
+{
+  "appName": "AgriShield AI",
+  "tagline": "Detect Early. Prevent Smarter. Protect Every Crop.",
+  "sihBadge": "Smart India Hackathon (SIH)",
+  "nav": {
+    "dashboard": "Dashboard",
+    "analyze": "Analyze Crop",
+    "earlyWarning": "Early Warning",
+    "monitoring": "Crop Plots",
+    "history": "Analysis History",
+    "admin": "System Health",
+    "demo": "SIH Demo Mode"
+  },
+  "hero": {
+    "title": "AI-Powered Early Crop Pest Detection & Prevention",
+    "subtitle": "Predict fungal & insect threats before visible damage occurs using multimodal AI, real-time micrometeorology, and agronomic knowledge.",
+    "ctaScan": "Scan Leaf Now",
+    "ctaRisk": "Check Field Risk",
+    "ctaDemo": "Try SIH Demo Cases"
+  },
+  "location": {
+    "title": "Farm Location",
+    "currentBtn": "Use My Current Location",
+    "manualBtn": "Enter Location Manually",
+    "detecting": "Acquiring GPS coordinates...",
+    "detected": "Live GPS Location Active",
+    "selectState": "Select State",
+    "selectDistrict": "Select District",
+    "village": "Village / Farm Name",
+    "permissionDenied": "Location permission was denied. Please select your state and district manually.",
+    "unavailable": "Location unavailable. Please select your district manually."
+  },
+  "weather": {
+    "title": "Real-Time Weather",
+    "temp": "Temperature",
+    "humidity": "Relative Humidity",
+    "rainfall": "Rainfall",
+    "wind": "Wind Speed",
+    "pressure": "Pressure",
+    "forecast": "5-Day Agricultural Forecast",
+    "highRiskAlert": "Moisture & temperature in this zone are favorable for fungal sporulation."
+  },
+  "crop": {
+    "selectTitle": "Select Your Crop",
+    "searchPlaceholder": "Search crop (Tomato, Rice, Cotton...)",
+    "growthStage": "Crop Growth Stage",
+    "observations": "Field Observations (Optional)",
+    "observationsPlaceholder": "e.g., noticed grey spots on lower leaves after rain..."
+  },
+  "upload": {
+    "title": "Upload or Capture Leaf / Plant Photo",
+    "dropzone": "Drag and drop crop image here, or click to browse",
+    "cameraBtn": "Use Device Camera",
+    "analyzing": "Analyzing crop with Dual-Engine AI...",
+    "step1": "Scanning visual leaf symptoms & lesions...",
+    "step2": "Computing micrometeorological risk model...",
+    "step3": "Formulating Integrated Pest Management (IPM) guidance...",
+    "formatNotice": "Supports JPG, PNG, WebP up to 10MB"
+  },
+  "result": {
+    "title": "Crop Health Diagnosis & Risk Report",
+    "cropDetected": "Identified Crop",
+    "condition": "Detected Condition",
+    "pathogen": "Scientific Name / Pathogen",
+    "severity": "Visual Severity",
+    "confidence": "AI Confidence",
+    "affectedArea": "Estimated Affected Area",
+    "symptoms": "Visual Symptoms",
+    "causes": "Probable Environmental Causes",
+    "expertNotice": "Consult your local Agricultural Officer (ADA/KVK) for laboratory confirmation."
+  },
+  "risk": {
+    "title": "Predictive Pest / Disease Risk",
+    "scoreLabel": "Risk Score",
+    "levelLabel": "Risk Category",
+    "low": "LOW RISK",
+    "medium": "MEDIUM RISK",
+    "high": "HIGH RISK",
+    "critical": "CRITICAL RISK",
+    "whyTitle": "Why is my crop at risk?",
+    "factorsTitle": "Contributing Environmental Factors",
+    "estimateNotice": "AI-assisted agronomic risk estimate based on micrometeorological and biological host parameters."
+  },
+  "ipm": {
+    "title": "Integrated Pest Management (IPM) Guidance",
+    "immediate": "Immediate Action Steps",
+    "prevention": "Long-term Preventive Measures",
+    "monitoring": "Field Monitoring Plan",
+    "chemicalWarningTitle": "Chemical Safety Advisory",
+    "chemicalWarning": "Use chemical sprays strictly as a last resort under local agricultural extension supervision. Always wear PPE and follow pre-harvest intervals (PHI)."
+  },
+  "voice": {
+    "speak": "Speak",
+    "listening": "Listening...",
+    "processing": "Processing...",
+    "stop": "Stop Listening",
+    "microphoneDenied": "Microphone permission was denied. Please allow microphone access in your browser settings.",
+    "notSupported": "Voice input is not supported in this browser. You can type your question instead.",
+    "noSpeech": "No speech detected. Please tap Speak and try again.",
+    "tryAgain": "Speech recognition error. Please try again."
+  },
+  "ask": {
+    "title": "Ask AgriShield AI",
+    "subtitle": "Ask questions about crop diseases, remedies, or field observations in your language",
+    "placeholder": "Type or speak your crop question (e.g. My tomato leaves are turning yellow)...",
+    "button": "Ask AI",
+    "thinking": "AgriShield AI is thinking...",
+    "autoSpeech": "Automatically read responses aloud"
+  },
+  "audio": {
+    "readAloud": "Read Aloud",
+    "playing": "Reading Aloud...",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "fallbackNotice": "Voice synthesis not supported in this browser for the chosen language. Reading in default voice.",
+    "noVoiceNotice": "Voice for this language is not available on this device/browser.",
+    "cropMismatchSpoken": "You selected {expectedCrop}, but the uploaded image appears to be {detectedCrop}. The diagnosis has been corrected based on image analysis.",
+    "speechReportIntro": "Your crop is {crop}. The detected condition is {condition}.",
+    "speechConfidenceArea": "The AI confidence is {confidence} percent. Approximately {affectedArea} of the crop area is affected.",
+    "speechThreat": "Early warning threat: {threat}.",
+    "speechPrevention": "Recommended prevention measures: {prevention}.",
+    "speechAction": "Immediate action steps: {actions}.",
+    "healthyCrop": "Your {crop} crop appears healthy with no visible signs of major disease or pest damage.",
+    "uncertainCrop": "The image could not be classified with enough confidence. Please upload a clearer image showing the affected leaf or fruit."
+  },
+  "alerts": {
+    "title": "Early Warning Advisories",
+    "noAlerts": "No active high-risk alerts for your area.",
+    "markRead": "Mark as read"
+  },
+  "offline": {
+    "banner": "You are currently offline. Displaying cached agricultural records.",
+    "syncNotice": "New scans will be evaluated locally or queued when connection is restored."
+  },
+  "demo": {
+    "modalTitle": "Smart India Hackathon (SIH) Interactive Demo Mode",
+    "description": "Select a pre-loaded real agricultural scenario to test the complete dual-engine workflow instantly without requiring external camera captures.",
+    "runTest": "Run Sample Analysis",
+    "badge": "SIH Demo Mode"
+  }
+}

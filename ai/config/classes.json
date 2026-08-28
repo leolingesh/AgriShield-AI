@@ -1,0 +1,23 @@
+{
+  "tomato": {
+    "classes": [
+      "blossom_end_rot",
+      "healthy",
+      "septoria_leaf_spot"
+    ],
+    "totalImages": 9
+  },
+  "rice": {
+    "classes": [
+      "healthy",
+      "leaf_blast"
+    ],
+    "totalImages": 6
+  },
+  "wheat": {
+    "classes": [
+      "yellow_rust"
+    ],
+    "totalImages": 3
+  }
+}

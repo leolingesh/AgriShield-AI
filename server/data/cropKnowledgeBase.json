@@ -1,0 +1,448 @@
+{
+  "crops": [
+    {
+      "id": "tomato",
+      "name": "Tomato",
+      "scientificName": "Solanum lycopersicum",
+      "icon": "🍅",
+      "category": "Vegetable",
+      "growthStages": ["Seedling", "Vegetative", "Flowering", "Fruiting", "Ripening"],
+      "threats": [
+        {
+          "name": "Early Blight",
+          "type": "fungal",
+          "pathogen": "Alternaria solani",
+          "tempRange": [24, 30],
+          "humidityMin": 75,
+          "rainfallTrigger": "moderate",
+          "riskWeight": 0.85,
+          "symptoms": ["Concentric dark brown rings on older leaves (target spots)", "Yellowing margins around spots", "Stem lesions near soil line"],
+          "prevention": [
+            "Maintain 60cm row spacing to facilitate air circulation",
+            "Avoid overhead sprinkler irrigation; use drip irrigation",
+            "Mulch base of plants with straw to prevent fungal spore splashback from soil",
+            "Apply Trichoderma viride bio-fungicide during vegetative stage"
+          ],
+          "immediateActions": [
+            "Prune and safely burn or bury heavily infected lower leaves",
+            "Disinfect pruning shears between plants with 70% alcohol",
+            "Apply Copper Oxychloride 50 WP (2.5g/L) or Mancozeb 75 WP (2g/L) on affected foliage (follow label guidelines)"
+          ]
+        },
+        {
+          "name": "Late Blight",
+          "type": "oomycete",
+          "pathogen": "Phytophthora infestans",
+          "tempRange": [15, 22],
+          "humidityMin": 85,
+          "rainfallTrigger": "high",
+          "riskWeight": 0.95,
+          "symptoms": ["Water-soaked dark lesions on leaf tips", "White fuzzy fungal growth under leaves during high humidity", "Rapid browning and stem collapse"],
+          "prevention": [
+            "Ensure field drainage avoids standing water puddles",
+            "Plant certified disease-free seeds or resistant hybrid varieties (e.g., Arka Rakshak)",
+            "Avoid working in tomato fields when leaves are wet to prevent pathogen spreading"
+          ],
+          "immediateActions": [
+            "Immediately destroy severely collapsed plants to prevent entire field epidemic",
+            "Apply systemic fungicide Metalaxyl-M + Mancozeb (2g/L) strictly according to CIBRC guidelines",
+            "Consult local Krishi Vigyan Kendra (KVK) officer immediately"
+          ]
+        },
+        {
+          "name": "Whitefly Infestation & Leaf Curl Virus",
+          "type": "pest_vector",
+          "pathogen": "Bemisia tabaci (Vector for ToLCV)",
+          "tempRange": [28, 38],
+          "humidityMin": 50,
+          "humidityMax": 75,
+          "riskWeight": 0.88,
+          "symptoms": ["Tiny white flying insects under leaves", "Curling, puckering and reduction of leaf size", "Sooty mold growth on honeydew secretions"],
+          "prevention": [
+            "Install yellow sticky traps (10-12 traps per acre) at canopy height",
+            "Grow 2-3 rows of maize or sorghum as border crop barrier",
+            "Spray 5% Neem Seed Kernel Extract (NSKE) or Neem oil (3ml/L) preventively"
+          ],
+          "immediateActions": [
+            "Spray Beauveria bassiana or Verticillium lecanii bio-insecticide (5g/L)",
+            "Remove and destroy initial virus-infected stunted plants",
+            "If infestation crosses Economic Threshold Level (5-10 nymphs/leaf), apply Acetamiprid 20 SP (0.5g/L) with PPE"
+          ]
+        },
+        {
+          "name": "Septoria Leaf Spot",
+          "type": "fungal",
+          "pathogen": "Septoria lycopersici",
+          "tempRange": [20, 28],
+          "humidityMin": 80,
+          "riskWeight": 0.78,
+          "symptoms": ["Small circular spots with grey centers and dark borders", "Tiny black pycnidia specks inside spots", "Severe premature defoliation starting bottom-up"],
+          "prevention": [
+            "Practice 2-3 year crop rotation with non-solanaceous crops",
+            "Stake plants to keep leaves off the ground",
+            "Destroy volunteer tomato plants and solanaceous weeds"
+          ],
+          "immediateActions": [
+            "Strip bottom 12 inches of infected foliage",
+            "Spray Chlorothalonil 75 WP (2g/L) or Copper Hydroxide (2g/L)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rice",
+      "name": "Rice (Paddy)",
+      "scientificName": "Oryza sativa",
+      "icon": "🌾",
+      "category": "Cereal",
+      "growthStages": ["Nursery", "Tillering", "Panicle Initiation", "Flowering / Heading", "Milking", "Maturity"],
+      "threats": [
+        {
+          "name": "Rice Blast",
+          "type": "fungal",
+          "pathogen": "Magnaporthe oryzae",
+          "tempRange": [20, 26],
+          "humidityMin": 88,
+          "rainfallTrigger": "continuous",
+          "riskWeight": 0.92,
+          "symptoms": ["Spindle-shaped diamond eye lesions on leaves", "Greyish center with brown borders", "Neck rot breaking panicles at heading"],
+          "prevention": [
+            "Avoid excessive nitrogen fertilizer application; split into 3-4 doses",
+            "Treat seeds with Pseudomonas fluorescens (10g/kg seed)",
+            "Ensure regulated water depth and avoid drought stress in nursery"
+          ],
+          "immediateActions": [
+            "Drain standing water and re-irrigate fresh water",
+            "Apply Tricyclazole 75 WP (0.6g/L) or Isoprothiolane 40 EC (1.5ml/L) at first sign of leaf spots"
+          ]
+        },
+        {
+          "name": "Brown Plant Hopper (BPH)",
+          "type": "pest",
+          "pathogen": "Nilaparvata lugens",
+          "tempRange": [25, 32],
+          "humidityMin": 70,
+          "riskWeight": 0.90,
+          "symptoms": ["Circular patches of drying plants called 'hopper burn'", "Brown nymphs crowding at the stem base just above water line", "Plant lodging and total grain loss"],
+          "prevention": [
+            "Form 'alleyways' (30cm walking path every 2-3 meters) to allow sunlight and aeration",
+            "Alternate wetting and drying (AWD) irrigation instead of continuous submergence",
+            "Conserve natural predators like spiders and mirid bugs (Cyrtorhinus lividipennis)"
+          ],
+          "immediateActions": [
+            "Drain water from field for 3-4 days to break insect breeding cycle",
+            "Direct spray at the base of plants: Triflumezopyrim 10 SC (0.5ml/L) or Pymetrozine 50 WG (0.6g/L)"
+          ]
+        },
+        {
+          "name": "Bacterial Leaf Blight (BLB)",
+          "type": "bacterial",
+          "pathogen": "Xanthomonas oryzae pv. oryzae",
+          "tempRange": [25, 34],
+          "humidityMin": 80,
+          "riskWeight": 0.84,
+          "symptoms": ["Wavy water-soaked stripes along leaf margins turning yellow then bleach white", "Milky bacterial ooze beads on young lesions early morning"],
+          "prevention": [
+            "Avoid clipping seedling leaf tips during transplantation",
+            "Apply balanced fertilizer with recommended Potash (MOP)",
+            "Do not allow irrigation water to flow from infected to healthy fields"
+          ],
+          "immediateActions": [
+            "Spray Copper Oxychloride (2.5g/L) + Streptocycline (0.1g/L) early morning",
+            "Withhold nitrogen application until new healthy tillers emerge"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cotton",
+      "name": "Cotton",
+      "scientificName": "Gossypium hirsutum",
+      "icon": "🌱",
+      "category": "Commercial",
+      "growthStages": ["Germination", "Squaring", "Flowering", "Boll Development", "Boll Bursting"],
+      "threats": [
+        {
+          "name": "Pink Bollworm",
+          "type": "pest",
+          "pathogen": "Pectinophora gossypiella",
+          "tempRange": [26, 35],
+          "humidityMin": 60,
+          "riskWeight": 0.93,
+          "symptoms": ["Rosetted flowers (petals twisted together)", "Small entry holes in green bolls plugged with excreta", "Premature boll dropping and stained lint"],
+          "prevention": [
+            "Install Pheromone traps (Gossyplure) @ 5 traps/acre for monitoring",
+            "Release Trichogramma bactrae egg parasitoids @ 60,000/acre at squaring",
+            "Avoid extending cotton crop beyond 160 days (terminate ratoon crop)"
+          ],
+          "immediateActions": [
+            "When trap catches cross 8 moths/trap/day for 3 consecutive days, install mass trapping traps (15/acre)",
+            "Apply Chlorantraniliprole 18.5 SC (0.3ml/L) or Spinosad 45 SC (0.4ml/L) targeting early instar larvae"
+          ]
+        },
+        {
+          "name": "Cotton Leaf Curl Virus (CLCuV)",
+          "type": "viral",
+          "pathogen": "Begomovirus (transmitted by Whitefly)",
+          "tempRange": [30, 40],
+          "humidityMin": 45,
+          "riskWeight": 0.88,
+          "symptoms": ["Upward and downward curling of leaves", "Thickening of leaf veins ('enation' leaf-like outgrowths underneath)", "Severe stunting of plant"],
+          "prevention": [
+            "Eradicate weed hosts like Abutilon indicum and Parthenium around borders",
+            "Plant CLCuV tolerant hybrids",
+            "Control vector whitefly populations rigorously"
+          ],
+          "immediateActions": [
+            "Rogue out and destroy infected plants showing severe enation in early crop stages",
+            "Apply Pyriproxyfen 10 EC (2ml/L) to suppress whitefly egg hatching"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wheat",
+      "name": "Wheat",
+      "scientificName": "Triticum aestivum",
+      "icon": "🌾",
+      "category": "Cereal",
+      "growthStages": ["Crown Root Initiation", "Tillering", "Jointing", "Heading / Booting", "Dough", "Maturity"],
+      "threats": [
+        {
+          "name": "Yellow / Stripe Rust",
+          "type": "fungal",
+          "pathogen": "Puccinia striiformis",
+          "tempRange": [10, 18],
+          "humidityMin": 85,
+          "riskWeight": 0.91,
+          "symptoms": ["Bright yellow powdery pustules arranged in parallel linear stripes along leaf blades", "Yellow dust adhering to farmer clothes when walking through field"],
+          "prevention": [
+            "Sow stripe rust resistant varieties recommended for Northern Plains (e.g., HD 2967, PBW 550)",
+            "Avoid late sowing in sub-mountainous high humidity zones",
+            "Monitor northern boundary fields frequently from December to February"
+          ],
+          "immediateActions": [
+            "At first appearance of single yellow stripe foci, spray Propiconazole 25 EC (1ml/L) or Tebuconazole 25.9 EC (1ml/L)"
+          ]
+        },
+        {
+          "name": "Aphids (Wheat Aphid)",
+          "type": "pest",
+          "pathogen": "Rhopalosiphum padi / Sitobion avenae",
+          "tempRange": [18, 26],
+          "humidityMin": 50,
+          "riskWeight": 0.76,
+          "symptoms": ["Greenish-black tiny insects sucking sap from ears and flag leaves", "Sticky honeydew turning into black sooty mold"],
+          "prevention": [
+            "Conserve Coccinellid predator beetles (Ladybird beetles)",
+            "Avoid late nitrogen top-dressing which induces lush succulent growth"
+          ],
+          "immediateActions": [
+            "If population exceeds 10-15 aphids per ear head, spray Thiamethoxam 25 WG (0.3g/L) or Dimethoate 30 EC (1.5ml/L)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "potato",
+      "name": "Potato",
+      "scientificName": "Solanum tuberosum",
+      "icon": "🥔",
+      "category": "Tuber",
+      "growthStages": ["Sprouting", "Vegetative", "Tuber Initiation", "Tuber Bulking", "Maturity"],
+      "threats": [
+        {
+          "name": "Potato Late Blight",
+          "type": "oomycete",
+          "pathogen": "Phytophthora infestans",
+          "tempRange": [12, 22],
+          "humidityMin": 85,
+          "riskWeight": 0.96,
+          "symptoms": ["Water-soaked dark purplish lesions on leaves", "White mildew ring under leaflets during fog/dew", "Rotting foul-smelling tubers in soil"],
+          "prevention": [
+            "Use certified disease-free seed tubers from cold storage",
+            "High ridging and earthing up to prevent zoospores washing down to tubers",
+            "Preventive spray of Mancozeb 75 WP (2.5g/L) before canopy closure"
+          ],
+          "immediateActions": [
+            "Spray Cymoxanil 8% + Mancozeb 64% WP (2.5g/L) or Dimethomorph 50% WP (1g/L)",
+            "Cut vines/haulms 10 days before harvest to prevent tuber contamination"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chilli",
+      "name": "Chilli (Pepper)",
+      "scientificName": "Capsicum annuum",
+      "icon": "🌶️",
+      "category": "Spice",
+      "growthStages": ["Seedling", "Vegetative", "Flowering", "Fruiting", "Harvest"],
+      "threats": [
+        {
+          "name": "Chilli Thrips & Murda Disease",
+          "type": "pest",
+          "pathogen": "Scirtothrips dorsalis",
+          "tempRange": [28, 38],
+          "humidityMin": 40,
+          "humidityMax": 70,
+          "riskWeight": 0.89,
+          "symptoms": ["Leaves curl upward like boat shape", "Brown necrotic scarring on leaf undersides and fruit stalks", "Stunted growth and bud drop"],
+          "prevention": [
+            "Install blue sticky traps (10/acre) specifically attractive to thrips",
+            "Intercrop with maize or coriander as trap/barrier crops",
+            "Foliar application of Neem oil 10000 ppm (2ml/L)"
+          ],
+          "immediateActions": [
+            "Spray Spinetoram 11.7 SC (1ml/L) or Fipronil 5 SC (2ml/L)",
+            "Alternate chemical groups to prevent rapid insecticide resistance"
+          ]
+        },
+        {
+          "name": "Anthracnose / Fruit Rot (Dieback)",
+          "type": "fungal",
+          "pathogen": "Colletotrichum capsici",
+          "tempRange": [25, 32],
+          "humidityMin": 80,
+          "riskWeight": 0.87,
+          "symptoms": ["Circular sunken spots on ripe fruits with black concentric rings", "Twigs dry from tip downwards ('dieback') turning straw colored"],
+          "prevention": [
+            "Treat seed with Captan or Thiram (3g/kg seed)",
+            "Avoid sprinkler irrigation during fruit ripening stage",
+            "Collect and destroy fallen infected fruits"
+          ],
+          "immediateActions": [
+            "Spray Azoxystrobin 23 SC (1ml/L) or Difenoconazole 25 EC (0.5ml/L) at fruit set"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "maize",
+      "name": "Maize (Corn)",
+      "scientificName": "Zea mays",
+      "icon": "🌽",
+      "category": "Cereal",
+      "growthStages": ["Knee-high", "Tasseling", "Silking", "Milking", "Maturity"],
+      "threats": [
+        {
+          "name": "Fall Armyworm (FAW)",
+          "type": "pest",
+          "pathogen": "Spodoptera frugiperda",
+          "tempRange": [25, 35],
+          "humidityMin": 50,
+          "riskWeight": 0.94,
+          "symptoms": ["Window-pane feeding marks on whorl leaves", "Deep irregular holes and sawdust-like frass inside central whorl", "Four elevated black spots arranged in a square on the 8th abdominal segment of larva"],
+          "prevention": [
+            "Install FAW pheromone traps (5/acre) immediately upon germination",
+            "Apply sand and wood ash (9:1 ratio) or neem cake into plant whorls at 15-20 days",
+            "Encourage predatory birds by erecting bird perches (10/acre)"
+          ],
+          "immediateActions": [
+            "Release egg parasitoid Trichogramma pretiosum @ 50,000/acre",
+            "Whorl application of Emamectin benzoate 5 SG (0.4g/L) or Spinetoram 11.7 SC (0.5ml/L)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sugarcane",
+      "name": "Sugarcane",
+      "scientificName": "Saccharum officinarum",
+      "icon": "🎋",
+      "category": "Commercial",
+      "growthStages": ["Germination", "Tillering", "Grand Growth", "Ripening"],
+      "threats": [
+        {
+          "name": "Early Shoot Borer",
+          "type": "pest",
+          "pathogen": "Chilo infuscatellus",
+          "tempRange": [30, 42],
+          "humidityMin": 30,
+          "humidityMax": 65,
+          "riskWeight": 0.82,
+          "symptoms": ["'Dead heart' drying of central spindle in young shoots (1-3 months old)", "Rotten dead heart easily pulled out with offensive odor"],
+          "prevention": [
+            "Trash mulching up to 10-15 cm thickness in sugarcane rows",
+            "Earthing up at 30-45 days after planting",
+            "Release egg parasitoid Trichogramma chilonis @ 20,000/acre"
+          ],
+          "immediateActions": [
+            "Soil drenching/application of Chlorantraniliprole 0.4 GR @ 7.5 kg/acre during early tillering"
+          ]
+        },
+        {
+          "name": "Red Rot",
+          "type": "fungal",
+          "pathogen": "Colletotrichum falcatum",
+          "tempRange": [27, 33],
+          "humidityMin": 85,
+          "riskWeight": 0.95,
+          "symptoms": ["Third and fourth leaves wither and turn yellow", "Internal pith turns blood red with crosswise white patches", "Alcoholic fermentation smell when cane is split"],
+          "prevention": [
+            "Select healthy setts from certified nurseries; hot water treatment at 52°C for 30 min",
+            "Sett treatment with Carbendazim 50 WP (1g/L)",
+            "Adopt crop rotation with paddy or green manure crops"
+          ],
+          "immediateActions": [
+            "Immediately uproot and burn infected stools; apply lime in the pit",
+            "Do not allow runoff water from infected fields into other cane plots"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "onion",
+      "name": "Onion",
+      "scientificName": "Allium cepa",
+      "icon": "🧅",
+      "category": "Vegetable",
+      "growthStages": ["Nursery", "Bulb Initiation", "Bulb Development", "Maturity"],
+      "threats": [
+        {
+          "name": "Purple Blotch",
+          "type": "fungal",
+          "pathogen": "Alternaria porri",
+          "tempRange": [22, 30],
+          "humidityMin": 80,
+          "riskWeight": 0.85,
+          "symptoms": ["Sunken purplish-brown elliptical lesions with yellow halo on leaves and seed stalks", "Foliage falls over and dies prematurely reducing bulb size"],
+          "prevention": [
+            "Avoid planting too densely; maintain proper raised beds",
+            "Seed treatment with Thiram (2.5g/kg seed)",
+            "Avoid overhead irrigation during humid weather"
+          ],
+          "immediateActions": [
+            "Spray Mancozeb 75 WP (2.5g/L) mixed with sticker (1ml/L) or Tebuconazole 25.9 EC (1ml/L)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "groundnut",
+      "name": "Groundnut (Peanut)",
+      "scientificName": "Arachis hypogaea",
+      "icon": "🥜",
+      "category": "Oilseed",
+      "growthStages": ["Vegetative", "Flowering / Pegging", "Pod Formation", "Pod Maturity"],
+      "threats": [
+        {
+          "name": "Tikka Leaf Spot (Early & Late)",
+          "type": "fungal",
+          "pathogen": "Cercospora arachidicola & Phaeoisariopsis personata",
+          "tempRange": [25, 30],
+          "humidityMin": 85,
+          "riskWeight": 0.88,
+          "symptoms": ["Early: Reddish-brown spots with prominent bright yellow halos", "Late: Carbon black circular spots without halos mainly on lower leaf surface"],
+          "prevention": [
+            "Seed treatment with Trichoderma harzianum (4g/kg seed)",
+            "Intercrop with Pearl Millet (Bajra) or Pigeon Pea (Arhar) in 4:1 ratio"
+          ],
+          "immediateActions": [
+            "Foliar spray of Carbendazim 12% + Mancozeb 63% WP (2g/L) or Hexaconazole 5 SC (2ml/L)"
+          ]
+        }
+      ]
+    }
+  ]
+}

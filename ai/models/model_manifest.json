@@ -1,0 +1,57 @@
+{
+  "name": "AgriShield Crop Disease Vision Classifier",
+  "modelVersion": "v1.0",
+  "architecture": "mobilenet_v3_large",
+  "crops": [
+    "tomato",
+    "rice",
+    "wheat"
+  ],
+  "unifiedClasses": [
+    "rice___healthy",
+    "rice___leaf_blast",
+    "tomato___blossom_end_rot",
+    "tomato___healthy",
+    "tomato___septoria_leaf_spot",
+    "wheat___healthy",
+    "wheat___yellow_rust"
+  ],
+  "classToIdx": {
+    "rice___healthy": 0,
+    "rice___leaf_blast": 1,
+    "tomato___blossom_end_rot": 2,
+    "tomato___healthy": 3,
+    "tomato___septoria_leaf_spot": 4,
+    "wheat___healthy": 5,
+    "wheat___yellow_rust": 6
+  },
+  "idxToClass": {
+    "0": "rice___healthy",
+    "1": "rice___leaf_blast",
+    "2": "tomato___blossom_end_rot",
+    "3": "tomato___healthy",
+    "4": "tomato___septoria_leaf_spot",
+    "5": "wheat___healthy",
+    "6": "wheat___yellow_rust"
+  },
+  "metrics": {
+    "testAccuracy": 0.7142857142857143,
+    "macroPrecision": 0.5714285714285714,
+    "macroRecall": 0.7142857142857143,
+    "macroF1": 0.619047619047619,
+    "testLoss": 0.35808640718460083,
+    "numClasses": 7,
+    "totalImages": 21,
+    "classes": [
+      "rice___healthy",
+      "rice___leaf_blast",
+      "tomato___blossom_end_rot",
+      "tomato___healthy",
+      "tomato___septoria_leaf_spot",
+      "wheat___healthy",
+      "wheat___yellow_rust"
+    ]
+  },
+  "confidenceThreshold": 0.6,
+  "trainedAt": "2026-08-28T05:30:43Z"
+}
