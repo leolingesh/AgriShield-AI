@@ -3,9 +3,16 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./config');
 
-const dataDir = path.join(__dirname, '..', 'data_store');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+const os = require('os');
+const isVercel = Boolean(process.env.VERCEL);
+const dataDir = isVercel ? path.join(os.tmpdir(), 'agrishield_data') : path.join(__dirname, '..', 'data_store');
+
+try {
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+} catch (e) {
+  console.warn('Using in-memory fallback store on serverless environment');
 }
 
 let isMongoConnected = false;
