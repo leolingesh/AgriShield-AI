@@ -92,6 +92,8 @@ async function startServer() {
     console.log(`   SIH Demo Mode: Active & Ready`);
     console.log(`====================================================`);
   });
+}
+
 if (require.main === module) {
   startServer();
 }
