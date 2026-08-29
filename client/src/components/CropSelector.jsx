@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Search, Sprout, Check, Info, Sparkles, BookOpen } from 'lucide-react';
+import { Search, Sprout, Check, Sparkles } from 'lucide-react';
 import VoiceInputButton from './VoiceInputButton';
 import { getLocalizedCropName, getLocalizedGrowthStage } from '../utils/localizationUtils';
 
@@ -8,13 +8,13 @@ export const CROPS_DATA = [
   { id: 'tomato', name: 'Tomato', icon: '🍅', category: 'vegetable', visionSupported: true, scientific: 'Solanum lycopersicum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Ripening'] },
   { id: 'rice', name: 'Rice (Paddy)', icon: '🌾', category: 'cereal', visionSupported: true, scientific: 'Oryza sativa', stages: ['Nursery', 'Tillering', 'Panicle Initiation', 'Flowering', 'Maturity'] },
   { id: 'wheat', name: 'Wheat', icon: '🌾', category: 'cereal', visionSupported: true, scientific: 'Triticum aestivum', stages: ['Crown Root', 'Tillering', 'Jointing', 'Booting / Heading', 'Maturity'] },
-  { id: 'cotton', name: 'Cotton', icon: '🌱', category: 'commercial', visionSupported: false, scientific: 'Gossypium hirsutum', stages: ['Germination', 'Squaring', 'Flowering', 'Boll Development', 'Boll Bursting'] },
-  { id: 'potato', name: 'Potato', icon: '🥔', category: 'tuber', visionSupported: false, scientific: 'Solanum tuberosum', stages: ['Sprouting', 'Vegetative', 'Tuber Initiation', 'Tuber Bulking', 'Maturity'] },
-  { id: 'chilli', name: 'Chilli (Pepper)', icon: '🌶️', category: 'spice', visionSupported: false, scientific: 'Capsicum annuum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Harvest'] },
-  { id: 'maize', name: 'Maize (Corn)', icon: '🌽', category: 'cereal', visionSupported: false, scientific: 'Zea mays', stages: ['Knee-high', 'Tasseling', 'Silking', 'Milking', 'Maturity'] },
-  { id: 'sugarcane', name: 'Sugarcane', icon: '🎋', category: 'commercial', visionSupported: false, scientific: 'Saccharum officinarum', stages: ['Germination', 'Tillering', 'Grand Growth', 'Ripening'] },
-  { id: 'onion', name: 'Onion', icon: '🧅', category: 'vegetable', visionSupported: false, scientific: 'Allium cepa', stages: ['Nursery', 'Bulb Initiation', 'Bulb Development', 'Maturity'] },
-  { id: 'groundnut', name: 'Groundnut (Peanut)', icon: '🥜', category: 'oilseed', visionSupported: false, scientific: 'Arachis hypogaea', stages: ['Vegetative', 'Flowering / Pegging', 'Pod Formation', 'Maturity'] }
+  { id: 'cotton', name: 'Cotton', icon: '🌱', category: 'commercial', visionSupported: true, scientific: 'Gossypium hirsutum', stages: ['Germination', 'Squaring', 'Flowering', 'Boll Development', 'Boll Bursting'] },
+  { id: 'potato', name: 'Potato', icon: '🥔', category: 'tuber', visionSupported: true, scientific: 'Solanum tuberosum', stages: ['Sprouting', 'Vegetative', 'Tuber Initiation', 'Tuber Bulking', 'Maturity'] },
+  { id: 'chilli', name: 'Chilli (Pepper)', icon: '🌶️', category: 'spice', visionSupported: true, scientific: 'Capsicum annuum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Harvest'] },
+  { id: 'maize', name: 'Maize (Corn)', icon: '🌽', category: 'cereal', visionSupported: true, scientific: 'Zea mays', stages: ['Knee-high', 'Tasseling', 'Silking', 'Milking', 'Maturity'] },
+  { id: 'sugarcane', name: 'Sugarcane', icon: '🎋', category: 'commercial', visionSupported: true, scientific: 'Saccharum officinarum', stages: ['Germination', 'Tillering', 'Grand Growth', 'Ripening'] },
+  { id: 'onion', name: 'Onion', icon: '🧅', category: 'vegetable', visionSupported: true, scientific: 'Allium cepa', stages: ['Nursery', 'Bulb Initiation', 'Bulb Development', 'Maturity'] },
+  { id: 'groundnut', name: 'Groundnut (Peanut)', icon: '🥜', category: 'oilseed', visionSupported: true, scientific: 'Arachis hypogaea', stages: ['Vegetative', 'Flowering / Pegging', 'Pod Formation', 'Maturity'] }
 ];
 
 export const CropSelector = ({
@@ -38,7 +38,6 @@ export const CropSelector = ({
   const activeCropObj = CROPS_DATA.find(c => c.id === selectedCrop?.id) || CROPS_DATA[0];
   const stagesList = activeCropObj ? activeCropObj.stages : ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity'];
   const localizedActiveCropName = getLocalizedCropName(selectedCrop?.id || 'tomato', language);
-  const isVisionSupported = activeCropObj?.visionSupported;
 
   return (
     <div className="glass-card" style={{ padding: '22px' }}>
@@ -66,7 +65,7 @@ export const CropSelector = ({
           <div>
             <h3 style={{ fontSize: '1.05rem', color: '#17211B', fontWeight: 700 }}>{t('crop.selectTitle')}</h3>
             <span style={{ fontSize: '0.78rem', color: '#647067' }}>
-              <strong style={{ color: '#16A34A' }}>{localizedActiveCropName}</strong>
+              <strong style={{ color: '#16A34A' }}>{localizedActiveCropName}</strong> — {t('crop.visionAiSupportedAll', 'AI Vision Supported')}
             </span>
           </div>
         </div>
@@ -93,19 +92,18 @@ export const CropSelector = ({
         </div>
       </div>
 
-      {/* Crop Cards Grid */}
+      {/* Crop Cards Grid - All 10 Crops Unified with Vision AI */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
         gap: 10,
-        marginBottom: 14,
-        maxHeight: 240,
+        marginBottom: 16,
+        maxHeight: 250,
         overflowY: 'auto',
         paddingRight: 4
       }}>
         {filteredCrops.map(crop => {
           const isSelected = selectedCrop?.id === crop.id;
-          const isTrained = crop.visionSupported;
           const localizedName = getLocalizedCropName(crop.id, language);
 
           return (
@@ -154,41 +152,20 @@ export const CropSelector = ({
                 padding: '2px 6px',
                 borderRadius: 4,
                 marginTop: 4,
-                background: isTrained ? '#DCFCE7' : '#F3F4F6',
-                color: isTrained ? '#15803D' : '#4B5563',
-                border: isTrained ? '1px solid #86EFAC' : '1px solid #E5E7EB',
+                background: '#DCFCE7',
+                color: '#15803D',
+                border: '1px solid #86EFAC',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 3
               }}>
-                {isTrained ? <Sparkles size={9} aria-hidden="true" /> : <BookOpen size={9} aria-hidden="true" />}
-                {isTrained ? 'Vision AI' : 'Knowledge'}
+                <Sparkles size={9} aria-hidden="true" />
+                <span>{t('crop.visionAiBadge', 'Vision AI')}</span>
               </span>
             </button>
           );
         })}
       </div>
-
-      {/* Unsupported Vision Crop Advisory Notice */}
-      {!isVisionSupported && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          background: '#EFF6FF',
-          border: '1px solid #BFDBFE',
-          borderRadius: 8,
-          padding: '8px 12px',
-          color: '#1E40AF',
-          fontSize: '0.8rem',
-          marginBottom: 16
-        }}>
-          <Info size={16} color="#2563EB" style={{ flexShrink: 0 }} aria-hidden="true" />
-          <span>
-            {t('crop.visionNotice', 'Vision AI currently supports Tomato, Rice, and Wheat. AgriShield agronomic knowledge and IPM guidance are active for other crops.')}
-          </span>
-        </div>
-      )}
 
       {/* Growth Stage and Observations */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>

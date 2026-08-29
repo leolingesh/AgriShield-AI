@@ -45,7 +45,9 @@
     "searchPlaceholder": "પાક શોધો (ટામેટા, ડાંગર, કપાસ...)",
     "growthStage": "પાકના વિકાસનો તબક્કો",
     "observations": "ખેડૂતનું અવલોકન (વૈકલ્પિક)",
-    "observationsPlaceholder": "દા.ત. વરસાદ પછી નીચેના પાંદડા પર ડાઘા દેખાયા..."
+    "observationsPlaceholder": "દા.ત. વરસાદ પછી નીચેના પાંદડા પર ડાઘા દેખાયા...",
+    "visionAiBadge": "વિઝન AI",
+    "visionAiSupportedAll": "AI વિઝન સમર્થિત"
   },
   "upload": {
     "title": "પાંદડા / છોડનો ફોટો અપલોડ કરો અથવા લો",
@@ -67,7 +69,9 @@
     "affectedArea": "અંદાજિત અસરગ્રસ્ત વિસ્તાર",
     "symptoms": "લક્ષણો",
     "causes": "પર્યાવરણીય કારણો",
-    "expertNotice": "ખાતરી માટે સ્થાનિક કૃષિ અધિકારી (KVK) નો સંપર્ક કરો."
+    "expertNotice": "ખાતરી માટે સ્થાનિક કૃષિ અધિકારી (KVK) નો સંપર્ક કરો.",
+    "cropMismatchTitle": "પાક મેળ ખાતો નથી",
+    "cropMismatchDesc": "પસંદ કરેલ પાક: {selectedCrop}, પરંતુ AI એ ઓળખ્યો: {detectedCrop}. નીચેનું નિદાન ઓળખાયેલા પાક માટે ગોઠવવામાં આવ્યું છે."
   },
   "risk": {
     "title": "જીવાત / રોગ જોખમ અનુમાન",

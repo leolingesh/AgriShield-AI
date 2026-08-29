@@ -127,7 +127,33 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
     : '🟡 Cloud Dual-Engine Knowledge Base';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Crop Mismatch Alert Card */}
+      {ai.crop_match === false && (
+        <div style={{
+          background: '#FEF3C7',
+          border: '1.5px solid #F59E0B',
+          borderRadius: 12,
+          padding: '14px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          color: '#92400E'
+        }}>
+          <AlertTriangle size={24} color="#D97706" style={{ flexShrink: 0 }} aria-hidden="true" />
+          <div style={{ fontSize: '0.88rem', lineHeight: 1.5 }}>
+            <strong style={{ display: 'block', fontSize: '0.95rem', marginBottom: 2 }}>
+              {t('result.cropMismatchTitle', 'Crop Mismatch Detected')}
+            </strong>
+            <span>
+              {t('result.cropMismatchDesc', 'Selected crop: {selectedCrop}, but AI detected: {detectedCrop}. The diagnosis below has been adjusted for the detected crop.')
+                .replace('{selectedCrop}', getLocalizedCropName(ai.selected_crop || analysis.cropName, language))
+                .replace('{detectedCrop}', getLocalizedCropName(ai.detected_crop || ai.crop, language))}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner with Diagnosis & Read Aloud Header */}
       <div className="glass-card" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
         <div style={{

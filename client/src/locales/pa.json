@@ -45,7 +45,9 @@
     "searchPlaceholder": "ਫਸਲ ਖੋਜੋ (ਟਮਾਟਰ, ਝੋਨਾ, ਨਰਮਾ/ਕਪਾਹ...)",
     "growthStage": "ਫਸਲ ਦੇ ਵਾਧੇ ਦਾ ਪੜਾਅ",
     "observations": "ਕਿਸਾਨ ਦੇ ਨਿਰੀਖਣ (ਵਿਕਲਪਿਕ)",
-    "observationsPlaceholder": "ਉਦਾ. ਮੀਂਹ ਤੋਂ ਬਾਅਦ ਹੇਠਲੇ ਪੱਤਿਆਂ 'ਤੇ ਧੱਬੇ ਦੇਖੇ ਗਏ..."
+    "observationsPlaceholder": "ਉਦਾ. ਮੀਂਹ ਤੋਂ ਬਾਅਦ ਹੇਠਲੇ ਪੱਤਿਆਂ 'ਤੇ ਧੱਬੇ ਦੇਖੇ ਗਏ...",
+    "visionAiBadge": "ਵਿਜ਼ਨ AI",
+    "visionAiSupportedAll": "AI ਵਿਜ਼ਨ ਸਮਰਥਿਤ"
   },
   "upload": {
     "title": "ਪੱਤੇ / ਪੌਦੇ ਦੀ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ ਜਾਂ ਖਿੱਚੋ",
@@ -67,7 +69,9 @@
     "affectedArea": "ਅੰਦਾਜ਼ਨ ਪ੍ਰਭਾਵਿਤ ਖੇਤਰ",
     "symptoms": "ਦਿਸਣਯੋਗ ਲੱਛਣ",
     "causes": "ਸੰਭਾਵੀ ਵਾਤਾਵਰਣਕ ਕਾਰਨ",
-    "expertNotice": "ਪੁਸ਼ਟੀ ਲਈ ਆਪਣੇ ਸਥਾਨਕ ਖੇਤੀਬਾੜੀ ਅਧਿਕਾਰੀ (KVK) ਨਾਲ ਸੰਪਰਕ ਕਰੋ।"
+    "expertNotice": "ਪੁਸ਼ਟੀ ਲਈ ਆਪਣੇ ਸਥਾਨਕ ਖੇਤੀਬਾੜੀ ਅਧਿਕਾਰੀ (KVK) ਨਾਲ ਸੰਪਰਕ ਕਰੋ।",
+    "cropMismatchTitle": "ਫ਼ਸਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦੀ",
+    "cropMismatchDesc": "ਚੁਣੀ ਗਈ ਫ਼ਸਲ: {selectedCrop}, ਪਰ AI ਨੇ ਪਛਾਣ ਕੀਤੀ: {detectedCrop}। ਹੇਠਾਂ ਦਿੱਤਾ ਨਿਦਾਨ ਪਛਾਣੀ ਗਈ ਫ਼ਸਲ ਅਨੁਸਾਰ ਹੈ।"
   },
   "risk": {
     "title": "ਕੀੜੇ / ਬਿਮਾਰੀ ਦੇ ਖਤਰੇ ਦਾ ਪੂਰਵ ਅਨੁਮਾਨ",

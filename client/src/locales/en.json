@@ -45,7 +45,9 @@
     "searchPlaceholder": "Search crop (Tomato, Rice, Cotton...)",
     "growthStage": "Crop Growth Stage",
     "observations": "Field Observations (Optional)",
-    "observationsPlaceholder": "e.g., noticed grey spots on lower leaves after rain..."
+    "observationsPlaceholder": "e.g., noticed grey spots on lower leaves after rain...",
+    "visionAiBadge": "Vision AI",
+    "visionAiSupportedAll": "AI Vision Supported"
   },
   "upload": {
     "title": "Upload or Capture Leaf / Plant Photo",
@@ -67,7 +69,9 @@
     "affectedArea": "Estimated Affected Area",
     "symptoms": "Visual Symptoms",
     "causes": "Probable Environmental Causes",
-    "expertNotice": "Consult your local Agricultural Officer (ADA/KVK) for laboratory confirmation."
+    "expertNotice": "Consult your local Agricultural Officer (ADA/KVK) for laboratory confirmation.",
+    "cropMismatchTitle": "Crop Mismatch Detected",
+    "cropMismatchDesc": "Selected crop: {selectedCrop}, but AI detected: {detectedCrop}. The diagnosis below has been adjusted for the detected crop."
   },
   "risk": {
     "title": "Predictive Pest / Disease Risk",

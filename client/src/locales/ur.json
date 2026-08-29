@@ -45,7 +45,9 @@
     "searchPlaceholder": "فصل تلاش کریں (ٹماٹر، چاول، کپاس...)",
     "growthStage": "فصل کی نشوونما کا مرحلہ",
     "observations": "کسان کے مشاہدات (اختیاری)",
-    "observationsPlaceholder": "مثلاً: بارش کے بعد نچلے پتوں پر داغ نظر آئے..."
+    "observationsPlaceholder": "مثلاً: بارش کے بعد نچلے پتوں پر داغ نظر آئے...",
+    "visionAiBadge": "ویژن AI",
+    "visionAiSupportedAll": "AI ویژن سپورٹڈ"
   },
   "upload": {
     "title": "پتے یا پودے کی تصویر اپ لوڈ کریں یا کھینچیں",
@@ -67,7 +69,9 @@
     "affectedArea": "متاثرہ رقبے کا اندازہ",
     "symptoms": "ظاہری علامات",
     "causes": "ماحولیاتی وجوہات",
-    "expertNotice": "تصدیق کے لیے مقامی زرعی افسر (KVK) سے رابطہ کریں۔"
+    "expertNotice": "تصدیق کے لیے مقامی زرعی افسر (KVK) سے رابطہ کریں۔",
+    "cropMismatchTitle": "فصل کی عدم مطابقت پائی گئی",
+    "cropMismatchDesc": "منتخب کردہ فصل: {selectedCrop}، لیکن AI نے شناخت کی: {detectedCrop}۔ نیچے دی گئی تشخیص شناخت شدہ فصل کے لیے ایڈجسٹ کی گئی ہے۔"
   },
   "risk": {
     "title": "کیڑوں / بیماری کے خطرے کی پیش گوئی",

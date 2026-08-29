@@ -45,7 +45,9 @@
     "searchPlaceholder": "ଫସଲ ଖୋଜନ୍ତୁ (ଟମାଟୋ, ଧାନ, କପା...)",
     "growthStage": "ଫସଲ ବୃଦ୍ଧିର ପର୍ଯ୍ୟାୟ",
     "observations": "ଚାଷୀଙ୍କ ନିରୀକ୍ଷଣ (ଐଚ୍ଛିକ)",
-    "observationsPlaceholder": "ଉଦା: ବର୍ଷା ପରେ ତଳ ପତ୍ରରେ ଦାଗ ଦେଖାଗଲା..."
+    "observationsPlaceholder": "ଉଦା: ବର୍ଷା ପରେ ତଳ ପତ୍ରରେ ଦାଗ ଦେଖାଗଲା...",
+    "visionAiBadge": "ଭିଜନ AI",
+    "visionAiSupportedAll": "AI ଭିଜନ ସମର୍ଥିତ"
   },
   "upload": {
     "title": "ପତ୍ର / ଗଛର ଫଟୋ ଅପଲୋଡ କରନ୍ତୁ କିମ୍ବା ଉଠାନ୍ତୁ",
@@ -67,7 +69,9 @@
     "affectedArea": "ଆକ୍ରାନ୍ତ ଅଞ୍ଚଳ ଆକଳନ",
     "symptoms": "ଦୃଶ୍ୟମାନ ଲକ୍ଷଣ",
     "causes": "ପରିବେଶଗତ କାରଣ",
-    "expertNotice": "ନିଶ୍ଚିତତା ପାଇଁ ସ୍ଥାନୀୟ କୃଷି ଅଧିକାରୀ (KVK) ଙ୍କ ସହ ଯୋଗାଯୋଗ କରନ୍ତୁ।"
+    "expertNotice": "ନିଶ୍ଚିତତା ପାଇଁ ସ୍ଥାନୀୟ କୃଷି ଅଧିକାରୀ (KVK) ଙ୍କ ସହ ଯୋଗାଯୋଗ କରନ୍ତୁ।",
+    "cropMismatchTitle": "ଫସଲ ଅସଙ୍ଗତି ଚିହ୍ନଟ ହୋଇଛି",
+    "cropMismatchDesc": "ମନୋନୀତ ଫସଲ: {selectedCrop}, କିନ୍ତୁ AI ଚିହ୍ନଟ କରିଛି: {detectedCrop}। ନିମ୍ନ ନିଦାନ ଚିହ୍ନଟ ଫସଲ ପାଇଁ ସଜାଡ଼ିତ ହୋଇଛି।"
   },
   "risk": {
     "title": "ଭବିଷ୍ୟତ କୀଟ / ରୋଗ ବିପଦ ପୂର୍ବାନୁମାନ",
