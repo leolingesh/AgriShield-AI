@@ -5,6 +5,23 @@ const path = require('path');
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3-vl:8b';
 
+// Language code to human language name map
+const LANGUAGE_NAMES = {
+  en: 'English',
+  ta: 'Tamil (தமிழ்)',
+  hi: 'Hindi (हिन्दी)',
+  te: 'Telugu (తెలుగు)',
+  kn: 'Kannada (ಕನ್ನಡ)',
+  ml: 'Malayalam (മലയാളം)',
+  mr: 'Marathi (मराठी)',
+  bn: 'Bengali (বাংলা)',
+  gu: 'Gujarati (ગુજરાતી)',
+  pa: 'Punjabi (ਪੰਜਾਬੀ)',
+  or: 'Odia (ଓଡ଼ିଆ)',
+  as: 'Assamese (অসমীয়া)',
+  ur: 'Urdu (اردو)'
+};
+
 // Localized non-plant error messages across 13 Indian languages
 const NON_PLANT_MESSAGES = {
   en: "This image does not appear to contain a recognizable crop or plant. Please upload a clear photo of a crop leaf, stem, fruit, or whole plant.",
@@ -47,11 +64,11 @@ async function isOllamaAvailable() {
     const res = await axios.get(`${OLLAMA_HOST}/api/tags`, { timeout: 1500 });
     if (res.status === 200 && res.data && res.data.models) {
       const hasModel = res.data.models.some(m => m.name.includes('qwen3-vl') || m.name.includes('qwen') || m.name === OLLAMA_MODEL);
-      return { available: true, model: hasModel ? OLLAMA_MODEL : res.data.models[0]?.name };
+      return { available: true, model: hasModel ? OLLAMA_MODEL : res.data.models[0]?.name, host: OLLAMA_HOST };
     }
-    return { available: false, model: null };
+    return { available: false, model: null, host: OLLAMA_HOST };
   } catch (err) {
-    return { available: false, model: null };
+    return { available: false, model: null, host: OLLAMA_HOST };
   }
 }
 
@@ -73,6 +90,13 @@ async function analyzeWithOllama({ imagePath, cropName = 'Tomato', cropId = 'tom
     if (!base64Image) {
       return null;
     }
+
+    console.log('==================================================');
+    console.log('[OLLAMA] Image Vision Analysis Request');
+    console.log(`[OLLAMA] Model: ${status.model || OLLAMA_MODEL}`);
+    console.log(`[OLLAMA] Selected Crop: ${cropName}`);
+    console.log(`[OLLAMA] Calling ${OLLAMA_HOST}/api/chat with base64 image`);
+    console.log('==================================================');
 
     const systemPrompt = `You are AgriShield AI, an expert agricultural pathologist and computer vision specialist.
 Examine this image carefully and answer in strict JSON:
@@ -122,13 +146,26 @@ Respond ONLY with valid JSON. Schema:
           temperature: 0.1
         }
       },
-      { timeout: 35000 }
+      { timeout: 45000 }
     );
 
     if (response.data && response.data.message && response.data.message.content) {
+      console.log('[OLLAMA] Response received successfully from Qwen3-VL');
+      let rawContent = response.data.message.content.trim();
+
+      // Clean markdown code blocks if model wrapped JSON
+      if (rawContent.startsWith('```json')) {
+        rawContent = rawContent.slice(7);
+      } else if (rawContent.startsWith('```')) {
+        rawContent = rawContent.slice(3);
+      }
+      if (rawContent.endsWith('```')) {
+        rawContent = rawContent.slice(0, -3);
+      }
+
       let parsed = null;
       try {
-        parsed = JSON.parse(response.data.message.content);
+        parsed = JSON.parse(rawContent.trim());
       } catch (e) {
         console.warn('[OLLAMA] JSON parse error:', e.message);
         return null;
@@ -172,16 +209,35 @@ Respond ONLY with valid JSON. Schema:
 /**
  * Ask AI question with Ollama LLM
  */
-async function askOllama({ question, cropContext = 'Tomato', conditionContext = '', language = 'en' }) {
+async function askOllama({ question, cropContext = 'Tomato', conditionContext = '', language = 'en', location = null, weather = null }) {
   try {
     const status = await isOllamaAvailable();
     if (!status.available) {
       return null;
     }
 
-    const systemPrompt = `You are AgriShield AI, a helpful agronomist and crop protection specialist for Indian farmers.
-Answer clearly, concisely, and practically in the ${language} language.
-Focus on biological and integrated pest management (IPM) controls for ${cropContext} showing ${conditionContext}.`;
+    const langName = LANGUAGE_NAMES[language] || 'English';
+
+    console.log('==================================================');
+    console.log('[OLLAMA] Ask Question Request Received');
+    console.log(`[OLLAMA] Model: ${status.model || OLLAMA_MODEL}`);
+    console.log(`[OLLAMA] Question: "${question}"`);
+    console.log(`[OLLAMA] Target Language: ${langName} (${language})`);
+    console.log(`[OLLAMA] Calling ${OLLAMA_HOST}/api/chat`);
+    console.log('==================================================');
+
+    const systemPrompt = `You are AgriShield AI, an expert agronomist and crop protection scientist advising Indian farmers.
+Respond ENTIRELY in ${langName} language (${language}).
+Do NOT use English sentences except for scientific names (e.g., Trichoderma viride), chemical trade names, or specific metric units.
+Provide clear, practical, biological, cultural, and integrated pest management (IPM) guidance for ${cropContext} showing ${conditionContext || 'field symptoms'}.`;
+
+    const weatherSnippet = weather ? `Current Weather: Temp ${weather.temperature || 28}°C, Humidity ${weather.humidity || 75}%, Rainfall ${weather.rainfall || 0}mm.` : '';
+    const locationSnippet = location?.district ? `Location: ${location.district}, ${location.state || ''}.` : '';
+
+    const userPrompt = `Crop Context: ${cropContext}. ${conditionContext ? `Diagnostic Condition: ${conditionContext}.` : ''} ${locationSnippet} ${weatherSnippet}
+Farmer Question: ${question}
+
+Answer in ${langName}:`;
 
     const response = await axios.post(
       `${OLLAMA_HOST}/api/chat`,
@@ -189,18 +245,19 @@ Focus on biological and integrated pest management (IPM) controls for ${cropCont
         model: status.model || OLLAMA_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: question }
+          { role: 'user', content: userPrompt }
         ],
         stream: false,
         options: {
           temperature: 0.3
         }
       },
-      { timeout: 25000 }
+      { timeout: 35000 }
     );
 
     if (response.data && response.data.message && response.data.message.content) {
-      return response.data.message.content;
+      console.log('[OLLAMA] Conversational answer received successfully');
+      return response.data.message.content.trim();
     }
 
     return null;

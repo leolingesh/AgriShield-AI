@@ -614,6 +614,58 @@ export function validateLanguageOutput(outputString, targetLanguage, componentNa
   return outputString;
 }
 
+/**
+ * Fully transforms an AI result or analysis record into pure localized representation
+ */
+export function localizeAIResult(result, lang = 'en') {
+  if (!result) return null;
+
+  const rawCrop = result.crop || result.cropName || result.aiAnalysis?.crop || 'Tomato';
+  const rawCondition = result.condition || result.disease || result.aiAnalysis?.condition || 'Healthy';
+  const rawSeverity = result.severity || result.aiAnalysis?.severity || 'Moderate';
+  const rawStage = result.growthStage || 'Vegetative';
+
+  const localizedCrop = getLocalizedCropName(rawCrop, lang);
+  const localizedCondition = getLocalizedDiseaseName(rawCondition, lang);
+  const localizedSeverity = getLocalizedSeverity(rawSeverity, lang);
+  const localizedStage = getLocalizedGrowthStage(rawStage, lang);
+
+  const visualSymptoms = localizeSymptoms(result.visualSymptoms || result.aiAnalysis?.visualSymptoms || [], lang);
+  const possibleCauses = localizeCauses(result.possibleCauses || result.aiAnalysis?.possibleCauses || [], lang);
+  
+  const rawActions = result.recommendedActions || result.immediateActions || result.recommendations?.immediateActions || [];
+  const immediateActions = rawActions.map(a => getLocalizedAction(a, lang));
+
+  const rawPrevention = result.prevention || result.recommendations?.prevention || [];
+  const prevention = rawPrevention.map(p => getLocalizedPrevention(p, lang));
+
+  const rawMonitoring = result.monitoringPlan || result.recommendations?.monitoringPlan || [];
+  const monitoringPlan = rawMonitoring.map(m => getLocalizedAction(m, lang));
+
+  const whyRiskExists = getLocalizedWhyNarrative(result.whyRiskExists || result.riskAssessment?.whyRiskExists, {
+    cropName: rawCrop,
+    diseaseName: rawCondition,
+    humidity: result.weather?.humidity || result.weatherSnapshot?.humidity || 80,
+    temp: result.weather?.temperature || result.weatherSnapshot?.temperature || 28,
+    location: result.location,
+    riskScore: result.riskAssessment?.riskScore || result.severityScore || 75
+  }, lang);
+
+  return {
+    ...result,
+    localizedCrop,
+    localizedCondition,
+    localizedSeverity,
+    localizedStage,
+    visualSymptoms,
+    possibleCauses,
+    immediateActions,
+    prevention,
+    monitoringPlan,
+    whyRiskExists
+  };
+}
+
 export default {
   ALL_LOCALES,
   normalizeCropKey,
@@ -637,5 +689,7 @@ export default {
   localizeCauses,
   localizeFactor,
   getLocalizedWhyNarrative,
+  localizeAIResult,
   validateLanguageOutput
 };
+

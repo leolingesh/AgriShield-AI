@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { LocationProvider } from './context/LocationContext';
 import { WeatherProvider } from './context/WeatherContext';
@@ -22,27 +22,56 @@ import SignupPage from './pages/SignupPage';
 
 export function AppContent() {
   const { isAuthenticated, authLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    const hash = window.location.hash.replace('#', '');
+    return hash && ['dashboard', 'analyze', 'early-warning', 'monitoring', 'history', 'profile', 'admin', 'login', 'signup'].includes(hash)
+      ? hash
+      : 'dashboard';
+  });
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [scanCropId, setScanCropId] = useState('tomato');
   const [activeDemoCase, setActiveDemoCase] = useState(null);
   const [selectedAnalysis, setSelectedAnalysis] = useState(null);
 
+  // Browser Back/Forward navigation support
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (event.state && event.state.tab) {
+        setActiveTab(event.state.tab);
+      } else {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) setActiveTab(hash);
+        else setActiveTab('dashboard');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateToTab = (tab) => {
+    if (tab !== activeTab) {
+      window.history.pushState({ tab }, '', `#${tab}`);
+      setSelectedAnalysis(null);
+      setActiveTab(tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleStartScanWithCrop = (cropId) => {
     setScanCropId(cropId || 'tomato');
     setActiveDemoCase(null);
-    setActiveTab('analyze');
+    navigateToTab('analyze');
   };
 
   const handleSelectDemoCase = (demoCase) => {
     setActiveDemoCase(demoCase);
     setScanCropId(demoCase.cropId);
-    setActiveTab('analyze');
+    navigateToTab('analyze');
   };
 
   const handleSelectAnalysis = (analysis) => {
     setSelectedAnalysis(analysis);
-    setActiveTab('history');
+    navigateToTab('history');
   };
 
   // Auth Initialization: Show clean loading state while verifying session token
@@ -72,9 +101,9 @@ export function AppContent() {
         <OfflineBanner />
         <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {activeTab === 'signup' ? (
-            <SignupPage onNavigate={(tab) => setActiveTab(tab)} />
+            <SignupPage onNavigate={(tab) => navigateToTab(tab)} />
           ) : (
-            <LoginPage onNavigate={(tab) => setActiveTab(tab)} />
+            <LoginPage onNavigate={(tab) => navigateToTab(tab)} />
           )}
         </main>
         <Footer />
@@ -90,17 +119,14 @@ export function AppContent() {
       <OfflineBanner />
       <Navbar
         activeTab={currentTab}
-        setActiveTab={(tab) => {
-          setSelectedAnalysis(null);
-          setActiveTab(tab);
-        }}
+        setActiveTab={navigateToTab}
         onOpenDemo={() => setIsDemoModalOpen(true)}
       />
 
       <main style={{ flex: 1 }}>
         {currentTab === 'dashboard' && (
           <Dashboard
-            onNavigate={(tab) => setActiveTab(tab)}
+            onNavigate={navigateToTab}
             onStartScanWithCrop={handleStartScanWithCrop}
             onSelectAnalysis={handleSelectAnalysis}
           />
