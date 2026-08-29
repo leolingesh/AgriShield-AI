@@ -9,6 +9,7 @@ import CameraCapture from '../components/CameraCapture';
 import AnalysisLoader from '../components/AnalysisLoader';
 import AnalysisResult from '../components/AnalysisResult';
 import AskAiCard from '../components/AskAiCard';
+import { getLocalizedCropName } from '../utils/localizationUtils';
 import { Sparkles, AlertCircle } from 'lucide-react';
 
 export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }) => {
@@ -59,7 +60,7 @@ export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }
 
   const handleStartAnalysis = async () => {
     if (!selectedImage && !selectedCrop) {
-      setErrorMsg('Please select a crop and upload or take a leaf photo.');
+      setErrorMsg(t('upload.dropzoneNotice'));
       return;
     }
 
@@ -92,11 +93,11 @@ export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }
       if (data.success && data.analysis) {
         setAnalysisResult(data.analysis);
       } else {
-        throw new Error(data.message || 'Analysis failed. Please try again with a clearer image.');
+        throw new Error(data.message || t('audio.uncertainCrop'));
       }
     } catch (err) {
       console.error('Analysis error:', err);
-      setErrorMsg(err.message || 'AI analysis is temporarily unavailable. Please try again.');
+      setErrorMsg(err.message || t('audio.uncertainCrop'));
     } finally {
       setIsAnalyzing(false);
     }
@@ -108,6 +109,8 @@ export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }
     setObservations('');
     setErrorMsg(null);
   };
+
+  const localizedCropName = getLocalizedCropName(selectedCrop?.id || 'tomato', language);
 
   return (
     <div className="app-container">
@@ -146,7 +149,7 @@ export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }
           {/* Ask AgriShield AI Voice Question Card with Active Image Context */}
           <AskAiCard
             currentAnalysis={analysisResult}
-            cropName={selectedCrop?.name || analysisResult.cropName}
+            cropName={localizedCropName}
           />
         </div>
       ) : isAnalyzing ? (
@@ -179,7 +182,7 @@ export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }
 
           {/* 4. Ask AgriShield AI Voice Question Box */}
           <AskAiCard
-            cropName={selectedCrop?.name || 'Tomato'}
+            cropName={localizedCropName}
           />
 
           {/* Error notice */}

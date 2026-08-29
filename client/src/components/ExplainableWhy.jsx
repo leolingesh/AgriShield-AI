@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { HelpCircle } from 'lucide-react';
-import { localizeFactor, getXAIString } from '../utils/localizationUtils';
+import { localizeFactor, getLocalizedWhyNarrative, getLocalizedRiskLevel, validateLanguageOutput } from '../utils/localizationUtils';
 
 export const ExplainableWhy = ({ riskAssessment }) => {
   const { t, language } = useLanguage();
@@ -9,21 +9,29 @@ export const ExplainableWhy = ({ riskAssessment }) => {
   if (!riskAssessment) return null;
 
   const rawFactors = riskAssessment.contributingFactors || [];
-  const whyNarrative = riskAssessment.whyRiskExists || '';
+  const rawWhy = riskAssessment.whyRiskExists || '';
+
+  const localizedWhy = validateLanguageOutput(
+    getLocalizedWhyNarrative(rawWhy, {
+      cropName: riskAssessment.cropName,
+      diseaseName: riskAssessment.predictedThreat,
+      riskLevel: riskAssessment.riskLevel,
+      riskScore: riskAssessment.riskScore
+    }, language),
+    language,
+    'ExplainableWhy'
+  );
 
   // Localize factors based on currently active language code
   const factors = rawFactors.map(f => localizeFactor(f, language));
 
   const getImpactBadge = (impact = '') => {
-    const imp = impact.toLowerCase();
-    if (imp === 'critical') return <span className="badge badge-critical">{t('risk.critical')}</span>;
-    if (imp === 'high') return <span className="badge badge-high">{t('risk.high')}</span>;
-    if (imp === 'moderate') return <span className="badge badge-medium">{t('risk.medium')}</span>;
-    return <span className="badge badge-low">{t('risk.low')}</span>;
+    const imp = String(impact).toLowerCase();
+    if (imp === 'critical') return <span className="badge badge-critical">{getLocalizedRiskLevel('CRITICAL', language)}</span>;
+    if (imp === 'high') return <span className="badge badge-high">{getLocalizedRiskLevel('HIGH', language)}</span>;
+    if (imp === 'moderate' || imp === 'medium') return <span className="badge badge-medium">{getLocalizedRiskLevel('MEDIUM', language)}</span>;
+    return <span className="badge badge-low">{getLocalizedRiskLevel('LOW', language)}</span>;
   };
-
-  const subtitleText = getXAIString('subtitle', language, 'Explainable AI (XAI) Agronomic Factor Decomposition');
-  const weightLabel = getXAIString('weight', language, 'Weight');
 
   return (
     <div className="glass-card" style={{ padding: '22px' }}>
@@ -43,13 +51,13 @@ export const ExplainableWhy = ({ riskAssessment }) => {
         <div>
           <h3 style={{ fontSize: '1.05rem', color: '#17211B' }}>{t('risk.whyTitle')}</h3>
           <span style={{ fontSize: '0.78rem', color: '#647067' }}>
-            {subtitleText}
+            {t('risk.factorsTitle')}
           </span>
         </div>
       </div>
 
       {/* Narrative Box */}
-      {whyNarrative && (
+      {localizedWhy && (
         <div style={{
           background: '#F0FDF4',
           borderLeft: '4px solid #16A34A',
@@ -60,7 +68,7 @@ export const ExplainableWhy = ({ riskAssessment }) => {
           lineHeight: 1.6,
           color: '#17211B'
         }}>
-          {whyNarrative}
+          {localizedWhy}
         </div>
       )}
 
@@ -93,7 +101,7 @@ export const ExplainableWhy = ({ riskAssessment }) => {
                     </span>
                     {f.weight && (
                       <span style={{ fontSize: '0.72rem', color: '#15803D', background: '#DCFCE7', padding: '2px 6px', borderRadius: 4, fontWeight: 600 }}>
-                        {weightLabel}: {f.weight}
+                        {f.weight}
                       </span>
                     )}
                   </div>
@@ -127,4 +135,3 @@ export const ExplainableWhy = ({ riskAssessment }) => {
 };
 
 export default ExplainableWhy;
-

@@ -17,7 +17,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
     { id: 'monitoring', label: t('nav.monitoring'), icon: Layers },
     { id: 'history', label: t('nav.history'), icon: History },
     { id: 'admin', label: t('nav.admin'), icon: Shield },
-    { id: isAuthenticated ? 'profile' : 'login', label: isAuthenticated ? 'Profile' : 'Sign In', icon: isAuthenticated ? UserIcon : LogIn }
+    { id: isAuthenticated ? 'profile' : 'login', label: isAuthenticated ? t('nav.profile') : t('nav.login'), icon: isAuthenticated ? UserIcon : LogIn }
   ];
 
   return (
@@ -62,7 +62,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
             <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
-              {t('appName', 'AgriShield AI')}
+              {t('appName')}
             </span>
           </div>
         </div>
@@ -151,7 +151,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
             }}
           >
             <Sparkles size={12} color="#D97706" />
-            <span>{t('nav.demo', 'SIH Demo')}</span>
+            <span>{t('nav.demo')}</span>
           </button>
 
           {/* Auth Button (Sign In or Logout) */}
@@ -175,7 +175,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               }}
             >
               <LogOut size={12} color="#991B1B" />
-              <span>Logout</span>
+              <span>{t('profile.logout')}</span>
             </button>
           ) : (
             <button
@@ -196,7 +196,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               }}
             >
               <LogIn size={12} color="#FFFFFF" />
-              <span>Sign In</span>
+              <span>{t('nav.login')}</span>
             </button>
           )}
 
@@ -293,7 +293,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
           boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
         }}>
           <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#647067', textTransform: 'uppercase', marginBottom: 2 }}>
-            {t('nav.dashboard', 'Menu')}
+            {t('nav.menu')}
           </div>
           {navItems.map(item => {
             const Icon = item.icon;
@@ -346,7 +346,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
             }}
           >
             <Sparkles size={18} color="#D97706" />
-            <span>{t('nav.demo', 'SIH Demo')}</span>
+            <span>{t('nav.demo')}</span>
           </button>
 
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>

@@ -57,10 +57,24 @@ export const LanguageProvider = ({ children }) => {
   };
 
   /**
-   * Safe nested key lookup with fallback to English
-   * Usage: t('nav.dashboard') or t('risk.low')
+   * Safe nested key lookup with parameter interpolation and fallback
+   * Usage:
+   *   t('nav.dashboard')
+   *   t('alerts.highestRiskTitle', { crop: 'Tomato', disease: 'Septoria Leaf Spot' })
    */
-  const t = (path, defaultText = '') => {
+  const t = (path, paramsOrFallback = {}, fallbackText = '') => {
+    if (!path || typeof path !== 'string') return '';
+
+    let params = {};
+    let defaultText = '';
+
+    if (typeof paramsOrFallback === 'string') {
+      defaultText = paramsOrFallback;
+    } else if (paramsOrFallback && typeof paramsOrFallback === 'object') {
+      params = paramsOrFallback;
+      defaultText = fallbackText;
+    }
+
     const keys = path.split('.');
     let current = translations[language];
     let fallback = translations['en'];
@@ -74,18 +88,34 @@ export const LanguageProvider = ({ children }) => {
       }
     }
 
-    if (current !== undefined) return current;
+    let result = current;
 
-    // Fallback to English
-    for (const key of keys) {
-      if (fallback && fallback[key] !== undefined) {
-        fallback = fallback[key];
-      } else {
-        return defaultText || path;
+    if (result === undefined) {
+      // Dev mode missing key detection
+      if (process.env.NODE_ENV !== 'production' && language !== 'en') {
+        console.warn(`[MISSING TRANSLATION] lang: ${language}, key: ${path}`);
       }
+
+      // Fallback lookup
+      for (const key of keys) {
+        if (fallback && fallback[key] !== undefined) {
+          fallback = fallback[key];
+        } else {
+          fallback = undefined;
+          break;
+        }
+      }
+      result = fallback !== undefined ? fallback : (defaultText || path);
     }
 
-    return fallback || defaultText || path;
+    // If result is a string and params are provided, interpolate {param}
+    if (typeof result === 'string' && Object.keys(params).length > 0) {
+      return result.replace(/\{(\w+)\}/g, (match, key) => {
+        return params[key] !== undefined ? params[key] : match;
+      });
+    }
+
+    return result !== undefined ? result : (defaultText || path);
   };
 
   const currentLanguageObj = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];

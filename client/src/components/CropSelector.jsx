@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Search, Sprout, Check } from 'lucide-react';
 import VoiceInputButton from './VoiceInputButton';
+import { getLocalizedCropName, getLocalizedGrowthStage } from '../utils/localizationUtils';
 
 export const CROPS_DATA = [
-  { id: 'tomato', name: 'Tomato', icon: '🍅', category: 'Vegetable', scientific: 'Solanum lycopersicum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Ripening'] },
-  { id: 'rice', name: 'Rice (Paddy)', icon: '🌾', category: 'Cereal', scientific: 'Oryza sativa', stages: ['Nursery', 'Tillering', 'Panicle Initiation', 'Flowering', 'Maturity'] },
-  { id: 'cotton', name: 'Cotton', icon: '🌱', category: 'Commercial', scientific: 'Gossypium hirsutum', stages: ['Germination', 'Squaring', 'Flowering', 'Boll Development', 'Boll Bursting'] },
-  { id: 'wheat', name: 'Wheat', icon: '🌾', category: 'Cereal', scientific: 'Triticum aestivum', stages: ['Crown Root', 'Tillering', 'Jointing', 'Booting / Heading', 'Maturity'] },
-  { id: 'potato', name: 'Potato', icon: '🥔', category: 'Tuber', scientific: 'Solanum tuberosum', stages: ['Sprouting', 'Vegetative', 'Tuber Initiation', 'Tuber Bulking', 'Maturity'] },
-  { id: 'chilli', name: 'Chilli (Pepper)', icon: '🌶️', category: 'Spice', scientific: 'Capsicum annuum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Harvest'] },
-  { id: 'maize', name: 'Maize (Corn)', icon: '🌽', category: 'Cereal', scientific: 'Zea mays', stages: ['Knee-high', 'Tasseling', 'Silking', 'Milking', 'Maturity'] },
-  { id: 'sugarcane', name: 'Sugarcane', icon: '🎋', category: 'Commercial', scientific: 'Saccharum officinarum', stages: ['Germination', 'Tillering', 'Grand Growth', 'Ripening'] },
-  { id: 'onion', name: 'Onion', icon: '🧅', category: 'Vegetable', scientific: 'Allium cepa', stages: ['Nursery', 'Bulb Initiation', 'Bulb Development', 'Maturity'] },
-  { id: 'groundnut', name: 'Groundnut (Peanut)', icon: '🥜', category: 'Oilseed', scientific: 'Arachis hypogaea', stages: ['Vegetative', 'Flowering / Pegging', 'Pod Formation', 'Maturity'] }
+  { id: 'tomato', name: 'Tomato', icon: '🍅', category: 'vegetable', scientific: 'Solanum lycopersicum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Ripening'] },
+  { id: 'rice', name: 'Rice (Paddy)', icon: '🌾', category: 'cereal', scientific: 'Oryza sativa', stages: ['Nursery', 'Tillering', 'Panicle Initiation', 'Flowering', 'Maturity'] },
+  { id: 'cotton', name: 'Cotton', icon: '🌱', category: 'commercial', scientific: 'Gossypium hirsutum', stages: ['Germination', 'Squaring', 'Flowering', 'Boll Development', 'Boll Bursting'] },
+  { id: 'wheat', name: 'Wheat', icon: '🌾', category: 'cereal', scientific: 'Triticum aestivum', stages: ['Crown Root', 'Tillering', 'Jointing', 'Booting / Heading', 'Maturity'] },
+  { id: 'potato', name: 'Potato', icon: '🥔', category: 'tuber', scientific: 'Solanum tuberosum', stages: ['Sprouting', 'Vegetative', 'Tuber Initiation', 'Tuber Bulking', 'Maturity'] },
+  { id: 'chilli', name: 'Chilli (Pepper)', icon: '🌶️', category: 'spice', scientific: 'Capsicum annuum', stages: ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Harvest'] },
+  { id: 'maize', name: 'Maize (Corn)', icon: '🌽', category: 'cereal', scientific: 'Zea mays', stages: ['Knee-high', 'Tasseling', 'Silking', 'Milking', 'Maturity'] },
+  { id: 'sugarcane', name: 'Sugarcane', icon: '🎋', category: 'commercial', scientific: 'Saccharum officinarum', stages: ['Germination', 'Tillering', 'Grand Growth', 'Ripening'] },
+  { id: 'onion', name: 'Onion', icon: '🧅', category: 'vegetable', scientific: 'Allium cepa', stages: ['Nursery', 'Bulb Initiation', 'Bulb Development', 'Maturity'] },
+  { id: 'groundnut', name: 'Groundnut (Peanut)', icon: '🥜', category: 'oilseed', scientific: 'Arachis hypogaea', stages: ['Vegetative', 'Flowering / Pegging', 'Pod Formation', 'Maturity'] }
 ];
 
 export const CropSelector = ({
@@ -24,17 +25,20 @@ export const CropSelector = ({
   observations,
   onChangeObservations
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredCrops = CROPS_DATA.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.scientific.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCrops = CROPS_DATA.filter(c => {
+    const locName = getLocalizedCropName(c.id, language);
+    return locName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.scientific.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const activeCropObj = CROPS_DATA.find(c => c.id === selectedCrop?.id) || CROPS_DATA[0];
   const stagesList = activeCropObj ? activeCropObj.stages : ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity'];
+
+  const localizedActiveCropName = getLocalizedCropName(selectedCrop?.id || 'tomato', language);
 
   return (
     <div className="glass-card" style={{ padding: '22px' }}>
@@ -62,7 +66,7 @@ export const CropSelector = ({
           <div>
             <h3 style={{ fontSize: '1.05rem', color: '#17211B' }}>{t('crop.selectTitle')}</h3>
             <span style={{ fontSize: '0.78rem', color: '#647067' }}>
-              <strong style={{ color: '#16A34A' }}>{selectedCrop?.name || 'Tomato'}</strong>
+              <strong style={{ color: '#16A34A' }}>{localizedActiveCropName}</strong>
             </span>
           </div>
         </div>
@@ -102,11 +106,13 @@ export const CropSelector = ({
         {filteredCrops.map(crop => {
           const isSelected = selectedCrop?.id === crop.id;
           const isTrained = ['tomato', 'rice', 'wheat'].includes(crop.id);
+          const localizedName = getLocalizedCropName(crop.id, language);
+
           return (
             <button
               key={crop.id}
               type="button"
-              onClick={() => onSelectCrop(crop)}
+              onClick={() => onSelectCrop({ ...crop, displayName: localizedName })}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -140,7 +146,7 @@ export const CropSelector = ({
               )}
               <span style={{ fontSize: '1.8rem', marginBottom: 4 }}>{crop.icon}</span>
               <span style={{ fontSize: '0.85rem', fontWeight: 700, color: isSelected ? '#15803D' : '#17211B' }}>
-                {crop.name}
+                {localizedName}
               </span>
               <span style={{
                 fontSize: '0.6rem',
@@ -151,7 +157,7 @@ export const CropSelector = ({
                 background: isTrained ? '#DCFCE7' : '#F3F4F6',
                 color: isTrained ? '#15803D' : '#6B7280'
               }}>
-                {isTrained ? 'AI Trained' : 'Coming Soon'}
+                {isTrained ? 'AI' : '...'}
               </span>
             </button>
           );
@@ -170,7 +176,7 @@ export const CropSelector = ({
           >
             {stagesList.map(st => (
               <option key={st} value={st} style={{ background: '#FFFFFF', color: '#17211B' }}>
-                🌱 {st}
+                🌱 {getLocalizedGrowthStage(st, language)}
               </option>
             ))}
           </select>

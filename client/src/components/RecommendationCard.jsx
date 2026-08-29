@@ -1,16 +1,33 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedAction, getLocalizedPrevention, validateLanguageOutput } from '../utils/localizationUtils';
 import { ShieldCheck, CheckCircle2, Calendar, AlertOctagon, Info } from 'lucide-react';
 
 export const RecommendationCard = ({ recommendations }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!recommendations) return null;
 
-  const immediate = recommendations.immediateActions || [];
-  const prevention = recommendations.prevention || [];
-  const monitoring = recommendations.monitoringPlan || [];
-  const chemicalWarning = recommendations.chemicalWarning || '';
+  const rawImmediate = recommendations.immediateActions || [];
+  const rawPrevention = recommendations.prevention || [];
+  const rawMonitoring = recommendations.monitoringPlan || [];
+  const rawChemicalWarning = recommendations.chemicalWarning || '';
+
+  const immediate = rawImmediate.map(act =>
+    validateLanguageOutput(getLocalizedAction(act, language), language, 'RecommendationCard.immediate')
+  );
+
+  const prevention = rawPrevention.map((prev, i) =>
+    validateLanguageOutput(getLocalizedPrevention(prev, language, i), language, 'RecommendationCard.prevention')
+  );
+
+  const monitoring = rawMonitoring.map(m =>
+    validateLanguageOutput(getLocalizedAction(m, language), language, 'RecommendationCard.monitoring')
+  );
+
+  const localizedChemicalWarning = rawChemicalWarning.toLowerCase().includes('consult') || rawChemicalWarning.toLowerCase().includes('protective') || rawChemicalWarning.toLowerCase().includes('chemical')
+    ? t('ipm.chemicalWarning')
+    : rawChemicalWarning;
 
   return (
     <div className="glass-card" style={{ padding: '24px' }}>
@@ -30,7 +47,7 @@ export const RecommendationCard = ({ recommendations }) => {
         <div>
           <h3 style={{ fontSize: '1.1rem', color: '#17211B' }}>{t('ipm.title')}</h3>
           <span style={{ fontSize: '0.78rem', color: '#647067' }}>
-            {t('ipm.subtitle', 'Multi-Tiered Biological, Cultural, and Chemical Controls')}
+            {t('ipm.subtitle')}
           </span>
         </div>
       </div>
@@ -182,7 +199,7 @@ export const RecommendationCard = ({ recommendations }) => {
         )}
 
         {/* Chemical Safety Advisory Warning Box */}
-        {chemicalWarning && (
+        {localizedChemicalWarning && (
           <div style={{
             background: '#FEE2E2',
             border: '1px solid #FCA5A5',
@@ -198,7 +215,7 @@ export const RecommendationCard = ({ recommendations }) => {
                 {t('ipm.chemicalWarningTitle')}
               </div>
               <p style={{ fontSize: '0.82rem', color: '#B91C1C', margin: 0, lineHeight: 1.5 }}>
-                {chemicalWarning}
+                {localizedChemicalWarning}
               </p>
             </div>
           </div>

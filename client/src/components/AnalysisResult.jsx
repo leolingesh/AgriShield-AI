@@ -4,6 +4,15 @@ import RiskGauge from './RiskGauge';
 import ExplainableWhy from './ExplainableWhy';
 import RecommendationCard from './RecommendationCard';
 import ReadAloudButton from './ReadAloudButton';
+import {
+  getLocalizedCropName,
+  getLocalizedDiseaseName,
+  getLocalizedGrowthStage,
+  getLocalizedSeverity,
+  localizeSymptoms,
+  localizeCauses,
+  validateLanguageOutput
+} from '../utils/localizationUtils';
 import { 
   AlertTriangle, 
   Sparkles, 
@@ -12,7 +21,7 @@ import {
 } from 'lucide-react';
 
 export const AnalysisResult = ({ analysis, onNewScan }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!analysis) return null;
 
@@ -20,6 +29,19 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
   const risk = analysis.riskAssessment || {};
   const recs = analysis.recommendations || {};
   const location = analysis.location || {};
+
+  const localizedCrop = getLocalizedCropName(analysis.cropName || ai.crop, language);
+  const localizedCondition = validateLanguageOutput(
+    getLocalizedDiseaseName(ai.condition, language),
+    language,
+    'AnalysisResult.condition'
+  );
+  const localizedStage = getLocalizedGrowthStage(analysis.growthStage || 'Vegetative', language);
+  const localizedThreat = validateLanguageOutput(
+    getLocalizedDiseaseName(risk.predictedThreat || ai.condition, language),
+    language,
+    'AnalysisResult.threat'
+  );
 
   // Render Low Confidence / Unsupported Image Alert
   if (ai.supported === false || ai.condition === 'unsupported_or_low_confidence') {
@@ -38,34 +60,25 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
           <AlertTriangle size={28} color="#D97706" />
         </div>
         <h3 style={{ fontSize: '1.25rem', color: '#92400E', marginBottom: 8, fontWeight: 700 }}>
-          Unsupported Image or Low Confidence Prediction
+          {t('audio.uncertainCrop')}
         </h3>
         <p style={{ color: '#4B5563', maxWidth: 520, margin: '0 auto 20px', lineHeight: 1.6, fontSize: '0.92rem' }}>
-          {ai.message || 'Unable to confidently identify the crop condition. AgriShield PyTorch AI is trained specifically on authentic leaf images of Tomato, Rice, and Wheat.'}
+          {ai.message || t('audio.uncertainCrop')}
         </p>
-        <div style={{ background: '#FFFBEB', padding: '14px 18px', borderRadius: 10, maxWidth: 500, margin: '0 auto 24px', textAlign: 'left' }}>
-          <p style={{ fontSize: '0.82rem', color: '#92400E', fontWeight: 600, marginBottom: 6 }}>
-            Recommended Steps:
-          </p>
-          <ul style={{ fontSize: '0.82rem', color: '#78350F', paddingLeft: 18, margin: 0 }}>
-            <li>Ensure the image is a close-up, clear photo of a Tomato 🍅, Rice 🌾, or Wheat 🌾 leaf.</li>
-            <li>Avoid uploading non-crop photos (car, face, animal, general scenery).</li>
-            <li>Provide adequate lighting and avoid extreme blur or shadowing.</li>
-          </ul>
-        </div>
         <button className="btn-primary" onClick={onNewScan}>
-          {t('analyze.startNew')}
+          {t('hero.ctaScan')}
         </button>
       </div>
     );
   }
 
   const getSeverityBadge = (sev = '') => {
-    const s = sev.toLowerCase();
-    if (s === 'severe' || s === 'critical') return <span className="badge badge-critical">{t('risk.critical')}</span>;
-    if (s === 'high') return <span className="badge badge-high">{t('risk.high')}</span>;
-    if (s === 'moderate' || s === 'medium') return <span className="badge badge-medium">{t('risk.medium')}</span>;
-    return <span className="badge badge-low">{t('risk.low')}</span>;
+    const s = String(sev).toLowerCase();
+    const localizedText = getLocalizedSeverity(sev, language);
+    if (s === 'severe' || s === 'critical') return <span className="badge badge-critical">{localizedText}</span>;
+    if (s === 'high') return <span className="badge badge-high">{localizedText}</span>;
+    if (s === 'moderate' || s === 'medium') return <span className="badge badge-medium">{localizedText}</span>;
+    return <span className="badge badge-low">{localizedText}</span>;
   };
 
   const getConfidenceBadge = (conf = 0.85) => {
@@ -73,6 +86,9 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
     if (conf >= 0.65) return <span className="badge badge-medium">{t('result.confidence')} ({Math.round(conf * 100)}%)</span>;
     return <span className="badge badge-critical">{t('result.expertNotice')} ({Math.round(conf * 100)}%)</span>;
   };
+
+  const symptomsList = localizeSymptoms(ai.visualSymptoms, language);
+  const causesList = localizeCauses(ai.possibleCauses, language);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -89,7 +105,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, flexWrap: 'wrap' }}>
               <span className="badge badge-low">
-                🌾 {analysis.cropName || 'Crop'}
+                🌾 {localizedCrop}
               </span>
               {analysis.isDemoMode && (
                 <span className="badge badge-medium">
@@ -101,9 +117,9 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
               </span>
             </div>
             <h2 style={{ fontSize: '1.7rem', color: '#17211B', letterSpacing: '-0.02em' }}>
-              {ai.condition || 'General Leaf Discoloration'}
+              {localizedCondition}
             </h2>
-            {ai.pathogen && (
+            {ai.pathogen && ai.pathogen !== 'none' && (
               <p style={{ fontSize: '0.9rem', color: '#0284C7', fontStyle: 'italic', marginTop: 2 }}>
                 {t('result.pathogen')}: {ai.pathogen}
               </p>
@@ -113,8 +129,8 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
           {/* Read Aloud Accessible Button */}
           <ReadAloudButton
             analysisRecord={analysis}
-            cropName={analysis.cropName}
-            condition={ai.condition}
+            cropName={localizedCrop}
+            condition={localizedCondition}
             riskLevel={risk.riskLevel}
             riskScore={risk.riskScore}
             whyText={risk.whyRiskExists}
@@ -143,7 +159,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
               }}>
                 <img
                   src={analysis.imageUrl}
-                  alt={analysis.cropName}
+                  alt={localizedCrop}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
@@ -168,7 +184,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
               <div>
                 <span style={{ fontSize: '0.75rem', color: '#647067', display: 'block', fontWeight: 600 }}>{t('crop.growthStage')}</span>
                 <span style={{ fontSize: '0.85rem', color: '#17211B', fontWeight: 600 }}>
-                  🌱 {analysis.growthStage || 'Vegetative'}
+                  🌱 {localizedStage}
                 </span>
               </div>
             </div>
@@ -191,7 +207,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
                 {t('risk.title')}
               </div>
               <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#17211B', marginTop: 2 }}>
-                {risk.predictedThreat || ai.condition}
+                {localizedThreat}
               </div>
               <div style={{ fontSize: '0.72rem', color: '#15803D', marginTop: 4, fontWeight: 600 }}>
                 {t('risk.estimateNotice')}
@@ -228,7 +244,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
             <FileText size={18} /> {t('result.symptoms')}
           </h3>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {(ai.visualSymptoms || ['Necrotic spots observed on foliage']).map((sym, i) => (
+            {symptomsList.map((sym, i) => (
               <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.88rem', color: '#17211B' }}>
                 <span style={{ color: '#16A34A' }}>•</span>
                 <span>{sym}</span>
@@ -243,7 +259,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
             <Droplets size={18} /> {t('result.causes')}
           </h3>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {(ai.possibleCauses || ['High humidity and temperature']).map((cause, i) => (
+            {causesList.map((cause, i) => (
               <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.88rem', color: '#17211B' }}>
                 <span style={{ color: '#0284C7' }}>•</span>
                 <span>{cause}</span>
@@ -277,7 +293,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
         </button>
 
         <div style={{ fontSize: '0.78rem', color: '#647067' }}>
-          Saved to MongoDB Analysis History • ID: {analysis._id || analysis.id || 'record-active'}
+          {t('common.savedToHistory')} • {t('common.id')}: {analysis._id || analysis.id || 'record-active'}
         </div>
       </div>
     </div>

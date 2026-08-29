@@ -32,13 +32,13 @@ export const ProfilePage = () => {
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16A34A', fontSize: '0.85rem', fontWeight: 700, marginBottom: 4 }}>
           <User size={18} />
-          <span>Farmer Settings & Localization</span>
+          <span>{t('profile.title')}</span>
         </div>
         <h1 style={{ fontSize: '1.9rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 4 }}>
-          {t('profile.title', 'Farmer Profile')}
+          {t('profile.title')}
         </h1>
         <p style={{ fontSize: '0.88rem', color: '#647067' }}>
-          {t('profile.subtitle', 'Manage your contact details, preferred Indian language for UI and voice read-aloud, and registered farm locations.')}
+          {t('profile.subtitle')}
         </p>
       </div>
 
@@ -47,7 +47,7 @@ export const ProfilePage = () => {
           {/* Language Preference */}
           <div>
             <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Globe size={16} color="#16A34A" /> {t('profile.prefLang', 'Preferred Language')}
+              <Globe size={16} color="#16A34A" /> {t('profile.prefLang')}
             </label>
             <select
               value={language}
@@ -65,7 +65,7 @@ export const ProfilePage = () => {
 
           {/* Name */}
           <div>
-            <label className="input-label">Farmer Full Name</label>
+            <label className="input-label">{t('profile.fullName')}</label>
             <input
               type="text"
               required
@@ -79,7 +79,7 @@ export const ProfilePage = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
             <div>
               <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Phone size={15} color="#16A34A" /> Phone Number
+                <Phone size={15} color="#16A34A" /> {t('profile.phone')}
               </label>
               <input
                 type="text"
@@ -91,7 +91,7 @@ export const ProfilePage = () => {
 
             <div>
               <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Mail size={15} color="#16A34A" /> Email (Optional)
+                <Mail size={15} color="#16A34A" /> {t('profile.email')}
               </label>
               <input
                 type="email"
@@ -133,7 +133,7 @@ export const ProfilePage = () => {
               alignItems: 'center',
               gap: 8
             }}>
-              <Check size={16} /> {t('profile.savedSuccess', 'Profile settings updated!')}
+              <Check size={16} /> {t('profile.savedSuccess')}
             </div>
           )}
 
@@ -158,7 +158,7 @@ export const ProfilePage = () => {
               }}
             >
               <LogOut size={16} color="#DC2626" />
-              <span>Logout</span>
+              <span>{t('profile.logout')}</span>
             </button>
 
             <button
@@ -166,7 +166,7 @@ export const ProfilePage = () => {
               className="btn-primary"
               style={{ padding: '12px 24px' }}
             >
-              <Check size={18} /> {t('profile.saveBtn', 'Save Settings')}
+              <Check size={18} /> {t('profile.saveBtn')}
             </button>
           </div>
         </form>

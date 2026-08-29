@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { UploadCloud, Camera, Image as ImageIcon, X, Sparkles, CheckCircle, AlertCircle } from 'lucide-react';
+import { getLocalizedDiseaseName } from '../utils/localizationUtils';
 
 export const ImageUploader = ({
   selectedImage,
@@ -9,7 +10,7 @@ export const ImageUploader = ({
   onLaunchCamera,
   sampleImages = []
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const fileInputRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -137,7 +138,7 @@ export const ImageUploader = ({
             {t('upload.dropzone')}
           </h4>
           <p style={{ fontSize: '0.82rem', color: '#647067' }}>
-            Take or select a clear photo of the leaf symptoms or pest damage
+            {t('upload.dropzoneNotice')}
           </p>
         </div>
       ) : (
@@ -182,7 +183,7 @@ export const ImageUploader = ({
             <button
               type="button"
               onClick={onClearImage}
-              title="Remove image"
+              title={t('common.remove')}
               style={{
                 background: '#DC2626',
                 color: '#ffffff',
@@ -197,7 +198,7 @@ export const ImageUploader = ({
                 cursor: 'pointer'
               }}
             >
-              <X size={14} /> Remove
+              <X size={14} /> {t('common.remove')}
             </button>
           </div>
         </div>
@@ -226,7 +227,7 @@ export const ImageUploader = ({
       {sampleImages.length > 0 && !selectedImage && (
         <div style={{ marginTop: 16 }}>
           <span style={{ fontSize: '0.78rem', color: '#647067', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, fontWeight: 600 }}>
-            <Sparkles size={13} color="#D97706" /> Or test with sample images:
+            <Sparkles size={13} color="#D97706" /> {t('upload.samplePrompt')}:
           </span>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {sampleImages.map((sample, i) => (
@@ -235,7 +236,7 @@ export const ImageUploader = ({
                 type="button"
                 onClick={() => onImageSelected({
                   previewUrl: sample.url,
-                  name: sample.label,
+                  name: getLocalizedDiseaseName(sample.label, language),
                   sampleImageUrl: sample.url,
                   isSample: true
                 })}
@@ -254,7 +255,7 @@ export const ImageUploader = ({
                 }}
               >
                 <ImageIcon size={13} color="#16A34A" />
-                {sample.label}
+                {getLocalizedDiseaseName(sample.label, language)}
               </button>
             ))}
           </div>

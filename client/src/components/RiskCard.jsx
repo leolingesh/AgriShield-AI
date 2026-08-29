@@ -1,19 +1,48 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import RiskGauge from './RiskGauge';
+import {
+  getLocalizedCropName,
+  getLocalizedDiseaseName,
+  getLocalizedWhyNarrative,
+  getLocalizedAction,
+  validateLanguageOutput
+} from '../utils/localizationUtils';
 import { AlertTriangle, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const RiskCard = ({ riskData, onInspect }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!riskData) return null;
 
   const score = riskData.riskScore || 25;
   const level = riskData.riskLevel || 'LOW';
-  const crop = riskData.cropName || 'Tomato';
-  const threat = riskData.predictedThreat || 'General Foliar Blight';
-  const why = riskData.whyRiskExists || '';
-  const action = riskData.recommendedAction || 'Inspect lower leaf canopy for early lesion flecks.';
+
+  const localizedCrop = getLocalizedCropName(riskData.cropId || riskData.cropName || 'Tomato', language);
+  const localizedThreat = validateLanguageOutput(
+    getLocalizedDiseaseName(riskData.predictedThreat || 'Septoria Leaf Spot', language),
+    language,
+    'RiskCard.threat'
+  );
+
+  const rawWhy = riskData.whyRiskExists || '';
+  const localizedWhy = rawWhy
+    ? validateLanguageOutput(getLocalizedWhyNarrative(rawWhy, {
+        cropName: localizedCrop,
+        diseaseName: localizedThreat,
+        riskLevel: level,
+        riskScore: score,
+        location: riskData.location,
+        weather: riskData.weather
+      }, language), language, 'RiskCard.why')
+    : '';
+
+  const rawAction = riskData.recommendedAction || riskData.recommendations?.immediateActions?.[0] || 'Inspect lower leaf canopy for early lesion flecks.';
+  const localizedAction = validateLanguageOutput(
+    getLocalizedAction(rawAction, language),
+    language,
+    'RiskCard.action'
+  );
 
   const isCritical = level === 'CRITICAL';
   const isHigh = level === 'HIGH';
@@ -77,12 +106,12 @@ export const RiskCard = ({ riskData, onInspect }) => {
               lineHeight: 1.2,
               wordBreak: 'break-word'
             }}>
-              {crop}
+              {localizedCrop}
             </h4>
           </div>
 
           <div style={{ fontSize: '0.83rem', color: '#647067', lineHeight: 1.4, wordBreak: 'break-word' }}>
-            <strong style={{ color: '#17211B', fontWeight: 700 }}>{threat}</strong>
+            <strong style={{ color: '#17211B', fontWeight: 700 }}>{localizedThreat}</strong>
           </div>
         </div>
 
@@ -91,7 +120,7 @@ export const RiskCard = ({ riskData, onInspect }) => {
       </div>
 
       {/* Environmental Why Explanation */}
-      {why && (
+      {localizedWhy && (
         <div style={{
           fontSize: '0.85rem',
           lineHeight: 1.5,
@@ -103,13 +132,13 @@ export const RiskCard = ({ riskData, onInspect }) => {
           wordBreak: 'break-word',
           overflowWrap: 'anywhere'
         }}>
-          <strong style={{ color: '#17211B', fontWeight: 700 }}>{t('risk.whyTitle', 'Why is my crop at risk?')} </strong>
-          <span>{why}</span>
+          <strong style={{ color: '#17211B', fontWeight: 700 }}>{t('risk.whyTitle')} </strong>
+          <span>{localizedWhy}</span>
         </div>
       )}
 
       {/* Recommended Action Block */}
-      {action && (
+      {localizedAction && (
         <div style={{
           background: '#F0FDF4',
           border: '1px solid #86EFAC',
@@ -122,9 +151,9 @@ export const RiskCard = ({ riskData, onInspect }) => {
           overflowWrap: 'anywhere'
         }}>
           <div style={{ fontWeight: 700, fontSize: '0.78rem', color: '#166534', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 5 }}>
-            <CheckCircle2 size={14} color="#16A34A" /> {t('ipm.immediate', 'Recommended Action')}
+            <CheckCircle2 size={14} color="#16A34A" /> {t('ipm.immediate')}
           </div>
-          <span>{action}</span>
+          <span>{localizedAction}</span>
         </div>
       )}
 
@@ -142,7 +171,7 @@ export const RiskCard = ({ riskData, onInspect }) => {
           marginTop: 'auto'
         }}
       >
-        <span>{t('hero.ctaRisk', 'View Preventive IPM Actions')}</span>
+        <span>{t('hero.ctaRisk')}</span>
         <ArrowRight size={15} />
       </button>
     </div>

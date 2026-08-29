@@ -4,9 +4,10 @@ import { useLocation } from '../context/LocationContext';
 import CropMonitoringCard from '../components/CropMonitoringCard';
 import { Layers, Plus, X, Sprout, Check } from 'lucide-react';
 import { CROPS_DATA } from '../components/CropSelector';
+import { getLocalizedCropName, getLocalizedGrowthStage } from '../utils/localizationUtils';
 
 export const MonitoringPage = ({ onStartScanWithCrop }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { location } = useLocation();
 
   const [plots, setPlots] = useState([]);
@@ -89,13 +90,13 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16A34A', fontSize: '0.85rem', fontWeight: 700, marginBottom: 4 }}>
             <Layers size={18} />
-            <span>Farm Plot Tracking & Phenology</span>
+            <span>{t('monitoring.subtitle')}</span>
           </div>
           <h1 style={{ fontSize: '1.9rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 4 }}>
-            {t('nav.monitoring')} ({plots.length} Active Plots)
+            {t('nav.monitoring')} ({plots.length} {t('monitoring.activePlots')})
           </h1>
           <p style={{ fontSize: '0.88rem', color: '#647067' }}>
-            Monitor crop growth stages, sowing timelines, and historical risk progression across all your farm blocks.
+            {t('monitoring.description')}
           </p>
         </div>
 
@@ -105,7 +106,7 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
           style={{ padding: '12px 22px' }}
         >
           <Plus size={18} />
-          <span>Add New Plot</span>
+          <span>{t('monitoring.addNewPlot')}</span>
         </button>
       </div>
 
@@ -124,12 +125,12 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
       ) : (
         <div className="glass-card" style={{ padding: '40px 20px', textAlign: 'center' }}>
           <Sprout size={48} color="#16A34A" style={{ margin: '0 auto 12px auto' }} />
-          <h3 style={{ fontSize: '1.2rem', color: '#17211B', marginBottom: 8 }}>No Monitored Plots Yet</h3>
+          <h3 style={{ fontSize: '1.2rem', color: '#17211B', marginBottom: 8 }}>{t('monitoring.noPlotsYet')}</h3>
           <p style={{ fontSize: '0.88rem', color: '#647067', marginBottom: 20 }}>
-            Add your farm fields to track growth stages and receive tailored early pest warnings.
+            {t('monitoring.addFirstPlotPrompt')}
           </p>
           <button onClick={() => setIsAddOpen(true)} className="btn-primary">
-            <Plus size={18} /> Add Your First Plot
+            <Plus size={18} /> {t('monitoring.addNewPlot')}
           </button>
         </div>
       )}
@@ -162,7 +163,7 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <Sprout size={22} color="#16A34A" />
-                <h3 style={{ fontSize: '1.2rem', color: '#17211B' }}>Add Farm Plot</h3>
+                <h3 style={{ fontSize: '1.2rem', color: '#17211B' }}>{t('monitoring.addNewPlot')}</h3>
               </div>
               <button
                 onClick={() => setIsAddOpen(false)}
@@ -174,7 +175,7 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
 
             <form onSubmit={handleAddPlot} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
-                <label className="input-label">Plot Name / Identifier</label>
+                <label className="input-label">{t('monitoring.plotName')}</label>
                 <input
                   type="text"
                   required
@@ -195,7 +196,7 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
                 >
                   {CROPS_DATA.map(c => (
                     <option key={c.id} value={c.id} style={{ background: '#FFFFFF', color: '#17211B' }}>
-                      {c.icon} {c.name} ({c.category})
+                      {c.icon} {getLocalizedCropName(c.id, language)}
                     </option>
                   ))}
                 </select>
@@ -210,17 +211,17 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
                     className="input-field"
                     style={{ cursor: 'pointer' }}
                   >
-                    <option value="Seedling">🌱 Seedling</option>
-                    <option value="Vegetative">🌿 Vegetative</option>
-                    <option value="Tillering">🌾 Tillering</option>
-                    <option value="Flowering">🌸 Flowering</option>
-                    <option value="Fruiting">🍅 Fruiting</option>
-                    <option value="Maturity">🌾 Maturity</option>
+                    <option value="Seedling">🌱 {getLocalizedGrowthStage('Seedling', language)}</option>
+                    <option value="Vegetative">🌿 {getLocalizedGrowthStage('Vegetative', language)}</option>
+                    <option value="Tillering">🌾 {getLocalizedGrowthStage('Tillering', language)}</option>
+                    <option value="Flowering">🌸 {getLocalizedGrowthStage('Flowering', language)}</option>
+                    <option value="Fruiting">🍅 {getLocalizedGrowthStage('Fruiting', language)}</option>
+                    <option value="Maturity">🌾 {getLocalizedGrowthStage('Maturity', language)}</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="input-label">Plot Size (Acres)</label>
+                  <label className="input-label">{t('monitoring.plotSize')} ({t('common.acres')})</label>
                   <input
                     type="number"
                     step="0.5"
@@ -233,7 +234,7 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
               </div>
 
               <div>
-                <label className="input-label">Sowing Date</label>
+                <label className="input-label">{t('monitoring.sowingDate')}</label>
                 <input
                   type="date"
                   value={sowingDate}
@@ -248,13 +249,13 @@ export const MonitoringPage = ({ onStartScanWithCrop }) => {
                   onClick={() => setIsAddOpen(false)}
                   className="btn-secondary"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="btn-primary"
                 >
-                  <Check size={18} /> Save Plot
+                  <Check size={18} /> {t('common.save')}
                 </button>
               </div>
             </form>

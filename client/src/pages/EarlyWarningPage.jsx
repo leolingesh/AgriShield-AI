@@ -5,6 +5,12 @@ import { useWeather } from '../context/WeatherContext';
 import RiskGauge from '../components/RiskGauge';
 import ExplainableWhy from '../components/ExplainableWhy';
 import AlertCard from '../components/AlertCard';
+import {
+  getLocalizedCropName,
+  getLocalizedDiseaseName,
+  getLocalizedGrowthStage,
+  validateLanguageOutput
+} from '../utils/localizationUtils';
 import { 
   AlertTriangle, 
   Sliders, 
@@ -14,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export const EarlyWarningPage = ({ onStartScanWithCrop }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { location } = useLocation();
   const { weather } = useWeather();
 
@@ -68,19 +74,22 @@ export const EarlyWarningPage = ({ onStartScanWithCrop }) => {
     runSimulation();
   }, [simCropId, simTemp, simHumidity, simRain, location]);
 
+  const simCropLocalized = getLocalizedCropName(simCropId, language);
+  const simStageLocalized = getLocalizedGrowthStage('Flowering', language);
+
   return (
     <div className="app-container">
       {/* Title */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#D97706', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6 }}>
           <AlertTriangle size={18} />
-          <span>Predictive Agronomic Intelligence (Before Damage)</span>
+          <span>{t('earlyWarning.predictiveTitle')}</span>
         </div>
         <h1 style={{ fontSize: '1.9rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 6 }}>
-          {t('nav.earlyWarning')} & Outbreak Simulator
+          {t('nav.earlyWarning')} & {t('earlyWarning.simulatorTitle')}
         </h1>
         <p style={{ fontSize: '0.9rem', color: '#647067', maxWidth: 700 }}>
-          Real-time epidemiological risk modeling combining microclimate, crop phenology, and pathogen spore germination curves before visible foliage damage occurs.
+          {t('earlyWarning.simulatorDescription')}
         </p>
       </div>
 
@@ -108,10 +117,10 @@ export const EarlyWarningPage = ({ onStartScanWithCrop }) => {
             </div>
             <div>
               <h3 style={{ fontSize: '1.15rem', color: '#17211B' }}>
-                Interactive Outbreak Climate Simulator
+                {t('earlyWarning.simulatorTitle')}
               </h3>
               <span style={{ fontSize: '0.78rem', color: '#B45309', fontWeight: 600 }}>
-                Adjust weather parameters to demonstrate how moisture spikes accelerate disease
+                {t('earlyWarning.adjustWeatherNotice')}
               </span>
             </div>
           </div>
@@ -123,12 +132,12 @@ export const EarlyWarningPage = ({ onStartScanWithCrop }) => {
             className="input-field"
             style={{ width: 'auto', minWidth: 160, padding: '8px 12px', fontSize: '0.85rem', cursor: 'pointer' }}
           >
-            <option value="tomato">🍅 Tomato</option>
-            <option value="rice">🌾 Rice (Paddy)</option>
-            <option value="cotton">🌱 Cotton</option>
-            <option value="wheat">🌾 Wheat</option>
-            <option value="potato">🥔 Potato</option>
-            <option value="chilli">🌶️ Chilli</option>
+            <option value="tomato">🍅 {getLocalizedCropName('tomato', language)}</option>
+            <option value="rice">🌾 {getLocalizedCropName('rice', language)}</option>
+            <option value="cotton">🌱 {getLocalizedCropName('cotton', language)}</option>
+            <option value="wheat">🌾 {getLocalizedCropName('wheat', language)}</option>
+            <option value="potato">🥔 {getLocalizedCropName('potato', language)}</option>
+            <option value="chilli">🌶️ {getLocalizedCropName('chilli', language)}</option>
           </select>
         </div>
 
@@ -214,10 +223,14 @@ export const EarlyWarningPage = ({ onStartScanWithCrop }) => {
                 size={105}
               />
               <h4 style={{ fontSize: '1.05rem', color: '#17211B', marginTop: 10 }}>
-                {simulatedRisk.predictedThreat}
+                {validateLanguageOutput(
+                  getLocalizedDiseaseName(simulatedRisk.predictedThreat, language),
+                  language,
+                  'EarlyWarningPage.simThreat'
+                )}
               </h4>
               <p style={{ fontSize: '0.8rem', color: '#647067', marginTop: 4 }}>
-                Simulated for {simulatedRisk.cropName} in flowering stage
+                {t('earlyWarning.simulatedFor', { crop: simCropLocalized, stage: simStageLocalized })}
               </p>
             </div>
           )}

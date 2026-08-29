@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import OfflineBanner from './components/OfflineBanner';
 import SihDemoModal from './components/SihDemoModal';
+import InstallPwaPrompt from './components/InstallPwaPrompt';
 
 // Pages
 import Dashboard from './pages/Dashboard';
@@ -149,6 +150,9 @@ export function AppContent() {
         onClose={() => setIsDemoModalOpen(false)}
         onSelectDemoCase={handleSelectDemoCase}
       />
+
+      {/* PWA App Install Banner */}
+      <InstallPwaPrompt />
     </div>
   );
 }

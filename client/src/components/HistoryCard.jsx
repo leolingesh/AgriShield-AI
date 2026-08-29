@@ -1,9 +1,10 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedCropName, getLocalizedDiseaseName, getLocalizedRiskLevel, validateLanguageOutput } from '../utils/localizationUtils';
 import { Trash2, ArrowRight } from 'lucide-react';
 
 export const HistoryCard = ({ analysis, onView, onDelete }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!analysis) return null;
 
@@ -11,12 +12,25 @@ export const HistoryCard = ({ analysis, onView, onDelete }) => {
   const risk = analysis.riskAssessment || {};
   const location = analysis.location || {};
 
+  const localizedCrop = getLocalizedCropName(analysis.cropName || analysis.cropId, language);
+  const localizedCondition = validateLanguageOutput(
+    getLocalizedDiseaseName(ai.condition || 'Leaf Analysis', language),
+    language,
+    'HistoryCard'
+  );
+
   const getLevelBadge = (lvl = 'LOW') => {
-    if (lvl === 'CRITICAL') return <span className="badge badge-critical">{t('risk.critical')}</span>;
-    if (lvl === 'HIGH') return <span className="badge badge-high">{t('risk.high')}</span>;
-    if (lvl === 'MEDIUM') return <span className="badge badge-medium">{t('risk.medium')}</span>;
-    return <span className="badge badge-low">{t('risk.low')}</span>;
+    const locLvl = getLocalizedRiskLevel(lvl, language);
+    if (lvl === 'CRITICAL') return <span className="badge badge-critical">{locLvl}</span>;
+    if (lvl === 'HIGH') return <span className="badge badge-high">{locLvl}</span>;
+    if (lvl === 'MEDIUM') return <span className="badge badge-medium">{locLvl}</span>;
+    return <span className="badge badge-low">{locLvl}</span>;
   };
+
+  const dateStr = new Date(analysis.createdAt || Date.now()).toLocaleDateString(
+    language === 'en' ? 'en-IN' : `${language}-IN`,
+    { day: 'numeric', month: 'short', year: 'numeric' }
+  );
 
   return (
     <div className="glass-card glass-card-interactive" style={{ padding: '18px' }}>
@@ -33,7 +47,7 @@ export const HistoryCard = ({ analysis, onView, onDelete }) => {
           }}>
             <img
               src={analysis.imageUrl}
-              alt={analysis.cropName}
+              alt={localizedCrop}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
@@ -42,7 +56,7 @@ export const HistoryCard = ({ analysis, onView, onDelete }) => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
             <span style={{ fontSize: '0.78rem', color: '#16A34A', fontWeight: 700 }}>
-              🌾 {analysis.cropName}
+              🌾 {localizedCrop}
             </span>
             {analysis.isDemoMode && (
               <span className="badge badge-medium" style={{ fontSize: '0.65rem' }}>
@@ -57,12 +71,12 @@ export const HistoryCard = ({ analysis, onView, onDelete }) => {
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}>
-            {ai.condition || 'Leaf Analysis'}
+            {localizedCondition}
           </h4>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.74rem', color: '#647067', marginTop: 2 }}>
             <span>📍 {location.district || 'Salem'}</span>
             <span>•</span>
-            <span>📅 {new Date(analysis.createdAt).toLocaleDateString()}</span>
+            <span>📅 {dateStr}</span>
           </div>
         </div>
 
@@ -89,7 +103,7 @@ export const HistoryCard = ({ analysis, onView, onDelete }) => {
           <button
             type="button"
             onClick={() => onDelete(analysis._id || analysis.id)}
-            title="Delete Record"
+            title={t('common.delete')}
             style={{
               padding: '8px 10px',
               borderRadius: 8,

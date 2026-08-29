@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Shield, PhoneCall, Cpu } from 'lucide-react';
+import { PhoneCall, Cpu } from 'lucide-react';
 
 export const Footer = () => {
   const { t } = useLanguage();
@@ -31,7 +31,7 @@ export const Footer = () => {
               style={{ width: 36, height: 36, objectFit: 'contain', flexShrink: 0 }} 
             />
             <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#17211B' }}>
-              {t('appName', 'AgriShield AI')}
+              {t('appName')}
             </span>
           </div>
           <p style={{ lineHeight: 1.6, color: '#647067', marginBottom: 14 }}>
@@ -42,11 +42,11 @@ export const Footer = () => {
         {/* Farmer Support & Helpline */}
         <div>
           <h4 style={{ color: '#17211B', fontSize: '0.95rem', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <PhoneCall size={16} color="#16A34A" /> {t('footer.helplineTitle', 'Agricultural Helpline & Support')}
+            <PhoneCall size={16} color="#16A34A" /> {t('footer.helplineTitle')}
           </h4>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <li>
-              <span style={{ color: '#17211B', fontWeight: 600 }}>{t('footer.kisanCallCenter', 'Kisan Call Centre (Toll Free)')}:</span>
+              <span style={{ color: '#17211B', fontWeight: 600 }}>{t('footer.kisanCallCenter')}:</span>
               <div style={{ color: '#15803D', fontWeight: 700, fontSize: '0.95rem', marginTop: 2 }}>
                 📞 1800-180-1551 (6 AM - 10 PM)
               </div>
@@ -61,14 +61,14 @@ export const Footer = () => {
         {/* Tech Stack & Verification */}
         <div>
           <h4 style={{ color: '#17211B', fontSize: '0.95rem', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Cpu size={16} color="#16A34A" /> {t('footer.techTitle', 'Architecture & Capabilities')}
+            <Cpu size={16} color="#16A34A" /> {t('footer.techTitle')}
           </h4>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, color: '#647067' }}>
-            <li>⚡ <strong>Dual-Engine AI:</strong> Visual Diagnosis + Agronomic Scoring</li>
+            <li>⚡ <strong>{t('appName')}:</strong> Visual Diagnosis + Agronomic Scoring</li>
             <li>🌦 <strong>Micrometeorology:</strong> Live Open-Meteo & OpenWeather Sync</li>
             <li>🌐 <strong>Localization:</strong> 13 Official Indian Languages + TTS Audio</li>
             <li>📍 <strong>Geolocation:</strong> Browser GPS + Reverse Geocoding</li>
-            <li>🛡 <strong>Integrations:</strong> Integrated Pest Management (IPM) Protocols</li>
+            <li>🛡 <strong>Integrations:</strong> {t('ipm.title')}</li>
           </ul>
         </div>
       </div>
@@ -88,10 +88,10 @@ export const Footer = () => {
         color: '#8E9A91'
       }}>
         <div>
-          © 2026 AgriShield AI. All rights reserved.
+          © 2026 {t('appName')}. {t('footer.allRights')}
         </div>
         <div style={{ maxWidth: 650, textAlign: 'right' }}>
-          <strong>Agricultural Disclaimer:</strong> {t('risk.estimateNotice')}
+          <strong>{t('footer.disclaimerTitle')}:</strong> {t('risk.estimateNotice')}
         </div>
       </div>
     </footer>

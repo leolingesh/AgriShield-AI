@@ -4,9 +4,10 @@ import HistoryCard from '../components/HistoryCard';
 import AnalysisResult from '../components/AnalysisResult';
 import { History, Search, ArrowLeft, RefreshCw, Eye, Trash2 } from 'lucide-react';
 import { CROPS_DATA } from '../components/CropSelector';
+import { getLocalizedCropName, getLocalizedDiseaseName, getLocalizedRiskLevel, validateLanguageOutput } from '../utils/localizationUtils';
 
 export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelectedAnalysis }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [analyses, setAnalyses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCropFilter, setSelectedCropFilter] = useState('ALL');
@@ -45,16 +46,17 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
 
   const filteredList = analyses.filter(a => {
     const term = searchTerm.toLowerCase();
-    const cropName = (a.cropName || '').toLowerCase();
-    const cond = (a.aiAnalysis?.condition || '').toLowerCase();
-    return cropName.includes(term) || cond.includes(term);
+    const cropName = (getLocalizedCropName(a.cropId || a.cropName, language) || '').toLowerCase();
+    const cond = (getLocalizedDiseaseName(a.aiAnalysis?.condition, language) || '').toLowerCase();
+    return cropName.includes(term) || cond.includes(term) || (a.cropName || '').toLowerCase().includes(term);
   });
 
   const getBadge = (lvl = 'LOW') => {
-    if (lvl === 'CRITICAL') return <span className="badge badge-critical">{t('risk.critical')}</span>;
-    if (lvl === 'HIGH') return <span className="badge badge-high">{t('risk.high')}</span>;
-    if (lvl === 'MEDIUM') return <span className="badge badge-medium">{t('risk.medium')}</span>;
-    return <span className="badge badge-low">{t('risk.low')}</span>;
+    const loc = getLocalizedRiskLevel(lvl, language);
+    if (lvl === 'CRITICAL') return <span className="badge badge-critical">{loc}</span>;
+    if (lvl === 'HIGH') return <span className="badge badge-high">{loc}</span>;
+    if (lvl === 'MEDIUM') return <span className="badge badge-medium">{loc}</span>;
+    return <span className="badge badge-low">{loc}</span>;
   };
 
   // If a single analysis is opened for detail view
@@ -66,7 +68,7 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
           className="btn-secondary"
           style={{ marginBottom: 20, display: 'inline-flex', alignItems: 'center', gap: 8 }}
         >
-          <ArrowLeft size={16} /> Back to Analysis Archive
+          <ArrowLeft size={16} /> {t('common.back')}
         </button>
 
         <AnalysisResult
@@ -83,7 +85,7 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#9333EA', fontSize: '0.85rem', fontWeight: 700, marginBottom: 4 }}>
           <History size={18} />
-          <span>Diagnostic Records Archive</span>
+          <span>{t('history.subtitle')}</span>
         </div>
         <h1 style={{ fontSize: '1.9rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 4 }}>
           {t('nav.history')} ({analyses.length})
@@ -121,7 +123,7 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
               <option value="ALL" style={{ background: '#FFFFFF', color: '#17211B' }}>🌾 {t('crop.selectTitle')}</option>
               {CROPS_DATA.map(c => (
                 <option key={c.id} value={c.name} style={{ background: '#FFFFFF', color: '#17211B' }}>
-                  {c.icon} {c.name}
+                  {c.icon} {getLocalizedCropName(c.id, language)}
                 </option>
               ))}
             </select>
@@ -149,7 +151,7 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
       {loading ? (
         <div className="glass-card" style={{ padding: '40px', textAlign: 'center' }}>
           <RefreshCw size={28} className="spin" style={{ color: '#16A34A', margin: '0 auto 12px auto' }} />
-          <p style={{ color: '#647067' }}>Loading diagnostic archive...</p>
+          <p style={{ color: '#647067' }}>{t('common.loading')}</p>
         </div>
       ) : filteredList.length > 0 ? (
         <>
@@ -158,28 +160,35 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
               <thead>
                 <tr style={{ background: '#F7F9F7', borderBottom: '1px solid #E5EAE6', color: '#647067', fontWeight: 600 }}>
-                  <th style={{ padding: '14px 16px' }}>Date</th>
+                  <th style={{ padding: '14px 16px' }}>{t('common.date')}</th>
                   <th style={{ padding: '14px 16px' }}>{t('result.cropDetected')}</th>
                   <th style={{ padding: '14px 16px' }}>{t('result.condition')}</th>
                   <th style={{ padding: '14px 16px' }}>{t('result.confidence')}</th>
                   <th style={{ padding: '14px 16px' }}>{t('result.severity')}</th>
-                  <th style={{ padding: '14px 16px', textAlign: 'right' }}>Actions</th>
+                  <th style={{ padding: '14px 16px', textAlign: 'right' }}>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredList.map((item, idx) => {
                   const ai = item.aiAnalysis || {};
                   const risk = item.riskAssessment || {};
+                  const locCrop = getLocalizedCropName(item.cropId || item.cropName, language);
+                  const locCondition = validateLanguageOutput(getLocalizedDiseaseName(ai.condition || 'Leaf Analysis', language), language, 'HistoryPage.tableRow');
+                  const dateStr = new Date(item.createdAt || Date.now()).toLocaleDateString(
+                    language === 'en' ? 'en-IN' : `${language}-IN`,
+                    { day: 'numeric', month: 'short', year: 'numeric' }
+                  );
+
                   return (
                     <tr key={item._id || item.id || idx} style={{ borderBottom: '1px solid #E5EAE6' }}>
                       <td style={{ padding: '14px 16px', color: '#647067', whiteSpace: 'nowrap' }}>
-                        {new Date(item.createdAt).toLocaleDateString()}
+                        {dateStr}
                       </td>
                       <td style={{ padding: '14px 16px', fontWeight: 700, color: '#17211B' }}>
-                        🌾 {item.cropName}
+                        🌾 {locCrop}
                       </td>
                       <td style={{ padding: '14px 16px', color: '#17211B' }}>
-                        {ai.condition || 'Foliar Check'}
+                        {locCondition}
                       </td>
                       <td style={{ padding: '14px 16px', color: '#16A34A', fontWeight: 700 }}>
                         {Math.round((ai.confidence || 0.85) * 100)}%
@@ -195,7 +204,7 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
                             className="btn-secondary"
                             style={{ padding: '6px 12px', minHeight: 32, fontSize: '0.78rem' }}
                           >
-                            <Eye size={14} /> View
+                            <Eye size={14} /> {t('common.view')}
                           </button>
                           <button
                             type="button"
@@ -228,9 +237,9 @@ export const HistoryPage = ({ onSelectAnalysis, selectedAnalysis, onClearSelecte
       ) : (
         <div className="glass-card" style={{ padding: '40px 20px', textAlign: 'center' }}>
           <History size={48} color="#647067" style={{ margin: '0 auto 12px auto' }} />
-          <h3 style={{ fontSize: '1.2rem', color: '#17211B', marginBottom: 6 }}>No Diagnostic Records Found</h3>
+          <h3 style={{ fontSize: '1.2rem', color: '#17211B', marginBottom: 6 }}>{t('history.noRecords')}</h3>
           <p style={{ fontSize: '0.85rem', color: '#647067' }}>
-            No analyses match your search criteria. Try clearing filters or run a new crop scan.
+            {t('history.noRecordsDescription')}
           </p>
         </div>
       )}

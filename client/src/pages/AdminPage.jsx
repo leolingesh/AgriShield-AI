@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedDiseaseName, getLocalizedRiskLevel, validateLanguageOutput } from '../utils/localizationUtils';
 import { Shield, Activity, Cpu, Database, CloudSun, CheckCircle2, RefreshCw } from 'lucide-react';
 
 export const AdminPage = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,13 +41,13 @@ export const AdminPage = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16A34A', fontSize: '0.85rem', fontWeight: 700, marginBottom: 4 }}>
             <Shield size={18} />
-            <span>Smart India Hackathon Administration</span>
+            <span>{t('admin.title')}</span>
           </div>
           <h1 style={{ fontSize: '1.9rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 4 }}>
-            System Health & Outbreak Analytics
+            {t('admin.systemHealth')} & {t('admin.outbreakAnalytics')}
           </h1>
           <p style={{ fontSize: '0.88rem', color: '#647067' }}>
-            System-wide telemetry, crop risk aggregations, and real-time backend API service health.
+            {t('admin.description')}
           </p>
         </div>
 
@@ -55,7 +56,7 @@ export const AdminPage = () => {
           className="btn-secondary"
           style={{ padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <RefreshCw size={15} className={loading ? 'spin' : ''} /> Refresh Metrics
+          <RefreshCw size={15} className={loading ? 'spin' : ''} /> {t('admin.refresh')}
         </button>
       </div>
 
@@ -64,35 +65,35 @@ export const AdminPage = () => {
           {/* Top 4 Metrics Tiles */}
           <div className="grid-4" style={{ marginBottom: 24 }}>
             <div className="glass-card" style={{ padding: '18px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>Total Analyses</span>
+              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>{t('admin.totalAnalyses')}</span>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#17211B', marginTop: 4 }}>
                 {metrics.totalAnalyses}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#15803D', fontWeight: 600 }}>Dual-engine evaluations</span>
+              <span style={{ fontSize: '0.75rem', color: '#15803D', fontWeight: 600 }}>{t('admin.evaluations')}</span>
             </div>
 
             <div className="glass-card" style={{ padding: '18px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>Active Network Farmers</span>
+              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>{t('admin.activeFarmers')}</span>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#17211B', marginTop: 4 }}>
                 {metrics.activeFarmers}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#0284C7', fontWeight: 600 }}>Pilot agricultural blocks</span>
+              <span style={{ fontSize: '0.75rem', color: '#0284C7', fontWeight: 600 }}>{t('admin.pilotBlocks')}</span>
             </div>
 
             <div className="glass-card" style={{ padding: '18px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>Monitored Farm Plots</span>
+              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>{t('admin.plotsTracked')}</span>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#17211B', marginTop: 4 }}>
                 {metrics.activePlotsTracked}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#B45309', fontWeight: 600 }}>Real-time phenology tracking</span>
+              <span style={{ fontSize: '0.75rem', color: '#B45309', fontWeight: 600 }}>{t('admin.phenologyTracking')}</span>
             </div>
 
             <div className="glass-card" style={{ padding: '18px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>Active Outbreak Advisories</span>
+              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>{t('admin.activeAlerts')}</span>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#DC2626', marginTop: 4 }}>
                 {metrics.activeAlerts}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#DC2626', fontWeight: 600 }}>Early warning triggers</span>
+              <span style={{ fontSize: '0.75rem', color: '#DC2626', fontWeight: 600 }}>{t('admin.earlyTriggers')}</span>
             </div>
           </div>
 
@@ -101,7 +102,7 @@ export const AdminPage = () => {
             {/* Risk Distribution Card */}
             <div className="glass-card" style={{ padding: '22px' }}>
               <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16 }}>
-                Risk Severity Breakdown
+                {t('admin.riskSeverity')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
@@ -149,29 +150,32 @@ export const AdminPage = () => {
             {/* Top Detected Issues */}
             <div className="glass-card" style={{ padding: '22px' }}>
               <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16 }}>
-                Commonly Identified Conditions & Pests
+                {t('admin.commonIssues')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {metrics.topIssues.map((issue, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '10px 14px',
-                      background: '#F7F9F7',
-                      border: '1px solid #E5EAE6',
-                      borderRadius: 10,
-                      fontSize: '0.85rem'
-                    }}
-                  >
-                    <span style={{ color: '#17211B', fontWeight: 600 }}>{issue.name}</span>
-                    <span style={{ background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: 6, fontWeight: 700 }}>
-                      {issue.count} cases
-                    </span>
-                  </div>
-                ))}
+                {metrics.topIssues.map((issue, i) => {
+                  const locIssue = validateLanguageOutput(getLocalizedDiseaseName(issue.name, language), language, 'AdminPage.issue');
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '10px 14px',
+                        background: '#F7F9F7',
+                        border: '1px solid #E5EAE6',
+                        borderRadius: 10,
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      <span style={{ color: '#17211B', fontWeight: 600 }}>{locIssue}</span>
+                      <span style={{ background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: 6, fontWeight: 700 }}>
+                        {issue.count} {t('common.cases')}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -180,7 +184,7 @@ export const AdminPage = () => {
           {metrics.modelStatus && (
             <div className="glass-card" style={{ padding: '22px', marginBottom: 24, border: '1px solid #BBF7D0' }}>
               <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Cpu size={18} color="#16A34A" /> Dedicated PyTorch Vision Model Telemetry
+                <Cpu size={18} color="#16A34A" /> {t('admin.modelTelemetry')}
               </h3>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
@@ -212,19 +216,13 @@ export const AdminPage = () => {
                   </div>
                 </div>
               </div>
-
-              <div style={{ marginTop: 14, fontSize: '0.8rem', color: '#4B5563', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                <span><strong>Supported Crops:</strong> 🍅 Tomato, 🌾 Rice, 🌾 Wheat</span>
-                <span><strong>Verified Class Taxonomies:</strong> {metrics.modelStatus.numClasses || 6} classes</span>
-                <span><strong>Confidence Threshold:</strong> {metrics.modelStatus.confidenceThreshold || 0.60}</span>
-              </div>
             </div>
           )}
 
           {/* Backend API Service Health Status */}
           <div className="glass-card" style={{ padding: '22px' }}>
             <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Activity size={18} color="#16A34A" /> Real-Time Backend API Health Checks
+              <Activity size={18} color="#16A34A" /> {t('admin.systemHealth')}
             </h3>
 
             <div style={{
@@ -256,7 +254,7 @@ export const AdminPage = () => {
               <div style={{ background: '#F7F9F7', border: '1px solid #E5EAE6', padding: '12px 14px', borderRadius: 10 }}>
                 <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>Backend Service</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#15803D', fontSize: '0.88rem', fontWeight: 700 }}>
-                  <CheckCircle2 size={16} color="#16A34A" /> Online (Uptime {metrics.systemHealth.serverUptime}s)
+                  <CheckCircle2 size={16} color="#16A34A" /> Online
                 </div>
               </div>
             </div>

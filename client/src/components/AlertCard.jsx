@@ -1,17 +1,47 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import {
+  getLocalizedAlertTitle,
+  getLocalizedCropName,
+  getLocalizedAlertDescription,
+  getLocalizedAction,
+  getLocalizedRiskLevel,
+  validateLanguageOutput
+} from '../utils/localizationUtils';
 import { AlertTriangle, AlertOctagon, CheckCircle2, MapPin, Calendar, Sprout } from 'lucide-react';
 
 export const AlertCard = ({ alert, onMarkRead }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!alert) return null;
 
-  const isCritical = alert.severity === 'CRITICAL';
-  const isHigh = alert.severity === 'HIGH' || !isCritical;
+  const isCritical = String(alert.severity || alert.riskLevel || '').toUpperCase() === 'CRITICAL';
   
   const borderAccent = isCritical ? '#DC2626' : '#F59E0B';
   const badgeClass = isCritical ? 'badge badge-critical' : 'badge badge-high';
+
+  const localizedTitle = validateLanguageOutput(
+    getLocalizedAlertTitle(alert, language),
+    language,
+    'AlertCard'
+  );
+
+  const localizedCropName = getLocalizedCropName(alert.cropId || alert.cropName || alert.crop, language);
+
+  const localizedReason = alert.triggerReason || alert.whyRiskExists
+    ? validateLanguageOutput(getLocalizedAlertDescription(alert, language), language, 'AlertCard.reason')
+    : '';
+
+  const rawAction = alert.recommendedAction || alert.action || alert.recommendedActions?.[0];
+  const localizedAction = rawAction
+    ? validateLanguageOutput(getLocalizedAction(rawAction, language), language, 'AlertCard.action')
+    : '';
+
+  // Localized date
+  const dateStr = new Date(alert.createdAt || Date.now()).toLocaleDateString(
+    language === 'en' ? 'en-IN' : `${language}-IN`,
+    { day: 'numeric', month: 'short', year: 'numeric' }
+  );
 
   return (
     <div style={{
@@ -53,7 +83,7 @@ export const AlertCard = ({ alert, onMarkRead }) => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#17211B' }}>
-                {alert.title}
+                {localizedTitle}
               </h4>
               {alert.riskScore && (
                 <span style={{
@@ -64,7 +94,7 @@ export const AlertCard = ({ alert, onMarkRead }) => {
                   padding: '2px 8px',
                   borderRadius: 999
                 }}>
-                  {alert.riskScore}% Risk
+                  {alert.riskScore}% {t('risk.scoreLabel')}
                 </span>
               )}
             </div>
@@ -73,27 +103,27 @@ export const AlertCard = ({ alert, onMarkRead }) => {
                 <MapPin size={13} color="#16A34A" /> {alert.location?.district || 'Salem'}, {alert.location?.state || 'TN'}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Sprout size={13} color="#16A34A" /> {alert.cropName || 'Crop'}
+                <Sprout size={13} color="#16A34A" /> {localizedCropName}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Calendar size={13} color="#647067" /> {new Date(alert.createdAt || Date.now()).toLocaleDateString()}
+                <Calendar size={13} color="#647067" /> {dateStr}
               </span>
             </div>
           </div>
         </div>
 
         <span className={badgeClass}>
-          {alert.severity === 'CRITICAL' ? t('risk.critical') : t('risk.high')}
+          {getLocalizedRiskLevel(isCritical ? 'CRITICAL' : 'HIGH', language)}
         </span>
       </div>
 
-      {alert.triggerReason && (
+      {localizedReason && (
         <p style={{ fontSize: '0.88rem', color: '#17211B', lineHeight: 1.5, margin: 0 }}>
-          <strong style={{ color: '#647067' }}>{t('risk.whyTitle')} </strong> {alert.triggerReason}
+          <strong style={{ color: '#647067' }}>{t('risk.whyTitle')} </strong> {localizedReason}
         </p>
       )}
 
-      {alert.recommendedAction && (
+      {localizedAction && (
         <div style={{
           background: '#F0FDF4',
           border: '1px solid #86EFAC',
@@ -102,7 +132,7 @@ export const AlertCard = ({ alert, onMarkRead }) => {
           fontSize: '0.85rem',
           color: '#15803D'
         }}>
-          <strong>{t('ipm.immediate')}: </strong> {alert.recommendedAction}
+          <strong>{t('ipm.immediate')}: </strong> {localizedAction}
         </div>
       )}
 

@@ -1,15 +1,24 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import RiskGauge from './RiskGauge';
+import { getLocalizedCropName, getLocalizedGrowthStage, getLocalizedDiseaseName, validateLanguageOutput } from '../utils/localizationUtils';
 import { Sprout, Trash2, ArrowRight } from 'lucide-react';
 
 export const CropMonitoringCard = ({ plot, onInspect, onDelete }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!plot) return null;
 
   const score = plot.currentRiskScore || 25;
   const level = plot.currentRiskLevel || 'LOW';
+
+  const localizedCrop = getLocalizedCropName(plot.cropId || plot.cropName, language);
+  const localizedStage = getLocalizedGrowthStage(plot.growthStage || 'Vegetative', language);
+  const localizedThreat = validateLanguageOutput(
+    getLocalizedDiseaseName(plot.latestThreat || 'routine_monitoring', language),
+    language,
+    'CropMonitoringCard'
+  );
 
   const daysSinceSowing = plot.sowingDate 
     ? Math.max(1, Math.round((Date.now() - new Date(plot.sowingDate).getTime()) / (1000 * 60 * 60 * 24)))
@@ -40,9 +49,9 @@ export const CropMonitoringCard = ({ plot, onInspect, onDelete }) => {
               {plot.plotName || 'Field Plot'}
             </h4>
             <div style={{ fontSize: '0.78rem', color: '#647067', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span>🌾 <strong>{plot.cropName}</strong></span>
+              <span>🌾 <strong>{localizedCrop}</strong></span>
               <span>•</span>
-              <span>{plot.acres || 1.5} Acres</span>
+              <span>{plot.acres || 1.5} {t('common.acres')}</span>
             </div>
           </div>
         </div>
@@ -51,7 +60,7 @@ export const CropMonitoringCard = ({ plot, onInspect, onDelete }) => {
           <button
             type="button"
             onClick={() => onDelete(plot._id || plot.id)}
-            title="Remove Plot"
+            title={t('monitoring.removePlot')}
             style={{
               padding: 6,
               borderRadius: 6,
@@ -80,15 +89,15 @@ export const CropMonitoringCard = ({ plot, onInspect, onDelete }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.8rem', color: '#17211B' }}>
           <div>
             <span style={{ color: '#647067' }}>{t('crop.growthStage')}: </span>
-            <strong style={{ color: '#17211B' }}>🌱 {plot.growthStage || 'Vegetative'}</strong>
+            <strong style={{ color: '#17211B' }}>🌱 {localizedStage}</strong>
           </div>
           <div>
-            <span style={{ color: '#647067' }}>Crop Age: </span>
-            <strong style={{ color: '#17211B' }}>{daysSinceSowing} days</strong>
+            <span style={{ color: '#647067' }}>{t('common.cropAge')}: </span>
+            <strong style={{ color: '#17211B' }}>{daysSinceSowing} {t('common.days')}</strong>
           </div>
           <div>
-            <span style={{ color: '#647067' }}>Latest Status: </span>
-            <strong style={{ color: score > 60 ? '#DC2626' : '#15803D' }}>{plot.latestThreat || 'Routine Monitoring'}</strong>
+            <span style={{ color: '#647067' }}>{t('common.latestStatus')}: </span>
+            <strong style={{ color: score > 60 ? '#DC2626' : '#15803D' }}>{localizedThreat}</strong>
           </div>
         </div>
 

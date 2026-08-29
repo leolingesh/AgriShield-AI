@@ -12,6 +12,7 @@ import HistoryCard from '../components/HistoryCard';
 import EarlyWarningCard from '../components/EarlyWarningCard';
 import PreventionCard from '../components/PreventionCard';
 import AskAiCard from '../components/AskAiCard';
+import { getLocalizedCropName, getLocalizedWeatherTerm } from '../utils/localizationUtils';
 import { 
   Sparkles, 
   AlertTriangle, 
@@ -20,12 +21,11 @@ import {
   History, 
   ArrowRight, 
   Layers,
-  Plus,
   Bell
 } from 'lucide-react';
 
 export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { location } = useLocation();
   const { weather } = useWeather();
   const { user } = useAuth();
@@ -93,6 +93,8 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
   const activeAlertsCount = alerts.filter(a => !a.isRead).length;
   const highRiskCount = riskOverview.filter(r => r.riskLevel === 'HIGH' || r.riskLevel === 'CRITICAL').length || 1;
 
+  const weatherCond = getLocalizedWeatherTerm(weather?.condition || 'Live Sync', language);
+
   return (
     <div className="app-container">
       {/* Hero Section */}
@@ -111,7 +113,7 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
         }}>
           <div style={{ maxWidth: 680 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#DCFCE7', color: '#15803D', padding: '4px 12px', borderRadius: 999, fontSize: '0.82rem', fontWeight: 700, marginBottom: 12, border: '1px solid #86EFAC' }}>
-              <span>Namaste, {user?.name || 'Ramesh Patel'} 👋</span>
+              <span>{t('hero.greeting', { name: user?.name || 'Ramesh Patel' })} 👋</span>
             </div>
             <h1 style={{ fontSize: '2rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 8 }}>
               {t('hero.title')}
@@ -125,7 +127,7 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
                 📍 {location?.district || 'Salem'}, {location?.state || 'Tamil Nadu'}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FFFFFF', padding: '6px 12px', borderRadius: 8, border: '1px solid #E5EAE6' }}>
-                🌦️ {weather?.temperature ? `${weather.temperature}°C • ${weather.condition || 'Live Sync'}` : 'Weather Active'}
+                🌦️ {weather?.temperature ? `${weather.temperature}°C • ${weatherCond}` : t('weather.title')}
               </span>
             </div>
           </div>
@@ -209,13 +211,10 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
             cropId: 'tomato',
             riskScore: 78,
             riskLevel: 'HIGH',
-            predictedThreat: 'Septoria & Early Blight',
-            whyRiskExists: `Current humidity (${weather?.humidity || 84}%) in ${location?.district || 'Salem'} exceeds critical fungal moisture threshold (${weather?.temperature || 28}°C).`,
-            contributingFactors: [
-              { factor: 'High Air Moisture', impact: 'High', detail: 'Relative humidity above 75% favorable for fungal spore germination.' },
-              { factor: 'Recent Rainfall / Dew', impact: 'High', detail: 'Free water films on foliage accelerate fungal spore penetration.' },
-              { factor: 'Optimal Temperature', impact: 'Moderate', detail: 'Ambient temperature supports pathogen incubation.' }
-            ],
+            predictedThreat: 'Septoria Leaf Spot',
+            location,
+            weather,
+            growthStage: 'Vegetative',
             recommendations: {
               immediateActions: [
                 'Inspect lower foliage of tomato plants immediately for dark concentric spots.',
@@ -237,13 +236,7 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
 
         <PreventionCard
           cropName={riskOverview[0]?.cropName || 'Tomato'}
-          preventionList={riskOverview[0]?.recommendations?.prevention || [
-            'Inspect plants regularly (especially lower foliage and leaf undersides).',
-            'Remove severely affected plant material and dispose of it safely away from the field.',
-            'Maintain proper field/canopy airflow by keeping recommended row spacing.',
-            'Avoid unnecessary leaf wetting (irrigate early morning or use drip systems).',
-            'Monitor weather conditions closely after rain or prolonged morning dew.'
-          ]}
+          preventionList={riskOverview[0]?.recommendations?.prevention || []}
         />
       </div>
 
@@ -320,9 +313,10 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
                   cropId: 'tomato',
                   riskScore: 78,
                   riskLevel: 'HIGH',
-                  predictedThreat: 'Septoria & Early Blight',
-                  whyRiskExists: 'Current humidity (84%) in Salem exceeds fungal threshold.',
-                  recommendedAction: 'Apply preventive Copper Oxychloride spray.'
+                  predictedThreat: 'Septoria Leaf Spot',
+                  location,
+                  weather,
+                  recommendedAction: 'Prune and destroy infected lower leaves up to 12 inches above soil line.'
                 }}
                 onInspect={() => onStartScanWithCrop('tomato')}
               />
@@ -332,8 +326,9 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
                   cropId: 'rice',
                   riskScore: 24,
                   riskLevel: 'LOW',
-                  predictedThreat: 'Leaf Blast (Low Pressure)',
-                  whyRiskExists: 'Conditions are stable with normal water depth.',
+                  predictedThreat: 'Rice Leaf Blast',
+                  location,
+                  weather,
                   recommendedAction: 'Maintain current water depth and monitoring schedule.'
                 }}
                 onInspect={() => onStartScanWithCrop('rice')}
@@ -344,9 +339,10 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
                   cropId: 'cotton',
                   riskScore: 58,
                   riskLevel: 'MEDIUM',
-                  predictedThreat: 'Whitefly & Aphid Vector',
-                  whyRiskExists: 'Warm temperatures favor sucking insect incubation.',
-                  recommendedAction: 'Install yellow sticky traps (10/acre).'
+                  predictedThreat: 'Pink Bollworm',
+                  location,
+                  weather,
+                  recommendedAction: 'Install pheromone traps (5-8 traps/acre) to monitor adult moth activity.'
                 }}
                 onInspect={() => onStartScanWithCrop('cotton')}
               />

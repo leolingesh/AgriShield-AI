@@ -1,33 +1,41 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import {
+  getLocalizedCropName,
+  getLocalizedDiseaseName,
+  getLocalizedRiskLevel,
+  getLocalizedAction,
+  getLocalizedWhyNarrative,
+  localizeFactor,
+  validateLanguageOutput
+} from '../utils/localizationUtils';
 import { 
   AlertTriangle, 
   CheckCircle2, 
   HelpCircle, 
-  Zap, 
-  Eye, 
-  Droplets, 
-  Thermometer, 
-  CloudRain,
   ChevronRight,
   ShieldAlert
 } from 'lucide-react';
 
 export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!riskData) return null;
 
   const {
     riskScore = 75,
     riskLevel = 'HIGH',
-    predictedThreat = 'Late Blight & Fungal Rust',
+    predictedThreat = 'Septoria Leaf Spot',
     whyRiskExists = '',
     contributingFactors = [],
     recommendations = {}
   } = riskData;
 
-  const immediateActions = recommendations.immediateActions || [
+  const localizedCrop = getLocalizedCropName(riskData.cropId || cropName, language);
+  const localizedThreat = getLocalizedDiseaseName(predictedThreat, language);
+  const localizedRisk = getLocalizedRiskLevel(riskLevel, language);
+
+  const rawActions = recommendations.immediateActions || [
     'Inspect the affected plants today.',
     'Check nearby plants for similar symptoms.',
     'Avoid practices that increase leaf wetness (e.g., overhead watering).',
@@ -35,16 +43,20 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
     'Monitor the field again within 24 to 48 hours.'
   ];
 
+  const localizedActions = rawActions.map(act =>
+    validateLanguageOutput(getLocalizedAction(act, language), language, 'EarlyWarningCard.action')
+  );
+
   const getRiskBadgeStyles = (level) => {
     switch (level) {
       case 'CRITICAL':
-        return { bg: '#FEF2F2', border: '#FCA5A5', color: '#991B1B', text: '🔴 CRITICAL RISK', icon: ShieldAlert };
+        return { bg: '#FEF2F2', border: '#FCA5A5', color: '#991B1B', text: `🔴 ${localizedRisk}`, icon: ShieldAlert };
       case 'HIGH':
-        return { bg: '#FEF2F2', border: '#FCA5A5', color: '#DC2626', text: '🔴 HIGH RISK', icon: AlertTriangle };
+        return { bg: '#FEF2F2', border: '#FCA5A5', color: '#DC2626', text: `🔴 ${localizedRisk}`, icon: AlertTriangle };
       case 'MEDIUM':
-        return { bg: '#FEF3C7', border: '#FDE68A', color: '#D97706', text: '🟠 MEDIUM RISK', icon: AlertTriangle };
+        return { bg: '#FEF3C7', border: '#FDE68A', color: '#D97706', text: `🟠 ${localizedRisk}`, icon: AlertTriangle };
       default:
-        return { bg: '#F0FDF4', border: '#86EFAC', color: '#15803D', text: '🟢 LOW RISK', icon: CheckCircle2 };
+        return { bg: '#F0FDF4', border: '#86EFAC', color: '#15803D', text: `🟢 ${localizedRisk}`, icon: CheckCircle2 };
     }
   };
 
@@ -53,15 +65,30 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
 
   const getActionPriorityHeader = (level) => {
     if (level === 'HIGH' || level === 'CRITICAL') {
-      return { label: '🔴 ACT NOW', color: '#DC2626', bg: '#FEF2F2', border: '#FCA5A5' };
+      return { label: `🔴 ${t('earlyWarning.actNow')}`, color: '#DC2626', bg: '#FEF2F2', border: '#FCA5A5' };
     }
     if (level === 'MEDIUM') {
-      return { label: '🟠 MONITOR CLOSELY', color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
+      return { label: `🟠 ${t('earlyWarning.monitorClosely')}`, color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
     }
-    return { label: '🟢 CONTINUE MONITORING', color: '#15803D', bg: '#F0FDF4', border: '#86EFAC' };
+    return { label: `🟢 ${t('earlyWarning.continueMonitoring')}`, color: '#15803D', bg: '#F0FDF4', border: '#86EFAC' };
   };
 
   const actionPriority = getActionPriorityHeader(riskLevel);
+
+  // Localized narrative
+  const localizedWhy = validateLanguageOutput(
+    getLocalizedWhyNarrative(whyRiskExists, {
+      cropName: localizedCrop,
+      diseaseName: localizedThreat,
+      riskLevel,
+      riskScore,
+      location: riskData.location,
+      weather: riskData.weather,
+      growthStage: riskData.growthStage
+    }, language),
+    language,
+    'EarlyWarningCard.why'
+  );
 
   return (
     <div className="glass-card" style={{
@@ -93,9 +120,9 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
             <BadgeIcon size={24} color={badgeStyle.color} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#17211B', margin: 0 }}>
-                ⚠ Early Warning
+                ⚠ {t('nav.earlyWarning')}
               </h3>
               <span style={{
                 background: badgeStyle.bg,
@@ -110,7 +137,7 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
               </span>
             </div>
             <span style={{ fontSize: '0.82rem', color: '#647067' }}>
-              Weather & Epidemiological Risk Modeling for {cropName}
+              {t('earlyWarning.modelingFor', { crop: localizedCrop })}
             </span>
           </div>
         </div>
@@ -121,7 +148,7 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
             className="btn-primary"
             style={{ padding: '8px 16px', fontSize: '0.85rem', fontWeight: 700 }}
           >
-            <span>Scan Leaf Now</span>
+            <span>{t('hero.ctaScan')}</span>
             <ChevronRight size={16} />
           </button>
         )}
@@ -136,14 +163,14 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
         marginBottom: 20
       }}>
         <h4 style={{ fontSize: '1rem', fontWeight: 800, color: badgeStyle.color, marginBottom: 6 }}>
-          {cropName} crops may be at increased risk of {predictedThreat} due to current environmental conditions.
+          {localizedWhy || `${localizedCrop} - ${localizedThreat} (${badgeStyle.text})`}
         </h4>
 
         {/* Risk Score Progress Bar */}
         <div style={{ marginTop: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}>
-            <span>Disease Risk Score</span>
-            <span style={{ color: badgeStyle.color }}>{riskScore}% ({riskLevel})</span>
+            <span>{t('earlyWarning.diseaseRiskScore')}</span>
+            <span style={{ color: badgeStyle.color }}>{riskScore}% ({localizedRisk})</span>
           </div>
           <div style={{
             width: '100%',
@@ -177,10 +204,10 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
           gap: 6
         }}>
           <HelpCircle size={16} color="#15803D" />
-          Why am I receiving this warning?
+          {t('earlyWarning.whyWarning')}
         </h4>
 
-        {whyRiskExists ? (
+        {localizedWhy ? (
           <p style={{
             fontSize: '0.88rem',
             lineHeight: 1.6,
@@ -191,36 +218,39 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
             border: '1px solid #E5EAE6',
             margin: 0
           }}>
-            {whyRiskExists}
+            {localizedWhy}
           </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {contributingFactors.length > 0 ? (
-              contributingFactors.map((f, idx) => (
-                <div key={idx} style={{
-                  fontSize: '0.86rem',
-                  color: '#17211B',
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 8
-                }}>
-                  <span style={{ color: '#16A34A', fontWeight: 800 }}>•</span>
-                  <span><strong>{f.factor}:</strong> {f.detail}</span>
-                </div>
-              ))
+              contributingFactors.map((f, idx) => {
+                const locF = localizeFactor(f, language);
+                return (
+                  <div key={idx} style={{
+                    fontSize: '0.86rem',
+                    color: '#17211B',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 8
+                  }}>
+                    <span style={{ color: '#16A34A', fontWeight: 800 }}>•</span>
+                    <span><strong>{locF.factor}:</strong> {locF.detail}</span>
+                  </div>
+                );
+              })
             ) : (
               <>
                 <div style={{ fontSize: '0.86rem', color: '#17211B', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ color: '#DC2626', fontWeight: 800 }}>•</span>
-                  <span>Humidity is currently high (above critical fungal threshold).</span>
+                  <span>{t('earlyWarning.humidityHighFungal')}</span>
                 </div>
                 <div style={{ fontSize: '0.86rem', color: '#17211B', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ color: '#DC2626', fontWeight: 800 }}>•</span>
-                  <span>Rainfall has increased leaf wetness duration.</span>
+                  <span>{t('earlyWarning.rainIncreasedWetness')}</span>
                 </div>
                 <div style={{ fontSize: '0.86rem', color: '#17211B', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ color: '#D97706', fontWeight: 800 }}>•</span>
-                  <span>These microclimate conditions favor rapid fungal spore germination.</span>
+                  <span>{t('earlyWarning.microclimateFungalSpore')}</span>
                 </div>
               </>
             )}
@@ -228,7 +258,7 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
         )}
       </div>
 
-      {/* WHAT SHOULD I DO NOW? (Action Priority + Simple Farmer Instructions) */}
+      {/* WHAT SHOULD I DO NOW? */}
       <div>
         <div style={{
           display: 'inline-flex',
@@ -247,7 +277,7 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
         </div>
 
         <h4 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#17211B', marginBottom: 10 }}>
-          What should I do now?
+          {t('earlyWarning.whatToDoNow')}
         </h4>
 
         <ol style={{
@@ -260,7 +290,7 @@ export const EarlyWarningCard = ({ riskData, cropName = 'Tomato', onInspect }) =
           color: '#17211B',
           lineHeight: 1.5
         }}>
-          {immediateActions.map((action, idx) => (
+          {localizedActions.map((action, idx) => (
             <li key={idx} style={{ paddingLeft: 4 }}>
               {action}
             </li>

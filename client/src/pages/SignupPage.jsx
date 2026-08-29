@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle, Leaf, Zap, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle, Leaf, Zap, ShieldCheck } from 'lucide-react';
 
 export const SignupPage = ({ onNavigate }) => {
+  const { t } = useLanguage();
   const { register } = useAuth();
 
   const [name, setName] = useState('');
@@ -23,35 +25,35 @@ export const SignupPage = ({ onNavigate }) => {
 
   const validateNameFormat = (val) => {
     if (!val || !val.trim()) {
-      return 'Please enter your name.';
+      return t('auth.nameRequired');
     }
     return '';
   };
 
   const validateEmailFormat = (val) => {
     if (!val || !val.trim()) {
-      return 'Please enter a valid email address.';
+      return t('auth.emailRequired');
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(val.trim())) {
-      return 'Please enter a valid email address.';
+      return t('auth.emailInvalid');
     }
     return '';
   };
 
   const validatePasswordFormat = (val) => {
     if (!val || val.length < 8) {
-      return 'Password must be at least 8 characters.';
+      return t('auth.passwordMinLength');
     }
     return '';
   };
 
   const validateConfirmFormat = (confirmVal, passVal) => {
     if (!confirmVal) {
-      return 'Please confirm your password.';
+      return t('auth.confirmPasswordRequired');
     }
     if (confirmVal !== passVal) {
-      return 'Passwords do not match.';
+      return t('auth.passwordsDoNotMatch');
     }
     return '';
   };
@@ -111,10 +113,10 @@ export const SignupPage = ({ onNavigate }) => {
           onNavigate('dashboard');
         }
       } else {
-        setServerError(res.message || 'Unable to create your account. Please check your information.');
+        setServerError(res.message || t('auth.createAccountError'));
       }
     } catch (err) {
-      setServerError('Unable to connect to the server. Please try again.');
+      setServerError(t('auth.connectionError'));
     } finally {
       setLoading(false);
     }
@@ -154,28 +156,6 @@ export const SignupPage = ({ onNavigate }) => {
           position: 'relative',
           overflow: 'hidden'
         }}>
-          {/* Subtle Visual Pattern */}
-          <div style={{
-            position: 'absolute',
-            top: -60,
-            right: -60,
-            width: 240,
-            height: 240,
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.06)',
-            pointerEvents: 'none'
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: -40,
-            left: -40,
-            width: 200,
-            height: 200,
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.05)',
-            pointerEvents: 'none'
-          }} />
-
           <div>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 36 }}>
@@ -193,16 +173,16 @@ export const SignupPage = ({ onNavigate }) => {
                 }} 
               />
               <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                AgriShield AI
+                {t('appName')}
               </span>
             </div>
 
             {/* Tagline */}
             <h1 style={{ fontSize: '1.8rem', fontWeight: 800, lineHeight: 1.3, marginBottom: 14, color: '#FFFFFF' }}>
-              AI-powered crop protection for smarter farming.
+              {t('tagline')}
             </h1>
             <p style={{ fontSize: '0.95rem', color: '#DCFCE7', lineHeight: 1.6, opacity: 0.9, maxWidth: 420 }}>
-              Join thousands of smart farmers defending their fields with real-time PyTorch leaf disease intelligence.
+              {t('hero.subtitle')}
             </p>
           </div>
 
@@ -218,13 +198,13 @@ export const SignupPage = ({ onNavigate }) => {
               <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: 6, borderRadius: 8 }}>
                 <Zap size={16} color="#FFFFFF" />
               </div>
-              <span>Real-Time Agronomic Risk Scoring</span>
+              <span>{t('risk.title')}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.88rem', color: '#F0FDF4' }}>
               <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: 6, borderRadius: 8 }}>
                 <ShieldCheck size={16} color="#FFFFFF" />
               </div>
-              <span>Integrated Pest Management (IPM) Advisory</span>
+              <span>{t('ipm.title')}</span>
             </div>
           </div>
         </div>
@@ -240,10 +220,10 @@ export const SignupPage = ({ onNavigate }) => {
           {/* Header */}
           <div style={{ marginBottom: 24 }}>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', marginBottom: 6 }}>
-              Create Your Account
+              {t('auth.createAccount')}
             </h2>
             <p style={{ fontSize: '0.9rem', color: '#647067', margin: 0 }}>
-              Join AgriShield AI and protect your crops with AI
+              {t('auth.joinAgriShield')}
             </p>
           </div>
 
@@ -277,7 +257,7 @@ export const SignupPage = ({ onNavigate }) => {
                 htmlFor="signup-name" 
                 style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}
               >
-                Full Name
+                {t('profile.fullName')}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <div style={{ position: 'absolute', left: 14, color: '#647067', display: 'flex', alignItems: 'center' }}>
@@ -289,7 +269,7 @@ export const SignupPage = ({ onNavigate }) => {
                   value={name}
                   onChange={handleNameChange}
                   onBlur={() => setNameError(validateNameFormat(name))}
-                  placeholder="Enter your full name"
+                  placeholder={t('profile.fullName')}
                   aria-invalid={Boolean(nameError)}
                   aria-describedby={nameError ? 'name-error' : undefined}
                   style={{
@@ -320,7 +300,7 @@ export const SignupPage = ({ onNavigate }) => {
                 htmlFor="signup-email" 
                 style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}
               >
-                Email Address
+                {t('auth.email')}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <div style={{ position: 'absolute', left: 14, color: '#647067', display: 'flex', alignItems: 'center' }}>
@@ -332,7 +312,7 @@ export const SignupPage = ({ onNavigate }) => {
                   value={email}
                   onChange={handleEmailChange}
                   onBlur={() => setEmailError(validateEmailFormat(email))}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.emailPlaceholder')}
                   aria-invalid={Boolean(emailError)}
                   aria-describedby={emailError ? 'signup-email-error' : undefined}
                   style={{
@@ -363,7 +343,7 @@ export const SignupPage = ({ onNavigate }) => {
                 htmlFor="signup-password" 
                 style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}
               >
-                Password
+                {t('auth.password')}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <div style={{ position: 'absolute', left: 14, color: '#647067', display: 'flex', alignItems: 'center' }}>
@@ -375,7 +355,7 @@ export const SignupPage = ({ onNavigate }) => {
                   value={password}
                   onChange={handlePasswordChange}
                   onBlur={() => setPasswordError(validatePasswordFormat(password))}
-                  placeholder="Create a password"
+                  placeholder={t('auth.passwordPlaceholder')}
                   aria-invalid={Boolean(passwordError)}
                   aria-describedby={passwordError ? 'signup-password-error' : undefined}
                   style={{
@@ -424,7 +404,7 @@ export const SignupPage = ({ onNavigate }) => {
                 htmlFor="signup-confirm-password" 
                 style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}
               >
-                Confirm Password
+                {t('auth.confirmPassword')}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <div style={{ position: 'absolute', left: 14, color: '#647067', display: 'flex', alignItems: 'center' }}>
@@ -436,7 +416,7 @@ export const SignupPage = ({ onNavigate }) => {
                   value={confirmPassword}
                   onChange={handleConfirmChange}
                   onBlur={() => setConfirmError(validateConfirmFormat(confirmPassword, password))}
-                  placeholder="Confirm your password"
+                  placeholder={t('auth.confirmPasswordPlaceholder')}
                   aria-invalid={Boolean(confirmError)}
                   aria-describedby={confirmError ? 'confirm-password-error' : undefined}
                   style={{
@@ -512,11 +492,11 @@ export const SignupPage = ({ onNavigate }) => {
                     borderRadius: '50%',
                     animation: 'spin 0.8s linear infinite'
                   }} />
-                  <span>Creating Account...</span>
+                  <span>{t('auth.creatingAccount')}</span>
                 </>
               ) : (
                 <>
-                  <span>Create Account</span>
+                  <span>{t('auth.createAccount')}</span>
                   <ArrowRight size={18} />
                 </>
               )}
@@ -525,7 +505,7 @@ export const SignupPage = ({ onNavigate }) => {
 
           {/* Bottom Login Link */}
           <div style={{ textAlign: 'center', marginTop: 24, fontSize: '0.88rem', color: '#647067' }}>
-            <span>Already have an account? </span>
+            <span>{t('auth.alreadyAccount')} </span>
             <button
               type="button"
               onClick={() => onNavigate && onNavigate('login')}
@@ -540,24 +520,12 @@ export const SignupPage = ({ onNavigate }) => {
                 fontSize: '0.88rem'
               }}
             >
-              Sign In
+              {t('auth.signIn')}
             </button>
           </div>
         </div>
 
       </div>
-
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };

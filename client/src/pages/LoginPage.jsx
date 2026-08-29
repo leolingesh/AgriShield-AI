@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, Sparkles, CheckCircle, Leaf, Zap, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, Sparkles, Leaf, Zap, ShieldCheck } from 'lucide-react';
 
 export const LoginPage = ({ onNavigate }) => {
+  const { t } = useLanguage();
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -20,18 +22,18 @@ export const LoginPage = ({ onNavigate }) => {
 
   const validateEmailFormat = (val) => {
     if (!val || !val.trim()) {
-      return 'Please enter your email address.';
+      return t('auth.emailRequired');
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(val.trim())) {
-      return 'Please enter a valid email address.';
+      return t('auth.emailInvalid');
     }
     return '';
   };
 
   const validatePasswordFormat = (val) => {
     if (!val) {
-      return 'Please enter your password.';
+      return t('auth.passwordRequired');
     }
     return '';
   };
@@ -80,10 +82,10 @@ export const LoginPage = ({ onNavigate }) => {
           onNavigate('dashboard');
         }
       } else {
-        setAuthError(res.message || 'Invalid email or password.');
+        setAuthError(res.message || t('auth.invalidCredentials'));
       }
     } catch (err) {
-      setAuthError('Unable to connect to the server. Please try again.');
+      setAuthError(t('auth.connectionError'));
     } finally {
       setLoading(false);
     }
@@ -123,28 +125,6 @@ export const LoginPage = ({ onNavigate }) => {
           position: 'relative',
           overflow: 'hidden'
         }}>
-          {/* Subtle Agricultural Visual Pattern */}
-          <div style={{
-            position: 'absolute',
-            top: -60,
-            right: -60,
-            width: 240,
-            height: 240,
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.06)',
-            pointerEvents: 'none'
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: -40,
-            left: -40,
-            width: 200,
-            height: 200,
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.05)',
-            pointerEvents: 'none'
-          }} />
-
           <div>
             {/* Logo & Brand Name */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 36 }}>
@@ -162,16 +142,16 @@ export const LoginPage = ({ onNavigate }) => {
                 }} 
               />
               <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                AgriShield AI
+                {t('appName')}
               </span>
             </div>
 
             {/* Main Tagline */}
             <h1 style={{ fontSize: '1.8rem', fontWeight: 800, lineHeight: 1.3, marginBottom: 14, color: '#FFFFFF' }}>
-              AI-powered crop protection for smarter farming.
+              {t('tagline')}
             </h1>
             <p style={{ fontSize: '0.95rem', color: '#DCFCE7', lineHeight: 1.6, opacity: 0.9, maxWidth: 420 }}>
-              Detect pests early, analyze disease severity, and receive real-time microclimate agronomic warnings.
+              {t('hero.subtitle')}
             </p>
           </div>
 
@@ -187,13 +167,13 @@ export const LoginPage = ({ onNavigate }) => {
               <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: 6, borderRadius: 8 }}>
                 <Zap size={16} color="#FFFFFF" />
               </div>
-              <span>Real-Time Agronomic Risk Scoring</span>
+              <span>{t('risk.title')}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.88rem', color: '#F0FDF4' }}>
               <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: 6, borderRadius: 8 }}>
                 <ShieldCheck size={16} color="#FFFFFF" />
               </div>
-              <span>Integrated Pest Management (IPM) Protocols</span>
+              <span>{t('ipm.title')}</span>
             </div>
           </div>
         </div>
@@ -209,10 +189,10 @@ export const LoginPage = ({ onNavigate }) => {
           {/* Header */}
           <div style={{ marginBottom: 28 }}>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', marginBottom: 6 }}>
-              Welcome back
+              {t('auth.welcomeBack')}
             </h2>
             <p style={{ fontSize: '0.9rem', color: '#647067', margin: 0 }}>
-              Sign in to continue to AgriShield AI
+              {t('auth.signInPrompt')}
             </p>
           </div>
 
@@ -230,7 +210,7 @@ export const LoginPage = ({ onNavigate }) => {
           }}>
             <div>
               <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#15803D', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Sparkles size={14} color="#16A34A" /> SIH Demo Account
+                <Sparkles size={14} color="#16A34A" /> {t('auth.sihDemoAccount')}
               </div>
               <div style={{ fontSize: '0.8rem', color: '#166534', marginTop: 2 }}>
                 <code>ramesh.farmer@agrishield.ai</code> • <code>123456</code>
@@ -251,7 +231,7 @@ export const LoginPage = ({ onNavigate }) => {
                 flexShrink: 0
               }}
             >
-              Fill Sample
+              {t('auth.fillSample')}
             </button>
           </div>
 
@@ -285,7 +265,7 @@ export const LoginPage = ({ onNavigate }) => {
                 htmlFor="email" 
                 style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}
               >
-                Email Address
+                {t('auth.email')}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <div style={{ position: 'absolute', left: 14, color: '#647067', display: 'flex', alignItems: 'center' }}>
@@ -297,7 +277,7 @@ export const LoginPage = ({ onNavigate }) => {
                   value={email}
                   onChange={handleEmailChange}
                   onBlur={() => setEmailError(validateEmailFormat(email))}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.emailPlaceholder')}
                   aria-invalid={Boolean(emailError)}
                   aria-describedby={emailError ? 'email-error' : undefined}
                   style={{
@@ -328,7 +308,7 @@ export const LoginPage = ({ onNavigate }) => {
                 htmlFor="password" 
                 style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#17211B', marginBottom: 6 }}
               >
-                Password
+                {t('auth.password')}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <div style={{ position: 'absolute', left: 14, color: '#647067', display: 'flex', alignItems: 'center' }}>
@@ -340,7 +320,7 @@ export const LoginPage = ({ onNavigate }) => {
                   value={password}
                   onChange={handlePasswordChange}
                   onBlur={() => setPasswordError(validatePasswordFormat(password))}
-                  placeholder="Enter your password"
+                  placeholder={t('auth.passwordPlaceholder')}
                   aria-invalid={Boolean(passwordError)}
                   aria-describedby={passwordError ? 'password-error' : undefined}
                   style={{
@@ -416,11 +396,11 @@ export const LoginPage = ({ onNavigate }) => {
                     borderRadius: '50%',
                     animation: 'spin 0.8s linear infinite'
                   }} />
-                  <span>Signing in...</span>
+                  <span>{t('auth.signingIn')}</span>
                 </>
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>{t('auth.signIn')}</span>
                   <ArrowRight size={18} />
                 </>
               )}
@@ -429,7 +409,7 @@ export const LoginPage = ({ onNavigate }) => {
 
           {/* Bottom Signup Link */}
           <div style={{ textAlign: 'center', marginTop: 24, fontSize: '0.88rem', color: '#647067' }}>
-            <span>Don't have an account? </span>
+            <span>{t('auth.noAccount')} </span>
             <button
               type="button"
               onClick={() => onNavigate && onNavigate('signup')}
@@ -444,24 +424,12 @@ export const LoginPage = ({ onNavigate }) => {
                 fontSize: '0.88rem'
               }}
             >
-              Create Account
+              {t('auth.createAccount')}
             </button>
           </div>
         </div>
 
       </div>
-
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };

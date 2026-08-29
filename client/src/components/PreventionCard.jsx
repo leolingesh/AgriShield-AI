@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedCropName, getLocalizedPrevention, validateLanguageOutput } from '../utils/localizationUtils';
 import { ShieldCheck, CheckCircle2, Circle } from 'lucide-react';
 
 export const PreventionCard = ({ cropName = 'Tomato', preventionList = [] }) => {
-  const defaultList = [
+  const { t, language } = useLanguage();
+  const [checkedItems, setCheckedItems] = useState({});
+
+  const localizedCrop = getLocalizedCropName(cropName, language);
+
+  const defaultRawList = [
     'Inspect plants regularly (especially lower foliage and leaf undersides).',
     'Remove severely affected plant material and dispose of it safely away from the field.',
     'Maintain proper field/canopy airflow by keeping recommended row spacing.',
@@ -10,8 +17,10 @@ export const PreventionCard = ({ cropName = 'Tomato', preventionList = [] }) => 
     'Monitor weather conditions closely after rain or prolonged morning dew.'
   ];
 
-  const itemsToDisplay = preventionList.length > 0 ? preventionList : defaultList;
-  const [checkedItems, setCheckedItems] = useState({});
+  const rawList = preventionList.length > 0 ? preventionList : defaultRawList;
+  const itemsToDisplay = rawList.map((item, idx) =>
+    validateLanguageOutput(getLocalizedPrevention(item, language, idx), language, 'PreventionCard')
+  );
 
   const toggleCheck = (idx) => {
     setCheckedItems(prev => ({
@@ -30,7 +39,7 @@ export const PreventionCard = ({ cropName = 'Tomato', preventionList = [] }) => 
       boxShadow: '0 8px 30px rgba(0,0,0,0.04)'
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 40,
@@ -46,10 +55,10 @@ export const PreventionCard = ({ cropName = 'Tomato', preventionList = [] }) => 
           </div>
           <div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17211B', margin: 0 }}>
-              🛡️ Prevention Checklist
+              🛡️ {t('prevention.checklistTitle')}
             </h3>
             <span style={{ fontSize: '0.82rem', color: '#647067' }}>
-              Protect your {cropName} crop before the problem spreads.
+              {t('prevention.checklistSubtitle', { crop: localizedCrop })}
             </span>
           </div>
         </div>
@@ -63,7 +72,7 @@ export const PreventionCard = ({ cropName = 'Tomato', preventionList = [] }) => 
             fontSize: '0.78rem',
             fontWeight: 800
           }}>
-            {completedCount} / {itemsToDisplay.length} Completed
+            {t('prevention.completedCount', { completed: completedCount, total: itemsToDisplay.length })}
           </span>
         )}
       </div>

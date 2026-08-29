@@ -2,6 +2,7 @@ import React from 'react';
 import { useWeather } from '../context/WeatherContext';
 import { useLocation } from '../context/LocationContext';
 import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedWeatherTerm, getLocalizedRiskLevel } from '../utils/localizationUtils';
 import { 
   CloudSun, 
   Droplets, 
@@ -18,7 +19,7 @@ import {
 export const WeatherCard = () => {
   const { weather, loadingWeather, refreshWeather } = useWeather();
   const { location } = useLocation();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!weather) {
     return (
@@ -48,6 +49,8 @@ export const WeatherCard = () => {
         return <Cloud size={size} color="#647067" />;
     }
   };
+
+  const localizedCondition = getLocalizedWeatherTerm(weather.condition || 'Partly Cloudy', language);
 
   return (
     <div className="glass-card" style={{ padding: '20px', position: 'relative', overflow: 'hidden' }}>
@@ -133,7 +136,7 @@ export const WeatherCard = () => {
               {weather.temperature}°C
             </div>
             <div style={{ fontSize: '0.68rem', color: '#647067' }}>
-              {t('weather.temp')} {weather.feelsLike || weather.temperature}°C
+              {localizedCondition}
             </div>
           </div>
         </div>
@@ -168,7 +171,7 @@ export const WeatherCard = () => {
               {weather.humidity}%
             </div>
             <div style={{ fontSize: '0.68rem', color: weather.humidity >= 80 ? '#DC2626' : '#15803D', fontWeight: 600 }}>
-              {weather.humidity >= 80 ? t('risk.high') : t('risk.low')}
+              {getLocalizedRiskLevel(weather.humidity >= 80 ? 'HIGH' : 'LOW', language)}
             </div>
           </div>
         </div>
@@ -203,7 +206,7 @@ export const WeatherCard = () => {
               {weather.rainfall} <span style={{ fontSize: '0.8rem' }}>mm</span>
             </div>
             <div style={{ fontSize: '0.68rem', color: '#647067' }}>
-              {weather.condition || t('weather.title')}
+              {localizedCondition}
             </div>
           </div>
         </div>

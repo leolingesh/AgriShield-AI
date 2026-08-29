@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import {
+  getLocalizedCropName,
+  getLocalizedDiseaseName,
+  getLocalizedAction,
+  getLocalizedPrevention
+} from '../utils/localizationUtils';
 import tts from '../services/ttsService';
 import voiceController from '../services/voiceController';
 
@@ -46,16 +52,8 @@ export function generateSpeechText(analysisResult, language, t) {
     );
   }
 
-  const cropId = (analysisResult.cropId || ai.crop || 'crop').toLowerCase();
-  const expectedCropId = (analysisResult.expectedCrop || '').toLowerCase();
-  const isMismatch = Boolean(
-    analysisResult.cropMismatch || 
-    (expectedCropId && cropId !== expectedCropId)
-  );
-
-  const cropTranslated = t(`crop.${cropId}`, analysisResult.cropName || ai.crop || cropId);
-  const expectedCropTranslated = expectedCropId ? t(`crop.${expectedCropId}`, expectedCropId) : '';
-  const conditionTranslated = ai.condition || 'General Leaf Discoloration';
+  const cropTranslated = getLocalizedCropName(analysisResult.cropId || ai.crop || analysisResult.cropName, language);
+  const conditionTranslated = getLocalizedDiseaseName(ai.condition, language);
   const isHealthy = Boolean(
     ai.condition?.toLowerCase().includes('healthy') ||
     ai.condition === 'Healthy'
@@ -64,7 +62,8 @@ export function generateSpeechText(analysisResult, language, t) {
   const parts = [];
 
   // 2. Crop Mismatch Spoken Notice
-  if (isMismatch && expectedCropTranslated) {
+  if (analysisResult.cropMismatch && analysisResult.expectedCrop) {
+    const expectedCropTranslated = getLocalizedCropName(analysisResult.expectedCrop, language);
     const mismatchTemplate = t(
       'audio.cropMismatchSpoken',
       'You selected {expectedCrop}, but the uploaded image appears to be {detectedCrop}. The diagnosis has been corrected based on image analysis.'
@@ -103,12 +102,12 @@ export function generateSpeechText(analysisResult, language, t) {
     'The AI confidence is {confidence} percent. Approximately {affectedArea} of the crop area is affected.'
   );
   const spokenConfArea = confAreaTemplate
-    .replace('{confidence}', confidenceVal)
+    .replace('{confidence}', String(confidenceVal))
     .replace('{affectedArea}', areaVal);
   parts.push(spokenConfArea);
 
   // 6. Early Warning Threat
-  const threatName = risk.predictedThreat || conditionTranslated;
+  const threatName = getLocalizedDiseaseName(risk.predictedThreat || ai.condition, language);
   if (threatName) {
     const threatTemplate = t('audio.speechThreat', 'Early warning threat: {threat}.');
     const spokenThreat = threatTemplate.replace('{threat}', threatName);
@@ -116,18 +115,18 @@ export function generateSpeechText(analysisResult, language, t) {
   }
 
   // 7. Prevention Measures
-  const preventionList = recs.prevention || [];
-  if (preventionList.length > 0) {
-    const preventionItems = preventionList.slice(0, 2).join('. ');
+  const rawPreventionList = recs.prevention || ai.prevention || [];
+  if (rawPreventionList.length > 0) {
+    const preventionItems = rawPreventionList.slice(0, 2).map((item, idx) => getLocalizedPrevention(item, language, idx)).join('. ');
     const preventionTemplate = t('audio.speechPrevention', 'Recommended prevention measures: {prevention}.');
     const spokenPrevention = preventionTemplate.replace('{prevention}', preventionItems);
     parts.push(spokenPrevention);
   }
 
   // 8. Immediate Action Steps
-  const actionList = recs.immediateActions || [];
-  if (actionList.length > 0) {
-    const actionItems = actionList.slice(0, 2).join('. ');
+  const rawActionList = recs.immediateActions || ai.recommendedActions || [];
+  if (rawActionList.length > 0) {
+    const actionItems = rawActionList.slice(0, 2).map(act => getLocalizedAction(act, language)).join('. ');
     const actionTemplate = t('audio.speechAction', 'Immediate action steps: {actions}.');
     const spokenAction = actionTemplate.replace('{actions}', actionItems);
     parts.push(spokenAction);
@@ -241,6 +240,5 @@ export function useMultilingualSpeech() {
   };
 }
 
-// Export alias as requested
 export const useTextToSpeech = useMultilingualSpeech;
 export default useMultilingualSpeech;

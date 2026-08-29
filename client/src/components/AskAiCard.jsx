@@ -82,10 +82,10 @@ export const AskAiCard = ({ currentAnalysis = null, cropName = 'Tomato' }) => {
         </div>
         <div>
           <h3 style={{ fontSize: '1.05rem', color: '#17211B', fontWeight: 700 }}>
-            {t('ask.title', 'Ask AgriShield AI')}
+            {t('ask.title')}
           </h3>
           <p style={{ fontSize: '0.78rem', color: '#647067', margin: 0 }}>
-            {t('ask.subtitle', 'Ask questions about crop diseases, remedies, or field observations in your language')}
+            {t('ask.subtitle')}
           </p>
         </div>
       </div>
@@ -95,7 +95,7 @@ export const AskAiCard = ({ currentAnalysis = null, cropName = 'Tomato' }) => {
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
             type="text"
-            placeholder={t('ask.placeholder', 'Type or speak your crop question (e.g. My tomato leaves are turning yellow)...')}
+            placeholder={t('ask.placeholder')}
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={(e) => {
@@ -136,7 +136,7 @@ export const AskAiCard = ({ currentAnalysis = null, cropName = 'Tomato' }) => {
             }}
           >
             {loading ? <Loader2 size={16} className="spin" color="#FFFFFF" /> : <Send size={16} />}
-            <span>{t('ask.button', 'Ask AI')}</span>
+            <span>{t('ask.button')}</span>
           </button>
         </div>
 
@@ -151,7 +151,7 @@ export const AskAiCard = ({ currentAnalysis = null, cropName = 'Tomato' }) => {
           />
           <label htmlFor="autoReadCheckbox" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
             <Volume2 size={14} color="#16A34A" />
-            <span>{t('ask.autoSpeech', 'Automatically read responses aloud')}</span>
+            <span>{t('ask.autoSpeech')}</span>
           </label>
         </div>
       </div>
@@ -190,7 +190,7 @@ export const AskAiCard = ({ currentAnalysis = null, cropName = 'Tomato' }) => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#15803D', fontWeight: 700, fontSize: '0.85rem' }}>
               <Sparkles size={16} color="#16A34A" />
-              <span>AgriShield AI Response</span>
+              <span>{t('appName')} AI</span>
             </div>
 
             {/* Read Answer Aloud Button */}

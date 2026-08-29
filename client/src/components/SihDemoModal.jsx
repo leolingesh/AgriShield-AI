@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Sparkles, X, ArrowRight } from 'lucide-react';
+import { getLocalizedCropName, getLocalizedDiseaseName, getLocalizedRiskLevel } from '../utils/localizationUtils';
 
 export const DEMO_CASES = [
   {
@@ -12,7 +13,7 @@ export const DEMO_CASES = [
     district: 'Salem',
     image: '/sample_crops/septoria_tomato.jpg',
     weatherDesc: '27.5°C • 84% Humidity • 14.2mm Rain',
-    threat: 'Fungal Leaf Spot (Septoria lycopersici)',
+    threat: 'Septoria Leaf Spot',
     riskLevel: 'HIGH',
     riskScore: 78
   },
@@ -25,7 +26,7 @@ export const DEMO_CASES = [
     district: 'Thanjavur',
     image: '/sample_crops/rice_blast.jpg',
     weatherDesc: '24.2°C • 91% Humidity • 22mm Rain',
-    threat: 'Rice Blast (Magnaporthe oryzae)',
+    threat: 'Rice Leaf Blast',
     riskLevel: 'CRITICAL',
     riskScore: 89
   },
@@ -38,7 +39,7 @@ export const DEMO_CASES = [
     district: 'Nagpur',
     image: '/sample_crops/cotton_bollworm.jpg',
     weatherDesc: '32.0°C • 68% Humidity • Warm & Dry',
-    threat: 'Pink Bollworm (Pectinophora gossypiella)',
+    threat: 'Pink Bollworm',
     riskLevel: 'CRITICAL',
     riskScore: 82
   },
@@ -51,14 +52,14 @@ export const DEMO_CASES = [
     district: 'Bengaluru Rural',
     image: '/sample_crops/blossom_rot_tomato.jpg',
     weatherDesc: '31.0°C • 48% Humidity • Water Stress',
-    threat: 'Physiological Calcium Deficiency',
+    threat: 'Blossom End Rot',
     riskLevel: 'MEDIUM',
     riskScore: 48
   }
 ];
 
 export const SihDemoModal = ({ isOpen, onClose, onSelectDemoCase }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -106,7 +107,7 @@ export const SihDemoModal = ({ isOpen, onClose, onSelectDemoCase }) => {
             <div>
               <h3 style={{ fontSize: '1.2rem', color: '#17211B' }}>{t('demo.modalTitle')}</h3>
               <span style={{ fontSize: '0.8rem', color: '#B45309', fontWeight: 600 }}>
-                Instant One-Click Demonstration for Hackathon Judges
+                {t('demo.modalSubtitle')}
               </span>
             </div>
           </div>
@@ -132,83 +133,89 @@ export const SihDemoModal = ({ isOpen, onClose, onSelectDemoCase }) => {
 
         {/* Demo Cases List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {DEMO_CASES.map(demo => (
-            <div
-              key={demo.id}
-              onClick={() => {
-                onSelectDemoCase(demo);
-                onClose();
-              }}
-              className="glass-card glass-card-interactive"
-              style={{
-                padding: '14px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                cursor: 'pointer',
-                background: '#F7F9F7'
-              }}
-            >
-              {/* Thumbnail */}
-              <div style={{
-                width: 76,
-                height: 76,
-                borderRadius: 10,
-                overflow: 'hidden',
-                flexShrink: 0,
-                border: '1px solid #E5EAE6',
-                background: '#FFFFFF'
-              }}>
-                <img
-                  src={demo.image}
-                  alt={demo.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
+          {DEMO_CASES.map(demo => {
+            const locCrop = getLocalizedCropName(demo.cropId, language);
+            const locDisease = getLocalizedDiseaseName(demo.threat, language);
+            const locRisk = getLocalizedRiskLevel(demo.riskLevel, language);
 
-              {/* Information */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-                  <span style={{ fontSize: '0.78rem', color: '#16A34A', fontWeight: 700 }}>
-                    🌾 {demo.crop}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#647067' }}>
-                    📍 {demo.district}, {demo.state}
-                  </span>
-                </div>
-
-                <h4 style={{ fontSize: '1rem', color: '#17211B', marginBottom: 4 }}>
-                  {demo.title}
-                </h4>
-
-                <div style={{ fontSize: '0.75rem', color: '#647067' }}>
-                  🌦 {demo.weatherDesc}
-                </div>
-              </div>
-
-              {/* Risk Level Badge & Action */}
-              <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: demo.riskScore > 60 ? '#DC2626' : '#B45309' }}>
-                  {demo.riskScore}%
-                </div>
-                <span className={demo.riskLevel === 'CRITICAL' ? 'badge badge-critical' : demo.riskLevel === 'HIGH' ? 'badge badge-high' : 'badge badge-medium'}>
-                  {demo.riskLevel === 'CRITICAL' ? t('risk.critical') : demo.riskLevel === 'HIGH' ? t('risk.high') : t('risk.medium')}
-                </span>
-                <div style={{
-                  marginTop: 6,
+            return (
+              <div
+                key={demo.id}
+                onClick={() => {
+                  onSelectDemoCase(demo);
+                  onClose();
+                }}
+                className="glass-card glass-card-interactive"
+                style={{
+                  padding: '14px 16px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 4,
-                  color: '#16A34A',
-                  fontSize: '0.75rem',
-                  fontWeight: 600
+                  gap: 16,
+                  cursor: 'pointer',
+                  background: '#F7F9F7'
+                }}
+              >
+                {/* Thumbnail */}
+                <div style={{
+                  width: 76,
+                  height: 76,
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                  border: '1px solid #E5EAE6',
+                  background: '#FFFFFF'
                 }}>
-                  <span>{t('demo.runTest')}</span>
-                  <ArrowRight size={13} />
+                  <img
+                    src={demo.image}
+                    alt={locDisease}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+
+                {/* Information */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                    <span style={{ fontSize: '0.78rem', color: '#16A34A', fontWeight: 700 }}>
+                      🌾 {locCrop}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#647067' }}>
+                      📍 {demo.district}, {demo.state}
+                    </span>
+                  </div>
+
+                  <h4 style={{ fontSize: '1rem', color: '#17211B', marginBottom: 4 }}>
+                    {locDisease}
+                  </h4>
+
+                  <div style={{ fontSize: '0.75rem', color: '#647067' }}>
+                    🌦 {demo.weatherDesc}
+                  </div>
+                </div>
+
+                {/* Risk Level Badge & Action */}
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: demo.riskScore > 60 ? '#DC2626' : '#B45309' }}>
+                    {demo.riskScore}%
+                  </div>
+                  <span className={demo.riskLevel === 'CRITICAL' ? 'badge badge-critical' : demo.riskLevel === 'HIGH' ? 'badge badge-high' : 'badge badge-medium'}>
+                    {locRisk}
+                  </span>
+                  <div style={{
+                    marginTop: 6,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    color: '#16A34A',
+                    fontSize: '0.75rem',
+                    fontWeight: 600
+                  }}>
+                    <span>{t('demo.runTest')}</span>
+                    <ArrowRight size={13} />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
