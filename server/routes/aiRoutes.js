@@ -6,6 +6,7 @@ const { analyzeCropImage } = require('../services/aiService');
 const { calculateCropRisk } = require('../services/riskEngine');
 const { getWeatherData } = require('../services/weatherService');
 const { generateEarlyWarningAlert } = require('../services/notificationService');
+const { askOllama } = require('../services/ollamaService');
 const Analysis = require('../models/Analysis');
 const { isMongoConnected, fallbackStore, persistFallback } = require('../config/db');
 const cropKnowledgeBase = require('../data/cropKnowledgeBase.json');
@@ -60,7 +61,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     const isDemo = (isDemoMode === 'true' || isDemoMode === true) && !req.file;
 
-    // 1. Dual-Engine Part A: Multimodal Vision AI Analysis
+    // 1. Dual-Engine Part A: Multimodal Vision AI Analysis (Ollama + PyTorch + Knowledge)
     const aiResult = await analyzeCropImage({
       imagePath,
       imageName: req.file ? req.file.originalname : path.basename(imageUrl),
@@ -118,7 +119,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       normalizedDisease: aiResult.condition,
       confidence: aiResult.confidence,
       knowledgeKey: `${detectedCropId}___${aiResult.condition}`,
-      knowledgeFound: Boolean(aiResult.supported)
+      knowledgeFound: Boolean(aiResult.supported),
+      engineSource: aiResult.source || 'AgriShield'
     }, null, 2));
     console.log('==================================================');
 
@@ -258,43 +260,50 @@ router.post('/ask', async (req, res) => {
     // Find crop knowledge from cropKnowledgeBase.json
     const cropData = cropKnowledgeBase.crops.find(c => c.id === targetCropId) || cropKnowledgeBase.crops[0];
     const activeCropName = cropData ? cropData.name : (currentAnalysis?.cropName || cropName || 'Tomato');
-
     const activeCondition = currentAnalysis?.aiAnalysis?.condition || 'Crop Condition';
-    const activeSeverity = currentAnalysis?.aiAnalysis?.severity || 'Moderate';
-    const preventionMeasures = currentAnalysis?.recommendations?.prevention || currentAnalysis?.aiAnalysis?.prevention || [];
-    const immediateActions = currentAnalysis?.recommendations?.immediateActions || currentAnalysis?.aiAnalysis?.recommendedActions || [];
 
-    let answer = '';
+    // Try Ollama LLM if available
+    let answer = await askOllama({
+      question,
+      cropContext: activeCropName,
+      conditionContext: activeCondition,
+      language
+    });
 
-    // If context of current analysis is available AND user refers to "this" condition
-    if (currentAnalysis && !matchedCropId && (
-      qLower.includes('this') || qLower.includes('do') || qLower.includes('treat') || 
-      qLower.includes('cure') || qLower.includes('prevent') || qLower.includes('என்ன') ||
-      qLower.includes('செய்ய') || qLower.includes('क्या') || qLower.includes('उपाय') ||
-      qLower.includes('మందు') || qLower.includes('ಔಷಧ')
-    )) {
-      let recsText = '';
-      if (immediateActions.length > 0) {
-        recsText += `Immediate action: ${immediateActions.join('. ')}. `;
+    if (!answer) {
+      const activeSeverity = currentAnalysis?.aiAnalysis?.severity || 'Moderate';
+      const preventionMeasures = currentAnalysis?.recommendations?.prevention || currentAnalysis?.aiAnalysis?.prevention || [];
+      const immediateActions = currentAnalysis?.recommendations?.immediateActions || currentAnalysis?.aiAnalysis?.recommendedActions || [];
+
+      // If context of current analysis is available AND user refers to "this" condition
+      if (currentAnalysis && !matchedCropId && (
+        qLower.includes('this') || qLower.includes('do') || qLower.includes('treat') || 
+        qLower.includes('cure') || qLower.includes('prevent') || qLower.includes('என்ன') ||
+        qLower.includes('செய்ய') || qLower.includes('क्या') || qLower.includes('उपाय') ||
+        qLower.includes('మందు') || qLower.includes('ಔಷಧ')
+      )) {
+        let recsText = '';
+        if (immediateActions.length > 0) {
+          recsText += `Immediate action: ${immediateActions.join('. ')}. `;
+        }
+        if (preventionMeasures.length > 0) {
+          recsText += `Prevention: ${preventionMeasures.join('. ')}.`;
+        }
+
+        answer = `For your ${activeCropName} showing ${activeCondition} (${activeSeverity} severity): ${recsText || 'Maintain proper soil drainage, remove infected foliage, and apply bio-fungicidal neem oil spray.'}`;
+      } else if (cropData && cropData.threats && cropData.threats.length > 0) {
+        const topThreat = cropData.threats[0];
+        const threatPrev = topThreat.prevention ? topThreat.prevention.slice(0, 2).join('. ') : '';
+        const threatActions = topThreat.immediateActions ? topThreat.immediateActions.slice(0, 2).join('. ') : '';
+
+        answer = `Based on AgriShield AI agronomic knowledge for ${activeCropName} (${cropData.category}): Key prevention: ${threatPrev}. Recommended action: ${threatActions}. Consult your local Krishi Vigyan Kendra (KVK) for field inspection.`;
+      } else if (qLower.includes('yellow') || qLower.includes('மஞ்சள்') || qLower.includes('पीली')) {
+        answer = `Yellow leaves on ${activeCropName} often indicate nitrogen deficiency, over-watering, or early fungal infection. Ensure balanced NPK fertilizer application, check root drainage, and avoid overhead watering.`;
+      } else if (qLower.includes('spot') || qLower.includes('black') || qLower.includes('கருப்பு') || qLower.includes('दब्बे') || qLower.includes('दाग')) {
+        answer = `Black or brown spots on ${activeCropName} leaves typically signal fungal leaf spot or bacterial lesion. Prune affected leaves, avoid wet foliage overnight, and apply copper bio-fungicide.`;
+      } else {
+        answer = `Based on AgriShield AI agronomic knowledge for ${activeCropName}: Monitor leaves daily for lesions or discoloration. Maintain proper plant spacing for ventilation, ensure balanced organic mulch, and consult your nearest Krishi Vigyan Kendra (KVK) if symptoms worsen.`;
       }
-      if (preventionMeasures.length > 0) {
-        recsText += `Prevention: ${preventionMeasures.join('. ')}.`;
-      }
-
-      answer = `For your ${activeCropName} showing ${activeCondition} (${activeSeverity} severity): ${recsText || 'Maintain proper soil drainage, remove infected foliage, and apply bio-fungicidal neem oil spray.'}`;
-    } else if (cropData && cropData.threats && cropData.threats.length > 0) {
-      // Query specific threats from knowledge base for the matched crop
-      const topThreat = cropData.threats[0];
-      const threatPrev = topThreat.prevention ? topThreat.prevention.slice(0, 2).join('. ') : '';
-      const threatActions = topThreat.immediateActions ? topThreat.immediateActions.slice(0, 2).join('. ') : '';
-
-      answer = `Based on AgriShield AI agronomic knowledge for ${activeCropName} (${cropData.category}): Key prevention: ${threatPrev}. Recommended action: ${threatActions}. Consult your local Krishi Vigyan Kendra (KVK) for field inspection.`;
-    } else if (qLower.includes('yellow') || qLower.includes('மஞ்சள்') || qLower.includes('पीली')) {
-      answer = `Yellow leaves on ${activeCropName} often indicate nitrogen deficiency, over-watering, or early fungal infection. Ensure balanced NPK fertilizer application, check root drainage, and avoid overhead watering.`;
-    } else if (qLower.includes('spot') || qLower.includes('black') || qLower.includes('கருப்பு') || qLower.includes('दब्बे') || qLower.includes('दाग')) {
-      answer = `Black or brown spots on ${activeCropName} leaves typically signal fungal leaf spot or bacterial lesion. Prune affected leaves, avoid wet foliage overnight, and apply copper bio-fungicide.`;
-    } else {
-      answer = `Based on AgriShield AI agronomic knowledge for ${activeCropName}: Monitor leaves daily for lesions or discoloration. Maintain proper plant spacing for ventilation, ensure balanced organic mulch, and consult your nearest Krishi Vigyan Kendra (KVK) if symptoms worsen.`;
     }
 
     res.json({

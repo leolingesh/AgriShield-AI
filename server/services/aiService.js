@@ -3,13 +3,13 @@ const path = require('path');
 const config = require('../config/config');
 const { buildSystemPrompt, buildUserPrompt } = require('./promptBuilder');
 const { classifyImage } = require('./diseaseClassifierClient');
+const { isOllamaAvailable, analyzeWithOllama } = require('./ollamaService');
 const diseaseKnowledge = require('../data/diseaseKnowledge.json');
 const cropKnowledgeBase = require('../data/cropKnowledgeBase.json');
 const sihDemoData = require('../data/sihDemoData.json');
 
 /**
  * Single normalization function to convert disease key variations into canonical key.
- * Requirement 4: Converts variations into exact disease key or returns null if knowledge unavailable.
  */
 function normalizeDiseaseKey(crop, rawCondition) {
   if (!crop || !rawCondition) return null;
@@ -24,6 +24,9 @@ function normalizeDiseaseKey(crop, rawCondition) {
   else if (cond.includes('blossom') || cond.includes('end_rot') || cond.includes('rot')) cond = 'blossom_end_rot';
   else if (cond.includes('blast')) cond = 'leaf_blast';
   else if (cond.includes('rust')) cond = 'yellow_rust';
+  else if (cond.includes('bollworm')) cond = 'pink_bollworm';
+  else if (cond.includes('early_blight') || cond.includes('early blight')) cond = 'early_blight';
+  else if (cond.includes('late_blight') || cond.includes('late blight')) cond = 'late_blight';
   else if (cond.includes('healthy') || cond.includes('normal')) cond = 'healthy';
 
   const fullKey = `${c}___${cond}`;
@@ -81,12 +84,13 @@ function validateAndNormalizeResponse(rawObj, fallbackCropName = 'Crop') {
       ? rawObj.monitoringPlan
       : ['Recheck foliage in 48 hours', 'Monitor dew duration'],
     chemicalWarning: rawObj.chemicalWarning || 'Consult local Krishi Vigyan Kendra (KVK) officer before applying any chemical pesticides. Always wear protective gear.',
-    message: rawObj.message || null
+    message: rawObj.message || null,
+    source: rawObj.source || 'AgriShield Dual-Engine'
   };
 }
 
 /**
- * Main Agronomic Analysis Pipeline combining Stage 1 PyTorch Classifier + Disease Knowledge Base
+ * Main Agronomic Analysis Pipeline combining Ollama Vision AI + Stage 1 PyTorch Classifier + Disease Knowledge Base
  */
 async function analyzeCropImage({
   imagePath,
@@ -102,7 +106,26 @@ async function analyzeCropImage({
 }) {
   const normCropId = (cropId || cropName || 'tomato').toLowerCase();
 
-  // 1. STAGE 1: Call Dedicated PyTorch Vision Model (MobileNetV3 on FastAPI port 8000)
+  // 1. Check if Ollama Vision (qwen3-vl:8b) is active locally (unless forced demo mode)
+  if (!forceDemoMode && imagePath && fs.existsSync(imagePath)) {
+    try {
+      const ollamaResult = await analyzeWithOllama({
+        imagePath,
+        cropName,
+        language,
+        observations: farmerObservations
+      });
+
+      if (ollamaResult && ollamaResult.condition) {
+        console.log(`[AI SERVICE] Processed via Ollama (${ollamaResult.source})`);
+        return validateAndNormalizeResponse(ollamaResult, cropName);
+      }
+    } catch (e) {
+      console.warn('[AI SERVICE] Ollama attempt bypassed:', e.message);
+    }
+  }
+
+  // 2. STAGE 1: Call Dedicated PyTorch Vision Model (MobileNetV3 on FastAPI port 8000)
   let pyPrediction = await classifyImage(imagePath, imageName || 'leaf.jpg', normCropId);
 
   if (pyPrediction.condition === 'service_offline' || pyPrediction.supported === false || forceDemoMode) {
@@ -123,10 +146,14 @@ async function analyzeCropImage({
     } else if (imgLower.includes('rust') || imgLower.includes('wheat')) {
       detectedCrop = 'wheat';
       detectedCondition = 'yellow_rust';
+    } else if (imgLower.includes('bollworm') || imgLower.includes('cotton')) {
+      detectedCrop = 'cotton';
+      detectedCondition = 'pink_bollworm';
     } else {
       if (normCropId === 'tomato') detectedCondition = 'septoria_leaf_spot';
       else if (normCropId === 'rice') detectedCondition = 'leaf_blast';
       else if (normCropId === 'wheat') detectedCondition = 'yellow_rust';
+      else if (normCropId === 'cotton') detectedCondition = 'pink_bollworm';
     }
 
     pyPrediction = {
@@ -151,7 +178,7 @@ async function analyzeCropImage({
   const activeCrop = (pyPrediction.crop || normCropId).toLowerCase();
   const activeCropCapitalized = activeCrop.charAt(0).toUpperCase() + activeCrop.slice(1);
 
-  // 2. Fetch Disease Knowledge Base record using canonical normalization
+  // 3. Fetch Disease Knowledge Base record using canonical normalization
   const diseaseKey = normalizeDiseaseKey(activeCrop, pyPrediction.condition);
   const dInfo = diseaseKey ? diseaseKnowledge[diseaseKey] : null;
 
@@ -178,7 +205,8 @@ async function analyzeCropImage({
       recommendedActions: dInfo.ipm.mechanical.concat(dInfo.ipm.cultural),
       prevention: dInfo.ipm.cultural.concat(dInfo.ipm.biological),
       monitoringPlan: [`Scout lower leaves weekly for ${dInfo.name}`],
-      chemicalWarning: isHealthy ? 'No chemical treatment required for healthy crop canopy.' : (dInfo.ipm.chemical[0] || 'Consult local Krishi Vigyan Kendra (KVK) agricultural officer.')
+      chemicalWarning: isHealthy ? 'No chemical treatment required for healthy crop canopy.' : (dInfo.ipm.chemical[0] || 'Consult local Krishi Vigyan Kendra (KVK) agricultural officer.'),
+      source: 'MobileNetV3 + Agronomic Knowledge'
     }, activeCropCapitalized);
   }
 
@@ -196,4 +224,3 @@ module.exports = {
   analyzeCropImage,
   validateAndNormalizeResponse
 };
-
