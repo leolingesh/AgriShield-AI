@@ -28,22 +28,21 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
       background: '#FFFFFF',
       borderBottom: '1px solid #E5EAE6',
       boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-      minHeight: '64px',
+      height: '60px',
       display: 'flex',
       alignItems: 'center',
       width: '100%',
       boxSizing: 'border-box'
     }}>
       <div style={{
-        maxWidth: 1400,
         width: '100%',
         margin: '0 auto',
-        padding: '6px 16px',
+        padding: '0 16px',
         boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: 8
+        gap: 10
       }}>
         {/* Brand Logo */}
         <div 
@@ -54,26 +53,29 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
             src="/logo.png" 
             alt="AgriShield AI Logo" 
             style={{ 
-              width: 34, 
-              height: 34, 
+              width: 32, 
+              height: 32, 
               objectFit: 'contain',
               flexShrink: 0 
             }} 
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
-            <span style={{ fontSize: '1.12rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '1.08rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
               {t('appName')}
             </span>
           </div>
         </div>
 
-        {/* Desktop Navigation Links */}
+        {/* Desktop Navigation Links - Single Crisp Row */}
         <nav className="desktop-nav" style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 3,
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          gap: 2,
+          flexWrap: 'nowrap',
+          whiteSpace: 'nowrap',
+          justifyContent: 'center',
+          flexShrink: 1,
+          minWidth: 0
         }}>
           {navItems.map(item => {
             const Icon = item.icon;
@@ -86,9 +88,9 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 4,
-                  padding: '6px 8px',
-                  borderRadius: 8,
-                  fontSize: '0.78rem',
+                  padding: '5px 7px',
+                  borderRadius: 7,
+                  fontSize: '0.76rem',
                   fontWeight: isActive ? 700 : 500,
                   lineHeight: 1.2,
                   whiteSpace: 'nowrap',
@@ -96,17 +98,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                   background: isActive ? '#DCFCE7' : 'transparent',
                   border: isActive ? '1px solid #BBF7D0' : '1px solid transparent',
                   transition: 'all 0.2s ease',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  flexShrink: 0
                 }}
               >
-                <Icon size={14} color={isActive ? '#15803D' : '#647067'} />
-                {item.label}
+                <Icon size={13} color={isActive ? '#15803D' : '#647067'} aria-hidden="true" />
+                <span>{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Right Controls: Location Badge, SIH Demo Button, Language Selector, Auth */}
+        {/* Right Controls: Location Badge, SIH Demo Button, Auth, Language Selector */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }} className="desktop-controls">
           {/* Quick Location Badge */}
           <div 
@@ -116,18 +119,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               display: 'flex',
               alignItems: 'center',
               gap: 4,
-              padding: '4px 8px',
+              padding: '4px 7px',
               borderRadius: 6,
               background: '#F1F5F2',
               border: '1px solid #E5EAE6',
-              fontSize: '0.74rem',
+              fontSize: '0.72rem',
               color: '#17211B',
               cursor: 'pointer',
               whiteSpace: 'nowrap'
             }}
           >
-            <MapPin size={13} color="#16A34A" />
-            <span style={{ maxWidth: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <MapPin size={12} color="#16A34A" aria-hidden="true" />
+            <span style={{ maxWidth: 90, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {location?.district || location?.state || t('location.title')}
             </span>
           </div>
@@ -139,18 +142,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               display: 'flex',
               alignItems: 'center',
               gap: 4,
-              padding: '5px 9px',
+              padding: '4px 8px',
               borderRadius: 6,
               background: '#FEF3C7',
               border: '1px solid #FDE68A',
               color: '#B45309',
-              fontSize: '0.74rem',
+              fontSize: '0.72rem',
               fontWeight: 700,
               cursor: 'pointer',
               whiteSpace: 'nowrap'
             }}
           >
-            <Sparkles size={13} color="#D97706" />
+            <Sparkles size={12} color="#D97706" aria-hidden="true" />
             <span>{t('nav.demo')}</span>
           </button>
 
@@ -163,18 +166,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 4,
-                padding: '5px 9px',
+                padding: '4px 8px',
                 borderRadius: 6,
                 background: '#FEE2F2',
                 border: '1px solid #FCA5A5',
                 color: '#991B1B',
-                fontSize: '0.74rem',
+                fontSize: '0.72rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
               }}
             >
-              <LogOut size={13} color="#991B1B" />
+              <LogOut size={12} color="#991B1B" aria-hidden="true" />
               <span>{t('profile.logout')}</span>
             </button>
           ) : (
@@ -184,18 +187,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 4,
-                padding: '5px 10px',
+                padding: '4px 8px',
                 borderRadius: 6,
                 background: '#16A34A',
                 border: '1px solid #15803D',
                 color: '#FFFFFF',
-                fontSize: '0.74rem',
+                fontSize: '0.72rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
               }}
             >
-              <LogIn size={13} color="#FFFFFF" />
+              <LogIn size={12} color="#FFFFFF" aria-hidden="true" />
               <span>{t('auth.signIn')}</span>
             </button>
           )}
@@ -207,16 +210,16 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               onChange={(e) => setLanguage(e.target.value)}
               aria-label="Select Language"
               style={{
-                padding: '5px 7px',
+                padding: '4px 6px',
                 borderRadius: 6,
                 background: '#FFFFFF',
                 border: '1px solid #E5EAE6',
                 color: '#17211B',
-                fontSize: '0.74rem',
+                fontSize: '0.72rem',
                 fontWeight: 600,
                 outline: 'none',
                 cursor: 'pointer',
-                maxWidth: 110
+                maxWidth: 105
               }}
             >
               {languages.map(lang => (
@@ -267,7 +270,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               cursor: 'pointer'
             }}
           >
-            {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            {isMenuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
           </button>
         </div>
       </div>
@@ -276,7 +279,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
       {isMenuOpen && (
         <div style={{
           position: 'fixed',
-          top: '64px',
+          top: '60px',
           left: 0,
           right: 0,
           bottom: 0,
@@ -322,8 +325,8 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                   wordBreak: 'break-word'
                 }}
               >
-                <Icon size={18} color={isActive ? '#15803D' : '#647067'} />
-                {item.label}
+                <Icon size={18} color={isActive ? '#15803D' : '#647067'} aria-hidden="true" />
+                <span>{item.label}</span>
               </button>
             );
           })}
@@ -345,13 +348,13 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               fontSize: '0.92rem'
             }}
           >
-            <Sparkles size={18} color="#D97706" />
+            <Sparkles size={18} color="#D97706" aria-hidden="true" />
             <span>{t('nav.demo')}</span>
           </button>
 
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
             <div style={{ flex: 1, padding: '9px 12px', background: '#F1F5F2', borderRadius: 8, border: '1px solid #E5EAE6', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <MapPin size={15} color="#16A34A" />
+              <MapPin size={15} color="#16A34A" aria-hidden="true" />
               <span>{location?.formatted || (location?.district ? `${location.district}, ${location.state || ''}` : t('location.title'))}</span>
             </div>
           </div>
@@ -359,12 +362,12 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
       )}
 
       <style>{`
-        @media (max-width: 1023px) {
+        @media (max-width: 1140px) {
           .desktop-nav { display: none !important; }
           .desktop-controls { display: none !important; }
           .mobile-controls { display: flex !important; }
         }
-        @media (min-width: 1024px) {
+        @media (min-width: 1141px) {
           .desktop-nav { display: flex !important; }
           .desktop-controls { display: flex !important; }
           .mobile-controls { display: none !important; }
