@@ -17,7 +17,10 @@ import {
   AlertTriangle, 
   Sparkles, 
   FileText, 
-  Droplets
+  Droplets,
+  Cpu,
+  Info,
+  HelpCircle
 } from 'lucide-react';
 
 export const AnalysisResult = ({ analysis, onNewScan }) => {
@@ -43,13 +46,13 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
     'AnalysisResult.threat'
   );
 
-  // Render Low Confidence / Unsupported Image Alert
-  if (ai.supported === false || ai.condition === 'unsupported_or_low_confidence') {
+  // 1. Non-Plant Image Card
+  if (ai.image_type === 'non_plant' || ai.condition === 'Non-Plant Image' || ai.diseaseCode === 'non_plant') {
     return (
-      <div className="glass-card" style={{ padding: '32px', textAlign: 'center', border: '1.5px solid #F59E0B' }}>
+      <div className="glass-card" style={{ padding: '36px 24px', textAlign: 'center', border: '1.5px solid #F59E0B' }}>
         <div style={{
-          width: 56,
-          height: 56,
+          width: 60,
+          height: 60,
           borderRadius: '50%',
           background: '#FEF3C7',
           display: 'flex',
@@ -57,16 +60,45 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
           justifyContent: 'center',
           margin: '0 auto 16px'
         }}>
-          <AlertTriangle size={28} color="#D97706" />
+          <HelpCircle size={32} color="#D97706" aria-hidden="true" />
         </div>
-        <h3 style={{ fontSize: '1.25rem', color: '#92400E', marginBottom: 8, fontWeight: 700 }}>
+        <h3 style={{ fontSize: '1.3rem', color: '#92400E', marginBottom: 10, fontWeight: 700 }}>
           {t('audio.uncertainCrop')}
         </h3>
-        <p style={{ color: '#4B5563', maxWidth: 520, margin: '0 auto 20px', lineHeight: 1.6, fontSize: '0.92rem' }}>
+        <p style={{ color: '#4B5563', maxWidth: 540, margin: '0 auto 24px', lineHeight: 1.6, fontSize: '0.95rem' }}>
           {ai.message || t('audio.uncertainCrop')}
         </p>
-        <button className="btn-primary" onClick={onNewScan}>
-          {t('hero.ctaScan')}
+        <button className="btn-primary" onClick={onNewScan} style={{ margin: '0 auto' }}>
+          <Sparkles size={18} aria-hidden="true" /> {t('hero.ctaScan')}
+        </button>
+      </div>
+    );
+  }
+
+  // 2. Crop Mismatch / Low Confidence / Unsupported Image Alert
+  if (ai.supported === false || ai.condition === 'unsupported_or_low_confidence' || ai.image_type === 'low_quality') {
+    return (
+      <div className="glass-card" style={{ padding: '36px 24px', textAlign: 'center', border: '1.5px solid #F59E0B' }}>
+        <div style={{
+          width: 60,
+          height: 60,
+          borderRadius: '50%',
+          background: '#FEF3C7',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 16px'
+        }}>
+          <AlertTriangle size={32} color="#D97706" aria-hidden="true" />
+        </div>
+        <h3 style={{ fontSize: '1.3rem', color: '#92400E', marginBottom: 10, fontWeight: 700 }}>
+          {t('audio.uncertainCrop')}
+        </h3>
+        <p style={{ color: '#4B5563', maxWidth: 540, margin: '0 auto 24px', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          {ai.message || t('audio.uncertainCrop')}
+        </p>
+        <button className="btn-primary" onClick={onNewScan} style={{ margin: '0 auto' }}>
+          <Sparkles size={18} aria-hidden="true" /> {t('hero.ctaScan')}
         </button>
       </div>
     );
@@ -90,6 +122,10 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
   const symptomsList = localizeSymptoms(ai.visualSymptoms, language);
   const causesList = localizeCauses(ai.possibleCauses, language);
 
+  const engineLabel = ai.source && ai.source.includes('Ollama')
+    ? '🟢 Ollama qwen3-vl:8b Vision AI'
+    : '🟡 Cloud Dual-Engine Knowledge Base';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Top Banner with Diagnosis & Read Aloud Header */}
@@ -107,6 +143,20 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
               <span className="badge badge-low">
                 🌾 {localizedCrop}
               </span>
+              {/* Engine Status Badge */}
+              <span style={{
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                padding: '3px 8px',
+                borderRadius: 6,
+                background: ai.source?.includes('Ollama') ? '#DCFCE7' : '#FEF3C7',
+                color: ai.source?.includes('Ollama') ? '#15803D' : '#B45309',
+                border: ai.source?.includes('Ollama') ? '1px solid #86EFAC' : '1px solid #FDE68A'
+              }}>
+                <Cpu size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} aria-hidden="true" />
+                {engineLabel}
+              </span>
+
               {analysis.isDemoMode && (
                 <span className="badge badge-medium">
                   {t('nav.demo')}
@@ -230,7 +280,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
             alignItems: 'center',
             gap: 10
           }}>
-            <AlertTriangle size={20} color="#D97706" style={{ flexShrink: 0 }} />
+            <AlertTriangle size={20} color="#D97706" style={{ flexShrink: 0 }} aria-hidden="true" />
             <span>{t('result.expertNotice')}</span>
           </div>
         )}
@@ -241,7 +291,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
         {/* Symptoms */}
         <div className="glass-card" style={{ padding: '22px' }}>
           <h3 style={{ fontSize: '1rem', color: '#15803D', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <FileText size={18} /> {t('result.symptoms')}
+            <FileText size={18} aria-hidden="true" /> {t('result.symptoms')}
           </h3>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
             {symptomsList.map((sym, i) => (
@@ -256,7 +306,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
         {/* Environmental Causes */}
         <div className="glass-card" style={{ padding: '22px' }}>
           <h3 style={{ fontSize: '1rem', color: '#0284C7', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Droplets size={18} /> {t('result.causes')}
+            <Droplets size={18} aria-hidden="true" /> {t('result.causes')}
           </h3>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
             {causesList.map((cause, i) => (
@@ -289,7 +339,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
           className="btn-primary"
           style={{ padding: '12px 28px' }}
         >
-          <Sparkles size={18} /> {t('hero.ctaScan')}
+          <Sparkles size={18} aria-hidden="true" /> {t('hero.ctaScan')}
         </button>
 
         <div style={{ fontSize: '0.78rem', color: '#647067' }}>

@@ -11,6 +11,19 @@ const Analysis = require('../models/Analysis');
 const { isMongoConnected, fallbackStore, persistFallback } = require('../config/db');
 const cropKnowledgeBase = require('../data/cropKnowledgeBase.json');
 
+// GET /api/ai/health - Health check for Ollama local AI engine
+router.get('/health', async (req, res) => {
+  const { isOllamaAvailable } = require('../services/ollamaService');
+  const ollamaStatus = await isOllamaAvailable();
+  res.json({
+    success: true,
+    ollama: ollamaStatus.available,
+    model: ollamaStatus.model || 'qwen3-vl:8b',
+    vision: true,
+    engine: ollamaStatus.available ? 'Ollama qwen3-vl:8b' : 'Cloud Knowledge Base Fallback'
+  });
+});
+
 // POST /api/analyze - Full Dual-Engine Analysis (Vision AI + Agronomic Risk Scoring)
 router.post('/', upload.single('image'), async (req, res) => {
   try {

@@ -4,6 +4,7 @@ const config = require('../config/config');
 const Analysis = require('../models/Analysis');
 const { isMongoConnected, fallbackStore } = require('../config/db');
 const { getModelTelemetry } = require('../services/diseaseClassifierClient');
+const { isOllamaAvailable } = require('../services/ollamaService');
 
 // GET /api/admin/metrics - Analytics & System Status
 router.get('/metrics', async (req, res) => {
@@ -17,6 +18,7 @@ router.get('/metrics', async (req, res) => {
 
     const totalAnalyses = allAnalyses.length;
     const aiTelemetry = await getModelTelemetry();
+    const ollamaStatus = await isOllamaAvailable();
 
     // Crop distribution
     const cropCounts = {};
@@ -56,10 +58,13 @@ router.get('/metrics', async (req, res) => {
         topIssues,
         cropsBreakdown,
         modelStatus: aiTelemetry,
+        ollamaStatus,
         systemHealth: {
           database: isMongoConnected() ? 'Connected (MongoDB)' : 'Active (Resilient High-Speed Memory Store)',
           weatherProvider: `${config.WEATHER_PROVIDER} (Active Real-Time)`,
-          aiProvider: `AgriShield PyTorch ${aiTelemetry.architecture || 'MobileNetV3'} (FastAPI Port 8000)`,
+          aiProvider: ollamaStatus.available 
+            ? `Ollama ${ollamaStatus.model || 'qwen3-vl:8b'} (Port 11434) + MobileNetV3`
+            : `AgriShield Dual-Engine Knowledge Base + MobileNetV3`,
           serverUptime: Math.round(process.uptime()),
           nodeVersion: process.version
         }
