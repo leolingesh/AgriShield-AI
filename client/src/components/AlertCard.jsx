@@ -100,7 +100,7 @@ export const AlertCard = ({ alert, onMarkRead }) => {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.78rem', color: '#647067', marginTop: 4, flexWrap: 'wrap' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <MapPin size={13} color="#16A34A" /> {alert.location?.district || 'Salem'}, {alert.location?.state || 'TN'}
+                <MapPin size={13} color="#16A34A" /> {alert.location?.formatted || (alert.location?.district ? `${alert.location.district}, ${alert.location.state || ''}` : t('location.title'))}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <Sprout size={13} color="#16A34A" /> {localizedCropName}

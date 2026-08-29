@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from '../context/LocationContext';
 import { useLanguage } from '../context/LanguageContext';
 import { MapPin, Navigation, Edit3, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
@@ -17,9 +17,17 @@ export const LocationSelector = ({ compact = false }) => {
 
   const { t } = useLanguage();
 
-  const [selectedState, setSelectedState] = useState(location?.state || 'Tamil Nadu');
-  const [selectedDistrict, setSelectedDistrict] = useState(location?.district || 'Salem');
+  const [selectedState, setSelectedState] = useState(location?.state || '');
+  const [selectedDistrict, setSelectedDistrict] = useState(location?.district || '');
   const [villageInput, setVillageInput] = useState(location?.village || '');
+
+  useEffect(() => {
+    if (location) {
+      if (location.state) setSelectedState(location.state);
+      if (location.district) setSelectedDistrict(location.district);
+      if (location.village) setVillageInput(location.village);
+    }
+  }, [location]);
 
   // Get districts for currently selected state
   const currentStateObj = availableStates.find(s => s.name === selectedState) || availableStates[0];
@@ -44,7 +52,7 @@ export const LocationSelector = ({ compact = false }) => {
     const newDistrict = e.target.value;
     setSelectedDistrict(newDistrict);
     setManualLocation({
-      state: selectedState,
+      state: selectedState || availableStates[0]?.name,
       district: newDistrict,
       village: villageInput
     });
@@ -52,11 +60,15 @@ export const LocationSelector = ({ compact = false }) => {
 
   const handleVillageBlur = () => {
     setManualLocation({
-      state: selectedState,
+      state: selectedState || availableStates[0]?.name,
       district: selectedDistrict,
       village: villageInput
     });
   };
+
+  const locationSubtitle = location?.isLiveGPS 
+    ? '📍 ' + t('location.detected') 
+    : (location?.formatted ? '📍 ' + location.formatted : (isLocating ? '📍 ' + t('location.detecting') : '📍 ' + t('location.unavailable')));
 
   return (
     <div className="glass-card" style={{ padding: compact ? '16px' : '20px' }}>
@@ -85,7 +97,7 @@ export const LocationSelector = ({ compact = false }) => {
           <div>
             <h3 style={{ fontSize: '1.05rem', color: '#17211B' }}>{t('location.title')}</h3>
             <span style={{ fontSize: '0.78rem', color: '#647067' }}>
-              {location?.isLiveGPS ? '📍 ' + t('location.detected') : '📍 ' + (location?.formatted || 'Salem, Tamil Nadu')}
+              {locationSubtitle}
             </span>
           </div>
         </div>
@@ -160,11 +172,13 @@ export const LocationSelector = ({ compact = false }) => {
           }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#15803D', fontWeight: 600, fontSize: '0.88rem', marginBottom: 2 }}>
-                <CheckCircle2 size={15} /> {location?.formatted || 'Tamil Nadu, India'}
+                <CheckCircle2 size={15} /> {location?.formatted || (isLocating ? t('location.detecting') : t('location.unavailable'))}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#647067' }}>
-                Lat {location?.lat?.toFixed(4) || '11.5977'}°, Lng {location?.lng?.toFixed(4) || '78.5986'}°
-              </div>
+              {location?.lat && location?.lng && (
+                <div style={{ fontSize: '0.75rem', color: '#647067' }}>
+                  Lat {location.lat.toFixed(4)}°, Lng {location.lng.toFixed(4)}°
+                </div>
+              )}
             </div>
 
             <button

@@ -45,8 +45,8 @@ function findClosestDistrict(lat, lng) {
   }
 
   return closest || {
-    state: 'Tamil Nadu',
-    district: 'Salem',
+    state: '',
+    district: `GPS (${lat.toFixed(3)}, ${lng.toFixed(3)})`,
     village: '',
     lat,
     lng
@@ -93,10 +93,10 @@ async function reverseGeocode(lat, lng) {
       const country = addr.country || 'India';
 
       const result = {
-        state: state || 'Tamil Nadu',
-        district: district || 'Salem',
+        state: state || '',
+        district: district || (village ? village : `GPS (${latitude.toFixed(3)}, ${longitude.toFixed(3)})`),
         village: village || '',
-        formatted: [village, district, state, country].filter(Boolean).join(', '),
+        formatted: [village, district, state, country].filter(Boolean).join(', ') || `GPS (${latitude.toFixed(3)}, ${longitude.toFixed(3)})`,
         lat: latitude,
         lng: longitude
       };

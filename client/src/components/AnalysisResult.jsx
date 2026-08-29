@@ -113,7 +113,7 @@ export const AnalysisResult = ({ analysis, onNewScan }) => {
                 </span>
               )}
               <span style={{ fontSize: '0.8rem', color: '#647067' }}>
-                📍 {location.district || 'Salem'}, {location.state || 'Tamil Nadu'}
+                📍 {location.formatted || (location.district ? `${location.district}, ${location.state || ''}` : t('location.title'))}
               </span>
             </div>
             <h2 style={{ fontSize: '1.7rem', color: '#17211B', letterSpacing: '-0.02em' }}>

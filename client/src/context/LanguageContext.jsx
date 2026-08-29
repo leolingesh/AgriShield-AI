@@ -44,8 +44,14 @@ export const LanguageProvider = ({ children }) => {
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.documentElement.dir = language === 'ur' ? 'rtl' : 'ltr';
+      const isRTL = language === 'ur';
+      document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
       document.documentElement.lang = language;
+      if (isRTL) {
+        document.body.classList.add('rtl-mode');
+      } else {
+        document.body.classList.remove('rtl-mode');
+      }
     }
   }, [language]);
 
@@ -92,11 +98,11 @@ export const LanguageProvider = ({ children }) => {
 
     if (result === undefined) {
       // Dev mode missing key detection
-      if (process.env.NODE_ENV !== 'production' && language !== 'en') {
-        console.warn(`[MISSING TRANSLATION] lang: ${language}, key: ${path}`);
+      if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production' && language !== 'en') {
+        console.warn(`[MISSING TRANSLATION] language: ${language}, key: ${path}`);
       }
 
-      // Fallback lookup
+      // Fallback lookup to English
       for (const key of keys) {
         if (fallback && fallback[key] !== undefined) {
           fallback = fallback[key];
@@ -105,7 +111,15 @@ export const LanguageProvider = ({ children }) => {
           break;
         }
       }
-      result = fallback !== undefined ? fallback : (defaultText || path);
+      
+      // If still undefined, use defaultText or empty string (NEVER render raw key string in production!)
+      if (fallback !== undefined) {
+        result = fallback;
+      } else if (defaultText) {
+        result = defaultText;
+      } else {
+        result = '';
+      }
     }
 
     // If result is a string and params are provided, interpolate {param}
@@ -115,7 +129,7 @@ export const LanguageProvider = ({ children }) => {
       });
     }
 
-    return result !== undefined ? result : (defaultText || path);
+    return result !== undefined ? result : (defaultText || '');
   };
 
   const currentLanguageObj = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
@@ -126,7 +140,8 @@ export const LanguageProvider = ({ children }) => {
       setLanguage,
       t,
       languages: LANGUAGES,
-      currentLanguage: currentLanguageObj
+      currentLanguage: currentLanguageObj,
+      isRTL: language === 'ur'
     }}>
       {children}
     </LanguageContext.Provider>
@@ -138,3 +153,5 @@ export const useLanguage = () => {
   if (!context) throw new Error('useLanguage must be used within a LanguageProvider');
   return context;
 };
+
+export default LanguageContext;

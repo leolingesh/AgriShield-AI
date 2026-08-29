@@ -25,8 +25,11 @@ async function generateEarlyWarningAlert({
     threatName,
     severity: riskLevel,
     location: {
-      state: location?.state || 'Tamil Nadu',
-      district: location?.district || 'Salem'
+      state: location?.state || '',
+      district: location?.district || '',
+      village: location?.village || '',
+      latitude: location?.lat || location?.latitude,
+      longitude: location?.lng || location?.longitude
     },
     triggerReason: whyRiskExists || `Elevated environmental risk (${riskScore}%) detected for ${threatName}.`,
     recommendedAction: recommendedAction || 'Inspect lower leaves immediately and apply bio-protective IPM procedure.',

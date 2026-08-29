@@ -17,7 +17,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
     { id: 'monitoring', label: t('nav.monitoring'), icon: Layers },
     { id: 'history', label: t('nav.history'), icon: History },
     { id: 'admin', label: t('nav.admin'), icon: Shield },
-    { id: isAuthenticated ? 'profile' : 'login', label: isAuthenticated ? t('nav.profile') : t('nav.login'), icon: isAuthenticated ? UserIcon : LogIn }
+    { id: isAuthenticated ? 'profile' : 'login', label: isAuthenticated ? (t('profile.title') || 'Profile') : t('auth.signIn'), icon: isAuthenticated ? UserIcon : LogIn }
   ];
 
   return (
@@ -28,7 +28,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
       background: '#FFFFFF',
       borderBottom: '1px solid #E5EAE6',
       boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-      minHeight: '68px',
+      minHeight: '64px',
       display: 'flex',
       alignItems: 'center',
       width: '100%',
@@ -38,7 +38,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
         maxWidth: 1400,
         width: '100%',
         margin: '0 auto',
-        padding: '6px 20px',
+        padding: '6px 16px',
         boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',
@@ -54,14 +54,14 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
             src="/logo.png" 
             alt="AgriShield AI Logo" 
             style={{ 
-              width: 36, 
-              height: 36, 
+              width: 34, 
+              height: 34, 
               objectFit: 'contain',
               flexShrink: 0 
             }} 
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
-            <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '1.12rem', fontWeight: 800, color: '#17211B', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
               {t('appName')}
             </span>
           </div>
@@ -71,7 +71,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
         <nav className="desktop-nav" style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 4,
+          gap: 3,
           flexWrap: 'wrap',
           justifyContent: 'center'
         }}>
@@ -86,9 +86,9 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 4,
-                  padding: '5px 7px',
+                  padding: '6px 8px',
                   borderRadius: 8,
-                  fontSize: '0.76rem',
+                  fontSize: '0.78rem',
                   fontWeight: isActive ? 700 : 500,
                   lineHeight: 1.2,
                   whiteSpace: 'nowrap',
@@ -99,7 +99,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                   cursor: 'pointer'
                 }}
               >
-                <Icon size={13} color={isActive ? '#15803D' : '#647067'} />
+                <Icon size={14} color={isActive ? '#15803D' : '#647067'} />
                 {item.label}
               </button>
             );
@@ -116,19 +116,19 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               display: 'flex',
               alignItems: 'center',
               gap: 4,
-              padding: '4px 7px',
+              padding: '4px 8px',
               borderRadius: 6,
               background: '#F1F5F2',
               border: '1px solid #E5EAE6',
-              fontSize: '0.72rem',
+              fontSize: '0.74rem',
               color: '#17211B',
               cursor: 'pointer',
               whiteSpace: 'nowrap'
             }}
           >
-            <MapPin size={12} color="#16A34A" />
-            <span style={{ maxWidth: 70, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {location?.district || 'Salem'}
+            <MapPin size={13} color="#16A34A" />
+            <span style={{ maxWidth: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {location?.district || location?.state || t('location.title')}
             </span>
           </div>
 
@@ -139,18 +139,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               display: 'flex',
               alignItems: 'center',
               gap: 4,
-              padding: '4px 8px',
+              padding: '5px 9px',
               borderRadius: 6,
               background: '#FEF3C7',
               border: '1px solid #FDE68A',
               color: '#B45309',
-              fontSize: '0.72rem',
+              fontSize: '0.74rem',
               fontWeight: 700,
               cursor: 'pointer',
               whiteSpace: 'nowrap'
             }}
           >
-            <Sparkles size={12} color="#D97706" />
+            <Sparkles size={13} color="#D97706" />
             <span>{t('nav.demo')}</span>
           </button>
 
@@ -163,18 +163,18 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 4,
-                padding: '4px 8px',
+                padding: '5px 9px',
                 borderRadius: 6,
-                background: '#FEE2E2',
+                background: '#FEE2F2',
                 border: '1px solid #FCA5A5',
                 color: '#991B1B',
-                fontSize: '0.72rem',
+                fontSize: '0.74rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
               }}
             >
-              <LogOut size={12} color="#991B1B" />
+              <LogOut size={13} color="#991B1B" />
               <span>{t('profile.logout')}</span>
             </button>
           ) : (
@@ -184,19 +184,19 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 4,
-                padding: '4px 8px',
+                padding: '5px 10px',
                 borderRadius: 6,
                 background: '#16A34A',
                 border: '1px solid #15803D',
                 color: '#FFFFFF',
-                fontSize: '0.72rem',
+                fontSize: '0.74rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
               }}
             >
-              <LogIn size={12} color="#FFFFFF" />
-              <span>{t('nav.login')}</span>
+              <LogIn size={13} color="#FFFFFF" />
+              <span>{t('auth.signIn')}</span>
             </button>
           )}
 
@@ -207,16 +207,16 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               onChange={(e) => setLanguage(e.target.value)}
               aria-label="Select Language"
               style={{
-                padding: '4px 6px',
+                padding: '5px 7px',
                 borderRadius: 6,
                 background: '#FFFFFF',
                 border: '1px solid #E5EAE6',
                 color: '#17211B',
-                fontSize: '0.72rem',
+                fontSize: '0.74rem',
                 fontWeight: 600,
                 outline: 'none',
                 cursor: 'pointer',
-                maxWidth: 100
+                maxWidth: 110
               }}
             >
               {languages.map(lang => (
@@ -244,7 +244,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
               fontWeight: 600,
               outline: 'none',
               cursor: 'pointer',
-              maxWidth: 100
+              maxWidth: 105
             }}
           >
             {languages.map(lang => (
@@ -276,7 +276,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
       {isMenuOpen && (
         <div style={{
           position: 'fixed',
-          top: '68px',
+          top: '64px',
           left: 0,
           right: 0,
           bottom: 0,
@@ -293,7 +293,7 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
           boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
         }}>
           <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#647067', textTransform: 'uppercase', marginBottom: 2 }}>
-            {t('nav.menu')}
+            {t('appName')}
           </div>
           {navItems.map(item => {
             const Icon = item.icon;
@@ -352,19 +352,19 @@ export const Navbar = ({ activeTab, setActiveTab, onOpenDemo }) => {
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
             <div style={{ flex: 1, padding: '9px 12px', background: '#F1F5F2', borderRadius: 8, border: '1px solid #E5EAE6', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 6 }}>
               <MapPin size={15} color="#16A34A" />
-              <span>{location?.district || 'Salem'}, {location?.state || 'TN'}</span>
+              <span>{location?.formatted || (location?.district ? `${location.district}, ${location.state || ''}` : t('location.title'))}</span>
             </div>
           </div>
         </div>
       )}
 
       <style>{`
-        @media (max-width: 1550px) {
+        @media (max-width: 1023px) {
           .desktop-nav { display: none !important; }
           .desktop-controls { display: none !important; }
           .mobile-controls { display: flex !important; }
         }
-        @media (min-width: 1551px) {
+        @media (min-width: 1024px) {
           .desktop-nav { display: flex !important; }
           .desktop-controls { display: flex !important; }
           .mobile-controls { display: none !important; }

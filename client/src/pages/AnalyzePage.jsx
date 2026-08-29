@@ -79,7 +79,7 @@ export const AnalyzePage = ({ initialCropId = 'tomato', initialDemoCase = null }
       formData.append('cropId', selectedCrop?.id || 'tomato');
       formData.append('growthStage', growthStage);
       formData.append('farmerObservations', observations);
-      formData.append('location', JSON.stringify(location || { state: 'Tamil Nadu', district: 'Salem' }));
+      formData.append('location', JSON.stringify(location || null));
       formData.append('weather', JSON.stringify(weather || null));
       formData.append('isDemoMode', selectedImage?.isSample ? 'true' : 'false');
       formData.append('language', language);

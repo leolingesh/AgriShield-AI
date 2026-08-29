@@ -416,6 +416,19 @@
     "icarNotice": "ICAR / Krishi Vigyan Kendra: Consult your local Agricultural Officer (ADA/KVK) for laboratory confirmation.",
     "techTitle": "Architecture & Capabilities",
     "disclaimer": "Agricultural Disclaimer: AI-assisted agronomic risk estimate based on micrometeorological and biological host parameters.",
-    "allRightsReserved": "© 2026 AgriShield AI. All rights reserved."
+    "allRightsReserved": "© 2026 AgriShield AI. All rights reserved.",
+    "disclaimerTitle": "Agricultural Disclaimer",
+    "allRights": "All rights reserved."
+  },
+  "days": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
   }
 }

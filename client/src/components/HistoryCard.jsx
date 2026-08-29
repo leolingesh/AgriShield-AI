@@ -74,7 +74,7 @@ export const HistoryCard = ({ analysis, onView, onDelete }) => {
             {localizedCondition}
           </h4>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.74rem', color: '#647067', marginTop: 2 }}>
-            <span>📍 {location.district || 'Salem'}</span>
+            <span>📍 {location.district || location.state || location.formatted || t('location.title')}</span>
             <span>•</span>
             <span>📅 {dateStr}</span>
           </div>

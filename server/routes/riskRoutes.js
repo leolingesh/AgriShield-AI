@@ -17,7 +17,7 @@ router.post('/predict', async (req, res) => {
     const riskResult = calculateCropRisk({
       cropId,
       weather: weather || { temperature: 28, humidity: 78, rainfall: 0, windSpeed: 6 },
-      location: location || { state: 'Tamil Nadu', district: 'Salem' },
+      location: location || { state: '', district: '' },
       growthStage: growthStage || 'Vegetative',
       farmerObservations: farmerObservations || ''
     });
@@ -32,7 +32,7 @@ router.post('/predict', async (req, res) => {
         riskLevel: riskResult.riskLevel,
         location,
         whyRiskExists: riskResult.whyRiskExists,
-        recommendedAction: riskResult.recommendations.immediateActions[0]
+        recommendedAction: riskResult.recommendations?.immediateActions?.[0]
       });
     }
 

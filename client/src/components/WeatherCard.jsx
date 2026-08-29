@@ -2,7 +2,7 @@ import React from 'react';
 import { useWeather } from '../context/WeatherContext';
 import { useLocation } from '../context/LocationContext';
 import { useLanguage } from '../context/LanguageContext';
-import { getLocalizedWeatherTerm, getLocalizedRiskLevel } from '../utils/localizationUtils';
+import { getLocalizedWeatherTerm, getLocalizedRiskLevel, getLocalizedDayName } from '../utils/localizationUtils';
 import { 
   CloudSun, 
   Droplets, 
@@ -18,7 +18,7 @@ import {
 
 export const WeatherCard = () => {
   const { weather, loadingWeather, refreshWeather } = useWeather();
-  const { location } = useLocation();
+  const { location, isLocating } = useLocation();
   const { t, language } = useLanguage();
 
   if (!weather) {
@@ -52,6 +52,8 @@ export const WeatherCard = () => {
 
   const localizedCondition = getLocalizedWeatherTerm(weather.condition || 'Partly Cloudy', language);
 
+  const locationDisplayText = location?.formatted || (isLocating ? t('location.detecting') : t('location.title'));
+
   return (
     <div className="glass-card" style={{ padding: '20px', position: 'relative', overflow: 'hidden' }}>
       {/* Header */}
@@ -77,7 +79,7 @@ export const WeatherCard = () => {
           <div>
             <h3 style={{ fontSize: '1.05rem', color: '#17211B' }}>{t('weather.title')}</h3>
             <span style={{ fontSize: '0.78rem', color: '#647067' }}>
-              📍 {location?.formatted || 'Salem, Tamil Nadu'}
+              📍 {locationDisplayText}
             </span>
           </div>
         </div>
@@ -85,7 +87,7 @@ export const WeatherCard = () => {
         <button
           onClick={refreshWeather}
           disabled={loadingWeather}
-          title="Refresh Live Weather"
+          title={t('admin.refresh')}
           style={{
             padding: 7,
             borderRadius: 8,
@@ -290,36 +292,39 @@ export const WeatherCard = () => {
             gap: 6,
             overflowX: 'auto'
           }}>
-            {weather.forecast.map((f, i) => (
-              <div
-                key={i}
-                style={{
-                  background: i === 0 ? '#DCFCE7' : '#F7F9F7',
-                  border: i === 0 ? '1px solid #86EFAC' : '1px solid #E5EAE6',
-                  borderRadius: 8,
-                  padding: '8px 4px',
-                  textAlign: 'center'
-                }}
-              >
-                <div style={{ fontSize: '0.72rem', fontWeight: 600, color: i === 0 ? '#15803D' : '#647067', marginBottom: 2 }}>
-                  {f.day}
-                </div>
-                <div style={{ margin: '2px 0' }}>
-                  {renderWeatherIcon(f.category || 'clear', 16)}
-                </div>
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#17211B' }}>
-                  {f.tempMax}°
-                </div>
-                <div style={{ fontSize: '0.68rem', color: '#647067' }}>
-                  {f.tempMin}°
-                </div>
-                {f.rainProb > 20 && (
-                  <div style={{ fontSize: '0.62rem', color: '#2563EB', fontWeight: 600, marginTop: 2 }}>
-                    💧{f.rainProb}%
+            {weather.forecast.map((f, i) => {
+              const locDay = getLocalizedDayName(f.day, language);
+              return (
+                <div
+                  key={i}
+                  style={{
+                    background: i === 0 ? '#DCFCE7' : '#F7F9F7',
+                    border: i === 0 ? '1px solid #86EFAC' : '1px solid #E5EAE6',
+                    borderRadius: 8,
+                    padding: '8px 4px',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, color: i === 0 ? '#15803D' : '#647067', marginBottom: 2 }}>
+                    {locDay}
                   </div>
-                )}
-              </div>
-            ))}
+                  <div style={{ margin: '2px 0' }}>
+                    {renderWeatherIcon(f.category || 'clear', 16)}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#17211B' }}>
+                    {f.tempMax}°
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: '#647067' }}>
+                    {f.tempMin}°
+                  </div>
+                  {f.rainProb > 20 && (
+                    <div style={{ fontSize: '0.62rem', color: '#2563EB', fontWeight: 600, marginTop: 2 }}>
+                      💧{f.rainProb}%
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -124,7 +124,7 @@ export const Dashboard = ({ onNavigate, onStartScanWithCrop, onSelectAnalysis })
 
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, fontSize: '0.82rem', color: '#647067' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FFFFFF', padding: '6px 12px', borderRadius: 8, border: '1px solid #E5EAE6' }}>
-                📍 {location?.district || 'Salem'}, {location?.state || 'Tamil Nadu'}
+                📍 {location?.formatted || (location?.district ? `${location.district}, ${location.state || ''}` : t('location.detecting'))}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FFFFFF', padding: '6px 12px', borderRadius: 8, border: '1px solid #E5EAE6' }}>
                 🌦️ {weather?.temperature ? `${weather.temperature}°C • ${weatherCond}` : t('weather.title')}

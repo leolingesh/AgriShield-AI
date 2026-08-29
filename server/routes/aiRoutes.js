@@ -8,6 +8,7 @@ const { getWeatherData } = require('../services/weatherService');
 const { generateEarlyWarningAlert } = require('../services/notificationService');
 const Analysis = require('../models/Analysis');
 const { isMongoConnected, fallbackStore, persistFallback } = require('../config/db');
+const cropKnowledgeBase = require('../data/cropKnowledgeBase.json');
 
 // POST /api/analyze - Full Dual-Engine Analysis (Vision AI + Agronomic Risk Scoring)
 router.post('/', upload.single('image'), async (req, res) => {
@@ -25,9 +26,9 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     let location = {};
     try {
-      location = req.body.location ? JSON.parse(req.body.location) : { state: 'Tamil Nadu', district: 'Salem' };
+      location = req.body.location ? JSON.parse(req.body.location) : {};
     } catch (e) {
-      location = { state: 'Tamil Nadu', district: 'Salem' };
+      location = {};
     }
 
     let weather = null;
@@ -37,11 +38,9 @@ router.post('/', upload.single('image'), async (req, res) => {
       weather = null;
     }
 
-    // Fetch real weather if not provided
+    // Fetch real weather if coordinates provided and weather not yet fetched
     if (!weather && location.lat && location.lng) {
       weather = await getWeatherData(location.lat, location.lng);
-    } else if (!weather) {
-      weather = await getWeatherData(11.6643, 78.1460); // Default Salem, TN
     }
 
     // Determine image path & relative URL
@@ -132,8 +131,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       growthStage,
       farmerObservations,
       location: {
-        state: location.state || 'Tamil Nadu',
-        district: location.district || 'Salem',
+        state: location.state || '',
+        district: location.district || '',
         village: location.village || '',
         latitude: location.lat || location.latitude,
         longitude: location.lng || location.longitude

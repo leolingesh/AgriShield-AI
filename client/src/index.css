@@ -74,6 +74,13 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   letter-spacing: -0.02em;
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+p, span, div, label {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 a {
@@ -102,6 +109,8 @@ img {
   height: auto;
   width: 100%;
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -179,6 +188,7 @@ img {
   border-radius: var(--radius-md);
   transition: all 0.2s ease;
   min-height: 40px;
+  white-space: nowrap;
 }
 
 .btn-danger:hover {
@@ -283,6 +293,17 @@ img {
   }
 }
 
+/* Small mobile devices (320px - 430px) */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 12px 10px 60px 10px;
+  }
+  .btn-primary, .btn-secondary {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+}
+
 /* Form Controls */
 .input-field {
   width: 100%;
@@ -309,6 +330,28 @@ img {
   font-weight: 600;
   color: var(--text-secondary);
   margin-bottom: 5px;
+}
+
+/* RTL Support for Urdu */
+[dir="rtl"], body.rtl-mode {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Segoe UI', Tahoma, sans-serif;
+}
+
+[dir="rtl"] .glass-card,
+body.rtl-mode .glass-card {
+  text-align: right;
+}
+
+[dir="rtl"] input,
+[dir="rtl"] select,
+[dir="rtl"] textarea,
+body.rtl-mode input,
+body.rtl-mode select,
+body.rtl-mode textarea {
+  text-align: right;
+  direction: rtl;
 }
 
 /* Spin animation helper */

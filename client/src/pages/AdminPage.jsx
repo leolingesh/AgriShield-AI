@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { getLocalizedDiseaseName, getLocalizedRiskLevel, validateLanguageOutput } from '../utils/localizationUtils';
+import { getLocalizedDiseaseName, validateLanguageOutput } from '../utils/localizationUtils';
 import { Shield, Activity, Cpu, Database, CloudSun, CheckCircle2, RefreshCw } from 'lucide-react';
 
 export const AdminPage = () => {
@@ -44,10 +44,10 @@ export const AdminPage = () => {
             <span>{t('admin.title')}</span>
           </div>
           <h1 style={{ fontSize: '1.9rem', color: '#17211B', letterSpacing: '-0.02em', marginBottom: 4 }}>
-            {t('admin.systemHealth')} & {t('admin.outbreakAnalytics')}
+            {t('admin.title')}
           </h1>
           <p style={{ fontSize: '0.88rem', color: '#647067' }}>
-            {t('admin.description')}
+            {t('admin.subtitle')}
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export const AdminPage = () => {
           className="btn-secondary"
           style={{ padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <RefreshCw size={15} className={loading ? 'spin' : ''} /> {t('admin.refresh')}
+          <RefreshCw size={15} className={loading ? 'spin' : ''} /> {t('admin.refreshMetrics')}
         </button>
       </div>
 
@@ -69,7 +69,7 @@ export const AdminPage = () => {
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#17211B', marginTop: 4 }}>
                 {metrics.totalAnalyses}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#15803D', fontWeight: 600 }}>{t('admin.evaluations')}</span>
+              <span style={{ fontSize: '0.75rem', color: '#15803D', fontWeight: 600 }}>{t('admin.dualEngineEvaluations')}</span>
             </div>
 
             <div className="glass-card" style={{ padding: '18px' }}>
@@ -81,7 +81,7 @@ export const AdminPage = () => {
             </div>
 
             <div className="glass-card" style={{ padding: '18px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>{t('admin.plotsTracked')}</span>
+              <span style={{ fontSize: '0.78rem', color: '#647067', textTransform: 'uppercase', fontWeight: 600 }}>{t('admin.monitoredPlots')}</span>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#17211B', marginTop: 4 }}>
                 {metrics.activePlotsTracked}
               </div>
@@ -93,7 +93,7 @@ export const AdminPage = () => {
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#DC2626', marginTop: 4 }}>
                 {metrics.activeAlerts}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#DC2626', fontWeight: 600 }}>{t('admin.earlyTriggers')}</span>
+              <span style={{ fontSize: '0.75rem', color: '#DC2626', fontWeight: 600 }}>{t('admin.earlyWarningTriggers')}</span>
             </div>
           </div>
 
@@ -102,7 +102,7 @@ export const AdminPage = () => {
             {/* Risk Distribution Card */}
             <div className="glass-card" style={{ padding: '22px' }}>
               <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16 }}>
-                {t('admin.riskSeverity')}
+                {t('admin.severityBreakdown')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
@@ -150,7 +150,7 @@ export const AdminPage = () => {
             {/* Top Detected Issues */}
             <div className="glass-card" style={{ padding: '22px' }}>
               <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16 }}>
-                {t('admin.commonIssues')}
+                {t('admin.topConditions')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {metrics.topIssues.map((issue, i) => {
@@ -171,7 +171,7 @@ export const AdminPage = () => {
                     >
                       <span style={{ color: '#17211B', fontWeight: 600 }}>{locIssue}</span>
                       <span style={{ background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: 6, fontWeight: 700 }}>
-                        {issue.count} {t('common.cases')}
+                        {issue.count} {t('admin.cases')}
                       </span>
                     </div>
                   );
@@ -184,7 +184,7 @@ export const AdminPage = () => {
           {metrics.modelStatus && (
             <div className="glass-card" style={{ padding: '22px', marginBottom: 24, border: '1px solid #BBF7D0' }}>
               <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Cpu size={18} color="#16A34A" /> {t('admin.modelTelemetry')}
+                <Cpu size={18} color="#16A34A" /> {t('admin.telemetryTitle')}
               </h3>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
@@ -222,7 +222,7 @@ export const AdminPage = () => {
           {/* Backend API Service Health Status */}
           <div className="glass-card" style={{ padding: '22px' }}>
             <h3 style={{ fontSize: '1.05rem', color: '#17211B', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Activity size={18} color="#16A34A" /> {t('admin.systemHealth')}
+              <Activity size={18} color="#16A34A" /> {t('admin.apiHealthTitle')}
             </h3>
 
             <div style={{
@@ -231,30 +231,30 @@ export const AdminPage = () => {
               gap: 14
             }}>
               <div style={{ background: '#F7F9F7', border: '1px solid #E5EAE6', padding: '12px 14px', borderRadius: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>Database Engine</div>
+                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>{t('admin.databaseEngine')}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#15803D', fontSize: '0.88rem', fontWeight: 700 }}>
                   <CheckCircle2 size={16} /> {metrics.systemHealth.database}
                 </div>
               </div>
 
               <div style={{ background: '#F7F9F7', border: '1px solid #E5EAE6', padding: '12px 14px', borderRadius: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>Weather Provider</div>
+                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>{t('admin.weatherProvider')}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#0284C7', fontSize: '0.88rem', fontWeight: 700 }}>
                   <CloudSun size={16} /> {metrics.systemHealth.weatherProvider}
                 </div>
               </div>
 
               <div style={{ background: '#F7F9F7', border: '1px solid #E5EAE6', padding: '12px 14px', borderRadius: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>AI Multimodal Service</div>
+                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>{t('admin.aiService')}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#B45309', fontSize: '0.88rem', fontWeight: 700 }}>
                   <Cpu size={16} /> {metrics.systemHealth.aiProvider}
                 </div>
               </div>
 
               <div style={{ background: '#F7F9F7', border: '1px solid #E5EAE6', padding: '12px 14px', borderRadius: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>Backend Service</div>
+                <div style={{ fontSize: '0.75rem', color: '#647067', marginBottom: 4, fontWeight: 600 }}>{t('admin.backendService')}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#15803D', fontSize: '0.88rem', fontWeight: 700 }}>
-                  <CheckCircle2 size={16} color="#16A34A" /> Online
+                  <CheckCircle2 size={16} color="#16A34A" /> {t('common.online')}
                 </div>
               </div>
             </div>

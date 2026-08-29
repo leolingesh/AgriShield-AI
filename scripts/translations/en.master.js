@@ -422,6 +422,8 @@ const en = {
     icarNotice: "ICAR / Krishi Vigyan Kendra: Consult your local Agricultural Officer (ADA/KVK) for laboratory confirmation.",
     techTitle: "Architecture & Capabilities",
     disclaimer: "Agricultural Disclaimer: AI-assisted agronomic risk estimate based on micrometeorological and biological host parameters.",
+    disclaimerTitle: "Agricultural Disclaimer",
+    allRights: "All rights reserved.",
     allRightsReserved: "© 2026 AgriShield AI. All rights reserved."
   }
 };

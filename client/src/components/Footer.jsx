@@ -44,7 +44,7 @@ export const Footer = () => {
           <h4 style={{ color: '#17211B', fontSize: '0.95rem', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
             <PhoneCall size={16} color="#16A34A" /> {t('footer.helplineTitle')}
           </h4>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, padding: 0 }}>
             <li>
               <span style={{ color: '#17211B', fontWeight: 600 }}>{t('footer.kisanCallCenter')}:</span>
               <div style={{ color: '#15803D', fontWeight: 700, fontSize: '0.95rem', marginTop: 2 }}>
@@ -53,22 +53,22 @@ export const Footer = () => {
             </li>
             <li>
               <span style={{ color: '#17211B', fontWeight: 600 }}>ICAR / Krishi Vigyan Kendra:</span>
-              <div style={{ color: '#647067' }}>{t('result.expertNotice')}</div>
+              <div style={{ color: '#647067', marginTop: 2 }}>{t('result.expertNotice')}</div>
             </li>
           </ul>
         </div>
 
-        {/* Tech Stack & Verification */}
+        {/* Tech Stack & Capabilities */}
         <div>
           <h4 style={{ color: '#17211B', fontSize: '0.95rem', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
             <Cpu size={16} color="#16A34A" /> {t('footer.techTitle')}
           </h4>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, color: '#647067' }}>
-            <li>⚡ <strong>{t('appName')}:</strong> Visual Diagnosis + Agronomic Scoring</li>
-            <li>🌦 <strong>Micrometeorology:</strong> Live Open-Meteo & OpenWeather Sync</li>
-            <li>🌐 <strong>Localization:</strong> 13 Official Indian Languages + TTS Audio</li>
-            <li>📍 <strong>Geolocation:</strong> Browser GPS + Reverse Geocoding</li>
-            <li>🛡 <strong>Integrations:</strong> {t('ipm.title')}</li>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, color: '#647067', padding: 0 }}>
+            <li>⚡ <strong>{t('appName')}:</strong> {t('hero.title')}</li>
+            <li>🌦 <strong>{t('weather.title')}:</strong> {t('weather.forecast')}</li>
+            <li>🌐 <strong>{t('profile.prefLang')}:</strong> 13 {t('profile.prefLang')} + TTS</li>
+            <li>📍 <strong>{t('location.title')}:</strong> {t('location.detected')}</li>
+            <li>🛡 <strong>{t('ipm.title')}:</strong> {t('ipm.subtitle')}</li>
           </ul>
         </div>
       </div>

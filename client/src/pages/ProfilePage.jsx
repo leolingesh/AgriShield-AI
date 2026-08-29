@@ -113,11 +113,13 @@ export const ProfilePage = () => {
               <MapPin size={16} /> {t('location.title')}
             </div>
             <div style={{ fontSize: '0.88rem', color: '#17211B', fontWeight: 600 }}>
-              {location?.formatted || 'Salem, Tamil Nadu, India'}
+              {location?.formatted || t('location.detecting')}
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#647067', marginTop: 2 }}>
-              Coordinates: Lat {location?.lat?.toFixed(4) || '11.5977'}°, Lng {location?.lng?.toFixed(4) || '78.5986'}°
-            </div>
+            {location?.lat && location?.lng && (
+              <div style={{ fontSize: '0.75rem', color: '#647067', marginTop: 2 }}>
+                Lat {location.lat.toFixed(4)}°, Lng {location.lng.toFixed(4)}°
+              </div>
+            )}
           </div>
 
           {/* Success toast notice */}
